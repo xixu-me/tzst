@@ -1,0 +1,28 @@
+version: 2
+updates:
+  # Keep Python dependencies updated
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
+    # Apply labels to make pull requests easier to find
+    labels:
+      - "dependencies"
+      - "python"
+    # Group all minor and patch updates together
+    groups:
+      minor-patch-dependencies:
+        update-types:
+          - "minor"
+          - "patch"
+
+  # Keep GitHub Actions updated
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "github-actions"

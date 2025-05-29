@@ -45,6 +45,8 @@ pip install -e .[dev]
 
 ### Command Line Usage
 
+> **Recommended**: The `uvx tzst` command is highly recommended for running tzst without installation and with significantly better performance. [uv](https://github.com/astral-sh/uv) provides faster package resolution and execution compared to standard pip/python approaches. See the [uv's documentation](https://docs.astral.sh/uv/) for more details.
+
 ```bash
 # Create an archive
 tzst a archive.tzst file1.txt file2.txt directory/

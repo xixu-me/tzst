@@ -1,0 +1,81 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "tzst"
+dynamic = ["version"]
+description = "A Python library for creating and manipulating .tzst/.tar.zst archives"
+readme = "README.md"
+license = "BSD-3-Clause"
+requires-python = ">=3.8"
+authors = [{ name = "tzst contributors" }]
+keywords = ["tar", "zstandard", "compression", "archive"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: BSD License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: System :: Archiving :: Compression",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+dependencies = ["zstandard>=0.19.0,<1.0.0"]
+
+[project.optional-dependencies]
+dev = ["pytest>=7.0.0", "pytest-cov>=4.0.0", "ruff>=0.1.0", "black>=23.0.0"]
+
+[project.urls]
+Homepage = "https://github.com/xixu-me/tzst"
+Documentation = "https://github.com/xixu-me/tzst#readme"
+Repository = "https://github.com/xixu-me/tzst.git"
+"Bug Tracker" = "https://github.com/xixu-me/tzst/issues"
+
+[project.scripts]
+tzst = "tzst.cli:main"
+
+[tool.hatch.version]
+path = "src/tzst/__init__.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/tzst"]
+
+[tool.hatch.build.targets.sdist]
+include = ["/src", "/tests", "/README.md", "/LICENSE"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "--cov=tzst --cov-report=term-missing --cov-report=html"
+
+[tool.ruff]
+target-version = "py38"
+line-length = 88
+
+[tool.ruff.lint]
+select = [
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings
+    "F",  # pyflakes
+    "I",  # isort
+    "B",  # flake8-bugbear
+    "C4", # flake8-comprehensions
+    "UP", # pyupgrade
+]
+ignore = [
+    "E501", # line too long, handled by black
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*" = ["E501"]
+
+[tool.black]
+target-version = ["py38", "py39", "py310", "py311", "py312"]
+line-length = 88

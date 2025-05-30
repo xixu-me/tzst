@@ -20,8 +20,7 @@ A Python library for creating and manipulating `.tzst`/`.tar.zst` archives using
 - **Memory Efficient**: Streaming mode for handling large archives with minimal memory usage
 - **Atomic Operations**: Safe file operations with automatic cleanup on interruption
 - **Enhanced Error Handling**: Clear error messages with helpful alternatives and suggestions
-- **🔒 Security Features**: Built-in extraction filters with backward compatibility for Python < 3.12
-- **🛡️ Secure by Default**: Uses the 'data' filter for maximum security during extraction
+- **Secure by Default**: Uses the 'data' filter for maximum security during extraction
 
 ## Installation
 
@@ -217,7 +216,7 @@ tzst x archive.tzst --filter fully_trusted
 - `tar`: Standard tar compatibility. Blocks absolute paths and directory traversal but allows more file types and metadata.
 - `fully_trusted`: No security restrictions. Only use with completely trusted archives as it can be exploited for path traversal attacks.
 
-**⚠️ Security Warning:** Always use the default `data` filter when extracting archives from untrusted sources. Never use `fully_trusted` unless you completely trust the archive source.
+**Security Warning:** Always use the default `data` filter when extracting archives from untrusted sources. Never use `fully_trusted` unless you completely trust the archive source.
 
 ## Python API
 
@@ -570,7 +569,7 @@ extract_archive(large_archive, "restore/", streaming=True)
 
 ## Requirements
 
-- Python 3.8 or higher
+- Python 3.12 or higher
 - zstandard >= 0.19.0
 
 ## Development
@@ -694,11 +693,6 @@ Key configuration sections:
 - [Meta Zstandard](https://github.com/facebook/zstd) for the excellent compression algorithm
 - [python-zstandard](https://github.com/indygreg/python-zstandard) for Python bindings
 - The Python community for inspiration and feedback
-
-## Support
-
-- **Documentation**: [Full documentation](https://github.com/xixu-me/tzst#readme)
-- **PyPI Package**: [tzst on PyPI](https://pypi.org/project/tzst/)
 
 ## License
 

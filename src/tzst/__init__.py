@@ -1,6 +1,6 @@
 """tzst - A Python library for creating and manipulating .tzst/.tar.zst archives."""
 
-__version__ = "0.3.1"
+__version__ = "0.4.0"
 
 from .core import (
     TzstArchive,

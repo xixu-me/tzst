@@ -2,6 +2,7 @@
 
 import io
 import os
+import stat
 import tarfile
 import tempfile
 import time
@@ -14,6 +15,217 @@ from .exceptions import TzstArchiveError, TzstDecompressionError
 
 # Check if extraction filters are supported (Python 3.12+)
 EXTRACTION_FILTERS_SUPPORTED = hasattr(tarfile, "data_filter")
+
+
+# Custom exception classes for older Python versions
+class _FilterError(Exception):
+    """Base class for filter errors in older Python versions."""
+
+    def __init__(self, member):
+        self.tarinfo = member
+        super().__init__(f"Filter error for member: {member.name}")
+
+
+class _AbsolutePathError(_FilterError):
+    """Raised when a member has an absolute path."""
+
+    pass
+
+
+class _OutsideDestinationError(_FilterError):
+    """Raised when a member would be extracted outside destination."""
+
+    pass
+
+
+class _SpecialFileError(_FilterError):
+    """Raised when a member is a special file (device, pipe, etc.)."""
+
+    pass
+
+
+class _AbsoluteLinkError(_FilterError):
+    """Raised when a link has an absolute path."""
+
+    pass
+
+
+class _LinkOutsideDestinationError(_FilterError):
+    """Raised when a link points outside destination."""
+
+    pass
+
+
+# Use built-in exceptions if available, otherwise use custom ones
+if EXTRACTION_FILTERS_SUPPORTED:
+    AbsolutePathError = tarfile.AbsolutePathError
+    OutsideDestinationError = tarfile.OutsideDestinationError
+    SpecialFileError = tarfile.SpecialFileError
+    AbsoluteLinkError = tarfile.AbsoluteLinkError
+    LinkOutsideDestinationError = tarfile.LinkOutsideDestinationError
+else:
+    AbsolutePathError = _AbsolutePathError
+    OutsideDestinationError = _OutsideDestinationError
+    SpecialFileError = _SpecialFileError
+    AbsoluteLinkError = _AbsoluteLinkError
+    LinkOutsideDestinationError = _LinkOutsideDestinationError
+
+
+# Backward compatibility: Custom filter implementations for Python < 3.12
+def _is_within_directory(directory: str, target: str) -> bool:
+    """Check if target path is within directory (prevents path traversal)."""
+    abs_directory = os.path.abspath(directory)
+    abs_target = os.path.abspath(target)
+    return os.path.commonpath([abs_directory, abs_target]) == abs_directory
+
+
+def _fully_trusted_filter(member: tarfile.TarInfo, path: str) -> tarfile.TarInfo:
+    """
+    Backward compatibility implementation of fully_trusted_filter.
+    Return member unchanged - no security filtering.
+    """
+    return member
+
+
+def _tar_filter(member: tarfile.TarInfo, path: str) -> tarfile.TarInfo:
+    """
+    Backward compatibility implementation of tar_filter.
+
+    Implements the 'tar' filter security policy:
+    - Strip leading slashes from filenames
+    - Refuse to extract files with absolute paths
+    - Refuse to extract files outside destination
+    - Clear high mode bits (setuid, setgid, sticky) and group/other write bits
+    """
+    # Create a copy to avoid modifying the original
+    member = member.replace()
+
+    # Strip leading slashes and path separators
+    member.name = member.name.lstrip("/" + os.sep)
+    if member.linkname:
+        member.linkname = member.linkname.lstrip("/" + os.sep)
+
+    # Check for absolute paths (even after stripping slashes)
+    if os.path.isabs(member.name):
+        raise AbsolutePathError(member)
+    if member.linkname and os.path.isabs(member.linkname):
+        raise AbsoluteLinkError(member)
+
+    # Check if extraction would end up outside destination
+    target_path = os.path.join(path, member.name)
+    if not _is_within_directory(path, target_path):
+        raise OutsideDestinationError(member)
+
+    # For symbolic/hard links, check link target
+    if member.islnk() or member.issym():
+        if member.linkname:
+            if os.path.isabs(member.linkname):
+                raise AbsoluteLinkError(member)
+            # Check if link target would be outside destination
+            link_target = os.path.join(path, member.linkname)
+            if not _is_within_directory(path, link_target):
+                raise LinkOutsideDestinationError(member)
+
+    # Clear dangerous mode bits if mode is set
+    if member.mode is not None:
+        # Clear setuid, setgid, sticky bits
+        member.mode &= ~(stat.S_ISUID | stat.S_ISGID | stat.S_ISVTX)
+        # Clear group/other write permissions
+        member.mode &= ~(stat.S_IWGRP | stat.S_IWOTH)
+
+    return member
+
+
+def _data_filter(member: tarfile.TarInfo, path: str) -> tarfile.TarInfo:
+    """
+    Backward compatibility implementation of data_filter.
+
+    Implements the 'data' filter security policy (most restrictive):
+    - All tar_filter restrictions
+    - Refuse to extract device files (including pipes)
+    - Refuse to extract links with absolute paths or pointing outside destination
+    - Set safe permissions for regular files
+    - Clear user/group info for security
+    """
+    # First apply tar_filter restrictions
+    member = _tar_filter(member, path)
+
+    # Refuse device files and pipes
+    if member.ischr() or member.isblk() or member.isfifo():
+        raise SpecialFileError(member)
+
+    # Refuse links (both symbolic and hard) that are problematic
+    if member.islnk() or member.issym():
+        if member.linkname:
+            # Refuse absolute link paths
+            if os.path.isabs(member.linkname):
+                raise AbsoluteLinkError(member)
+            # Refuse links pointing outside destination
+            link_target = os.path.join(path, member.linkname)
+            if not _is_within_directory(path, link_target):
+                raise LinkOutsideDestinationError(member)
+
+    # Set safe permissions for regular files and hard links
+    if member.isfile() or member.islnk():
+        if member.mode is not None:
+            # Set owner read and write permissions
+            member.mode |= stat.S_IRUSR | stat.S_IWUSR
+            # Remove group & other executable if owner doesn't have it
+            if not (member.mode & stat.S_IXUSR):
+                member.mode &= ~(stat.S_IXGRP | stat.S_IXOTH)
+    else:
+        # For directories and other files, set mode to 0o755 (safe default)
+        # We can't set to None in older Python versions
+        member.mode = 0o755
+
+    # Clear user and group info for security (set to safe defaults)
+    # We can't set to None in older Python versions
+    member.uid = 0
+    member.gid = 0
+    member.uname = "root"
+    member.gname = "root"
+
+    return member
+
+
+# Map filter names to functions for backward compatibility
+_FILTER_FUNCTIONS = {
+    "fully_trusted": _fully_trusted_filter,
+    "tar": _tar_filter,
+    "data": _data_filter,
+}
+
+
+def _get_filter_function(
+    filter_arg: Optional[Union[str, Callable]],
+) -> Optional[Union[str, Callable]]:
+    """
+    Get the appropriate filter function for the given filter argument.
+
+    Returns:
+        - Built-in filter string if Python 3.12+ and filter is a string
+        - Custom filter function if Python < 3.12 and filter is a string
+        - The filter itself if it's a callable
+        - None if filter is None
+    """
+    if filter_arg is None:
+        return None
+
+    if callable(filter_arg):
+        return filter_arg
+
+    if isinstance(filter_arg, str):
+        if EXTRACTION_FILTERS_SUPPORTED:
+            # Use built-in filters for Python 3.12+
+            return filter_arg
+        else:
+            # Use custom filters for Python < 3.12
+            if filter_arg in _FILTER_FUNCTIONS:
+                return _FILTER_FUNCTIONS[filter_arg]
+            else:
+                raise ValueError(f"Unknown filter: {filter_arg}")
+
+    raise TypeError(f"Filter must be None, string, or callable, got {type(filter_arg)}")
 
 
 class TzstArchive:
@@ -245,6 +457,10 @@ class TzstArchive:
                 "Warning: Extraction filters are not supported in this Python version. "
                 "Consider upgrading to Python 3.12+ for enhanced security features.",
             )
+        else:
+            # Use backward-compatible filter for Python < 3.12
+            filter_function = _get_filter_function(filter)
+            extract_kwargs["filter"] = filter_function
 
         try:
             if member:

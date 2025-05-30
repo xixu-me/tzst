@@ -20,6 +20,8 @@ A Python library for creating and manipulating `.tzst`/`.tar.zst` archives using
 - **Memory Efficient**: Streaming mode for handling large archives with minimal memory usage
 - **Atomic Operations**: Safe file operations with automatic cleanup on interruption
 - **Enhanced Error Handling**: Clear error messages with helpful alternatives and suggestions
+- **🔒 Security Features**: Built-in extraction filters with backward compatibility for Python < 3.12
+- **🛡️ Secure by Default**: Uses the 'data' filter for maximum security during extraction
 
 ## Installation
 
@@ -173,6 +175,7 @@ tzst t archive.tzst --streaming
 - `-o, --output DIR`: Specify output directory (extract commands)
 - `-l, --level LEVEL`: Set compression level 1-22 (create command)
 - `--streaming`: Enable streaming mode for memory-efficient processing of large archives
+- `--filter FILTER`: Security filter for extraction (extract commands only)
 
 #### Streaming Mode
 
@@ -193,6 +196,29 @@ tzst t large_archive.tzst --streaming
 
 **Note:** Some advanced operations may be limited in streaming mode.
 
+#### Security Filters
+
+For enhanced security when extracting archives from untrusted sources, tzst provides extraction filters:
+
+```bash
+# Extract with maximum security (default)
+tzst x archive.tzst --filter data
+
+# Extract with standard tar compatibility
+tzst x archive.tzst --filter tar
+
+# Extract with full trust (dangerous - only for trusted archives)
+tzst x archive.tzst --filter fully_trusted
+```
+
+**Security Filter Options:**
+
+- `data` (default, recommended): Most secure option. Blocks dangerous files like device files, absolute paths, and paths outside the extraction directory. Sets safe permissions and clears user/group metadata.
+- `tar`: Standard tar compatibility. Blocks absolute paths and directory traversal but allows more file types and metadata.
+- `fully_trusted`: No security restrictions. Only use with completely trusted archives as it can be exploited for path traversal attacks.
+
+**⚠️ Security Warning:** Always use the default `data` filter when extracting archives from untrusted sources. Never use `fully_trusted` unless you completely trust the archive source.
+
 ## Python API
 
 ### TzstArchive Class
@@ -212,11 +238,16 @@ with TzstArchive("archive.tzst", "r") as archive:
     # List contents
     contents = archive.list(verbose=True)
     
-    # Extract specific file
-    archive.extract("file.txt", "output/")
+    # Extract specific file with security filter
+    archive.extract("file.txt", "output/", filter="data")
     
-    # Extract all files
+    # Extract all files (uses 'data' filter by default for security)
     archive.extract(path="output/")
+    
+    # Extract with different security levels
+    archive.extract(path="output/", filter="tar")        # Standard tar compatibility
+    archive.extract(path="output/", filter="data")       # Maximum security (default)
+    # archive.extract(path="output/", filter="fully_trusted")  # Only for trusted archives!
     
     # Test integrity
     is_valid = archive.test()
@@ -265,7 +296,7 @@ create_archive(
 ```python
 from tzst import extract_archive
 
-# Extract with directory structure
+# Extract with directory structure (uses 'data' filter by default for security)
 extract_archive("backup.tzst", "restore/")
 
 # Extract specific files
@@ -273,6 +304,10 @@ extract_archive("backup.tzst", "restore/", members=["config.txt"])
 
 # Flatten directory structure
 extract_archive("backup.tzst", "restore/", flatten=True)
+
+# Extract with different security filters
+extract_archive("backup.tzst", "restore/", filter="data")  # Maximum security (default)
+extract_archive("backup.tzst", "restore/", filter="tar")   # Standard tar compatibility
 
 # For large archives, use streaming mode for memory efficiency
 extract_archive("large_backup.tzst", "restore/", streaming=True)

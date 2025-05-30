@@ -85,14 +85,22 @@ def cmd_extract_full(args) -> int:
         output_dir = Path(args.output) if args.output else Path.cwd()
         members = args.files if hasattr(args, "files") and args.files else None
         streaming = getattr(args, "streaming", False)
+        filter_type = getattr(args, "filter", "data")
 
         print(f"Extracting from: {archive_path}")
         print(f"Output directory: {output_dir}")
         if streaming:
             print("Using streaming mode (memory efficient)")
+        if filter_type != "data":
+            print(f"Using security filter: {filter_type}")
 
         extract_archive(
-            archive_path, output_dir, members, flatten=False, streaming=streaming
+            archive_path,
+            output_dir,
+            members,
+            flatten=False,
+            streaming=streaming,
+            filter=filter_type,
         )
         print("Extraction completed successfully")
         return 0
@@ -125,12 +133,20 @@ def cmd_extract_flat(args) -> int:
         output_dir = Path(args.output) if args.output else Path.cwd()
         members = args.files if hasattr(args, "files") and args.files else None
         streaming = getattr(args, "streaming", False)
+        filter_type = getattr(args, "filter", "data")
 
         print(f"Extracting from: {archive_path}")
         print(f"Output directory: {output_dir}")
+        if filter_type != "data":
+            print(f"Using security filter: {filter_type}")
 
         extract_archive(
-            archive_path, output_dir, members, flatten=True, streaming=streaming
+            archive_path,
+            output_dir,
+            members,
+            flatten=True,
+            streaming=streaming,
+            filter=filter_type,
         )
         print("Extraction completed successfully")
         return 0
@@ -255,8 +271,8 @@ Command Reference:
     a, add, create    tzst a archive.tzst files...  [-l LEVEL] [--no-atomic]
 
   Extract:
-    x, extract        tzst x archive.tzst [files...] [-o DIR] [--streaming]
-    e, extract-flat   tzst e archive.tzst [files...] [-o DIR] [--streaming]
+    x, extract        tzst x archive.tzst [files...] [-o DIR] [--streaming] [--filter FILTER]
+    e, extract-flat   tzst e archive.tzst [files...] [-o DIR] [--streaming] [--filter FILTER]
 
   Manage:
     l, list           tzst l archive.tzst [-v] [--streaming]
@@ -267,7 +283,12 @@ Arguments:
   -o, --output DIR    Output directory (default: current directory)
   -v, --verbose       Show detailed information
   --streaming         Use streaming mode for memory efficiency with large archives
+  --filter FILTER     Security filter for extraction: data (safest, default), tar, fully_trusted
   --no-atomic         Disable atomic file operations (not recommended)
+
+Security Note:
+  Always use --filter=data (default) when extracting archives from untrusted sources.
+  Never use --filter=fully_trusted unless you completely trust the archive source.
 
 Documentation:
   https://github.com/xixu-me/tzst#readme
@@ -322,6 +343,12 @@ Documentation:
         action="store_true",
         help="Use streaming mode for memory efficiency with large archives",
     )
+    parser_extract.add_argument(
+        "--filter",
+        choices=["data", "tar", "fully_trusted"],
+        default="data",
+        help="Extraction filter for security (default: data). 'data' is safest for untrusted archives, 'tar' honors most tar features, 'fully_trusted' honors all metadata",
+    )
     parser_extract.set_defaults(func=cmd_extract_full)
 
     # Extract flat command
@@ -341,6 +368,12 @@ Documentation:
         "--streaming",
         action="store_true",
         help="Use streaming mode for memory efficiency with large archives",
+    )
+    parser_extract_flat.add_argument(
+        "--filter",
+        choices=["data", "tar", "fully_trusted"],
+        default="data",
+        help="Extraction filter for security (default: data). 'data' is safest for untrusted archives, 'tar' honors most tar features, 'fully_trusted' honors all metadata",
     )
     parser_extract_flat.set_defaults(func=cmd_extract_flat)
 

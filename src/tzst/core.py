@@ -6,11 +6,14 @@ import tarfile
 import tempfile
 import time
 from pathlib import Path
-from typing import BinaryIO, List, Optional, Sequence, Union
+from typing import BinaryIO, Callable, List, Optional, Sequence, Union
 
 import zstandard as zstd
 
 from .exceptions import TzstArchiveError, TzstDecompressionError
+
+# Check if extraction filters are supported (Python 3.12+)
+EXTRACTION_FILTERS_SUPPORTED = hasattr(tarfile, "data_filter")
 
 
 class TzstArchive:
@@ -188,6 +191,7 @@ class TzstArchive:
         path: Union[str, Path] = ".",
         set_attrs: bool = True,
         numeric_owner: bool = False,
+        filter: Optional[Union[str, Callable]] = "data",
     ):
         """
         Extract files from the archive.
@@ -197,6 +201,17 @@ class TzstArchive:
             path: Destination directory
             set_attrs: Whether to set file attributes
             numeric_owner: Whether to use numeric owner
+            filter: Extraction filter for security. Can be:
+                   - 'data': Safe filter for cross-platform data archives (default, recommended)
+                   - 'tar': Honor most tar features but block dangerous ones
+                   - 'fully_trusted': Honor all metadata (use only for trusted archives)
+                   - None: Use default behavior (may show deprecation warning in Python 3.12+)
+                   - callable: Custom filter function
+
+        Warning:
+            Never extract archives from untrusted sources without proper filtering.
+            The 'data' filter is recommended for most use cases as it prevents
+            dangerous security issues like path traversal attacks.
 
         Note:
             In streaming mode, extracting specific members is not supported.
@@ -218,11 +233,24 @@ class TzstArchive:
                 "Please use non-streaming mode for selective extraction, or extract all files."
             )
 
+        # Prepare extraction arguments
+        extract_kwargs = {}
+
+        # Add filter argument if supported (Python 3.12+)
+        if EXTRACTION_FILTERS_SUPPORTED:
+            extract_kwargs["filter"] = filter
+        elif filter is not None and filter != "data":
+            # Warn if user specified a filter but it's not supported
+            print(
+                "Warning: Extraction filters are not supported in this Python version. "
+                "Consider upgrading to Python 3.12+ for enhanced security features.",
+            )
+
         try:
             if member:
-                self._tarfile.extract(member, path=extract_path)
+                self._tarfile.extract(member, path=extract_path, **extract_kwargs)
             else:
-                self._tarfile.extractall(path=extract_path)
+                self._tarfile.extractall(path=extract_path, **extract_kwargs)
         except (tarfile.StreamError, OSError) as e:
             if self.streaming and (
                 "seeking" in str(e).lower() or "stream" in str(e).lower()
@@ -454,6 +482,7 @@ def extract_archive(
     members: Optional[List[str]] = None,
     flatten: bool = False,
     streaming: bool = False,
+    filter: Optional[Union[str, Callable]] = "data",
 ) -> None:
     """
     Extract files from a .tzst archive.
@@ -464,6 +493,17 @@ def extract_archive(
         members: Specific members to extract (None for all)
         flatten: If True, extract without directory structure
         streaming: If True, use streaming mode (memory efficient for large archives)
+        filter: Extraction filter for security. Can be:
+               - 'data': Safe filter for cross-platform data archives (default, recommended)
+               - 'tar': Honor most tar features but block dangerous ones
+               - 'fully_trusted': Honor all metadata (use only for trusted archives)
+               - None: Use default behavior (may show deprecation warning in Python 3.12+)
+               - callable: Custom filter function
+
+    Warning:
+        Never extract archives from untrusted sources without proper filtering.
+        The 'data' filter is recommended for most use cases as it prevents
+        dangerous security issues like path traversal attacks.
     """
     with TzstArchive(archive_path, "r", streaming=streaming) as archive:
         if flatten:
@@ -488,9 +528,9 @@ def extract_archive(
             # Extract with full directory structure
             if members:
                 for member in members:
-                    archive.extract(member, extract_path)
+                    archive.extract(member, extract_path, filter=filter)
             else:
-                archive.extract(path=extract_path)
+                archive.extract(path=extract_path, filter=filter)
 
 
 def list_archive(

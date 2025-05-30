@@ -27,7 +27,7 @@ def format_size(size: int) -> str:
 
 
 def cmd_add(args) -> int:
-    """Add/create archive command."""
+    """Add/create archive command with atomic file operations."""
     try:
         archive_path = Path(args.archive)
         files: List[Path] = [Path(f) for f in args.files]
@@ -45,10 +45,11 @@ def cmd_add(args) -> int:
 
         print(f"Creating archive: {archive_path}")
         for file_path in files:
-            print(
-                f"  Adding: {file_path}"
-            )  # Convert to the right type for create_archive function
-        create_archive(archive_path, files, compression_level)
+            print(f"  Adding: {file_path}")
+
+        # Use atomic file operations by default for better reliability
+        # This creates the archive in a temporary file first, then moves it atomically
+        create_archive(archive_path, files, compression_level, use_temp_file=True)
         print(f"Archive created successfully: {archive_path}")
         return 0
 
@@ -61,6 +62,10 @@ def cmd_add(args) -> int:
     except TzstArchiveError as e:
         print(f"Error: Archive operation failed - {e}", file=sys.stderr)
         return 1
+    except KeyboardInterrupt:
+        print("\nOperation interrupted by user", file=sys.stderr)
+        # Clean up any partial files - the atomic operations in create_archive handle this
+        return 130  # Standard exit code for SIGINT
     except Exception as e:
         print(f"Error creating archive: {e}", file=sys.stderr)
         return 1
@@ -76,11 +81,16 @@ def cmd_extract_full(args) -> int:
 
         output_dir = Path(args.output) if args.output else Path.cwd()
         members = args.files if hasattr(args, "files") and args.files else None
+        streaming = getattr(args, "streaming", False)
 
         print(f"Extracting from: {archive_path}")
         print(f"Output directory: {output_dir}")
+        if streaming:
+            print("Using streaming mode (memory efficient)")
 
-        extract_archive(archive_path, output_dir, members, flatten=False)
+        extract_archive(
+            archive_path, output_dir, members, flatten=False, streaming=streaming
+        )
         print("Extraction completed successfully")
         return 0
 
@@ -93,6 +103,9 @@ def cmd_extract_full(args) -> int:
     except TzstArchiveError as e:
         print(f"Error: Archive operation failed - {e}", file=sys.stderr)
         return 1
+    except KeyboardInterrupt:
+        print("\nOperation interrupted by user", file=sys.stderr)
+        return 130
     except Exception as e:
         print(f"Error extracting archive: {e}", file=sys.stderr)
         return 1
@@ -139,11 +152,14 @@ def cmd_list(args) -> int:
             return 1
 
         verbose = getattr(args, "verbose", False)
+        streaming = getattr(args, "streaming", False)
 
         print(f"Listing contents of: {archive_path}")
+        if streaming:
+            print("Using streaming mode (memory efficient)")
         print()
 
-        contents = list_archive(archive_path, verbose=verbose)
+        contents = list_archive(archive_path, verbose=verbose, streaming=streaming)
 
         if verbose:
             # Detailed listing
@@ -199,9 +215,13 @@ def cmd_test(args) -> int:
             print(f"Error: Archive not found: {archive_path}", file=sys.stderr)
             return 1
 
-        print(f"Testing archive: {archive_path}")
+        streaming = getattr(args, "streaming", False)
 
-        if test_archive(archive_path):
+        print(f"Testing archive: {archive_path}")
+        if streaming:
+            print("Using streaming mode (memory efficient)")
+
+        if test_archive(archive_path, streaming=streaming):
             print("Archive test passed - no errors detected")
             return 0
         else:
@@ -235,22 +255,20 @@ Command Reference:
   Manage:
     l, list            tzst l archive.tzst [-v]
     t, test            tzst t archive.tzst
+
+Documentation:
+  https://github.com/xixu-me/tzst#readme
 """
 
     parser = argparse.ArgumentParser(
         prog="tzst",
         epilog=epilog,
         formatter_class=argparse.RawDescriptionHelpFormatter,
-    )
-
-    parser.add_argument(
-        "--version",
-        action="version",
-        version=f"tzst {__version__}",
+        add_help=False,
     )
 
     subparsers = parser.add_subparsers(
-        dest="command", title="commands", help="Available commands", metavar="COMMAND"
+        dest="command", title="Commands", help="Available commands", metavar="COMMAND"
     )
 
     # Add/Create command
@@ -280,6 +298,11 @@ Command Reference:
     parser_extract.add_argument(
         "-o", "--output", help="Output directory (default: current directory)"
     )
+    parser_extract.add_argument(
+        "--streaming",
+        action="store_true",
+        help="Use streaming mode for memory efficiency with large archives",
+    )
     parser_extract.set_defaults(func=cmd_extract_full)
 
     # Extract flat command
@@ -305,6 +328,11 @@ Command Reference:
     parser_list.add_argument(
         "-v", "--verbose", action="store_true", help="Show detailed information"
     )
+    parser_list.add_argument(
+        "--streaming",
+        action="store_true",
+        help="Use streaming mode for memory efficiency with large archives",
+    )
     parser_list.set_defaults(func=cmd_list)
 
     # Test command
@@ -312,6 +340,11 @@ Command Reference:
         "t", aliases=["test"], help="Test integrity of archive"
     )
     parser_test.add_argument("archive", help="Archive file path")
+    parser_test.add_argument(
+        "--streaming",
+        action="store_true",
+        help="Use streaming mode for memory efficiency with large archives",
+    )
     parser_test.set_defaults(func=cmd_test)
 
     return parser

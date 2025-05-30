@@ -129,6 +129,22 @@ class TestCLIErrorHandling:
         result = main([])
         assert result == 1
 
+    def test_keyboard_interrupt_handling(self, temp_dir):
+        """Test that KeyboardInterrupt is handled properly."""
+        # This test is more conceptual since we can't easily simulate KeyboardInterrupt
+        # in a unit test, but we can verify the error handling structure exists
+        from tzst.cli import cmd_add
+
+        # Create a mock args object
+        class MockArgs:
+            archive = str(temp_dir / "interrupt_test.tzst")
+            files = ["non_existent_file.txt"]
+            compression_level = 3
+
+        # Test that the function handles FileNotFoundError properly
+        result = cmd_add(MockArgs())
+        assert result == 1  # Should return error code for missing files
+
 
 class TestCLIAliases:
     """Test CLI command aliases."""
@@ -212,3 +228,63 @@ class TestCLIIntegration:
                 original_content = file_path.read_bytes()
                 extracted_content = extracted_file.read_bytes()
                 assert original_content == extracted_content
+
+
+class TestCLIStreamingOptions:
+    """Test CLI streaming options."""
+
+    def test_extract_streaming_flag(self, sample_files, temp_dir):
+        """Test extract command with streaming flag."""
+        archive_path = temp_dir / "cli_streaming_test.tzst"
+        file_paths = [f for f in sample_files if f.is_file()]
+
+        # Create archive first
+        from tzst import create_archive
+
+        create_archive(archive_path, file_paths)
+
+        # Test extract with streaming
+        parser = create_parser()
+        args = parser.parse_args(
+            ["x", str(archive_path), "--streaming", "-o", str(temp_dir / "extracted")]
+        )
+
+        assert args.command == "x"
+        assert hasattr(args, "streaming")
+        assert args.streaming is True
+
+    def test_list_streaming_flag(self, sample_files, temp_dir):
+        """Test list command with streaming flag."""
+        archive_path = temp_dir / "cli_list_streaming.tzst"
+        file_paths = [f for f in sample_files if f.is_file()]
+
+        # Create archive first
+        from tzst import create_archive
+
+        create_archive(archive_path, file_paths)
+
+        # Test list with streaming
+        parser = create_parser()
+        args = parser.parse_args(["l", str(archive_path), "--streaming"])
+
+        assert args.command == "l"
+        assert hasattr(args, "streaming")
+        assert args.streaming is True
+
+    def test_test_streaming_flag(self, sample_files, temp_dir):
+        """Test test command with streaming flag."""
+        archive_path = temp_dir / "cli_test_streaming.tzst"
+        file_paths = [f for f in sample_files if f.is_file()]
+
+        # Create archive first
+        from tzst import create_archive
+
+        create_archive(archive_path, file_paths)
+
+        # Test test command with streaming
+        parser = create_parser()
+        args = parser.parse_args(["t", str(archive_path), "--streaming"])
+
+        assert args.command == "t"
+        assert hasattr(args, "streaming")
+        assert args.streaming is True

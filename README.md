@@ -2,6 +2,7 @@
 
 A Python library for creating and manipulating `.tzst`/`.tar.zst` archives using Zstandard compression.
 
+[![CodeQL](https://github.com/xixu-me/tzst/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/xixu-me/tzst/actions/workflows/github-code-scanning/codeql)
 [![CI/CD](https://github.com/xixu-me/tzst/actions/workflows/ci.yml/badge.svg)](https://github.com/xixu-me/tzst/actions/workflows/ci.yml)
 [![PyPI - Version](https://img.shields.io/pypi/v/tzst)](https://pypi.org/project/tzst/)
 [![GitHub License](https://img.shields.io/github/license/xixu-me/tzst)](LICENSE)
@@ -35,10 +36,21 @@ pip install .
 
 ### Development Installation
 
+This project uses [Hatch](https://hatch.pypa.io/) as the build system, configured in `pyproject.toml`. For development:
+
 ```bash
 git clone https://github.com/xixu-me/tzst.git
 cd tzst
 pip install -e .[dev]
+```
+
+Alternatively, if you have [Hatch](https://hatch.pypa.io/) installed:
+
+```bash
+git clone https://github.com/xixu-me/tzst.git
+cd tzst
+hatch env create
+hatch shell
 ```
 
 ## Quick Start
@@ -168,6 +180,12 @@ with TzstArchive("archive.tzst", "r") as archive:
     
     # Test integrity
     is_valid = archive.test()
+
+# For large archives, use streaming mode to reduce memory usage
+with TzstArchive("large_archive.tzst", "r", streaming=True) as archive:
+    # Streaming mode is more memory efficient but may limit some operations
+    contents = archive.list(verbose=True)
+    archive.extract(path="output/")
 ```
 
 ### Convenience Functions
@@ -197,6 +215,9 @@ extract_archive("backup.tzst", "restore/", members=["config.txt"])
 
 # Flatten directory structure
 extract_archive("backup.tzst", "restore/", flatten=True)
+
+# For large archives, use streaming mode
+extract_archive("large_backup.tzst", "restore/", streaming=True)
 ```
 
 #### list_archive()
@@ -291,9 +312,10 @@ except TzstFileNotFoundError:
 ## Performance Tips
 
 1. **Choose appropriate compression levels**: Level 3 is usually optimal for most use cases
-2. **Use streaming for large files**: The library handles large files efficiently
-3. **Batch operations**: Add multiple files in a single archive session when possible
-4. **Consider file types**: Already compressed files (images, videos) won't compress much further
+2. **Use streaming for large archives**: Enable streaming mode (`streaming=True`) for archives larger than 100MB to reduce memory usage
+3. **Atomic file operations**: The library uses atomic file operations by default to prevent incomplete archives on interruption
+4. **Batch operations**: Add multiple files in a single archive session when possible
+5. **Consider file types**: Already compressed files (images, videos) won't compress much further
 
 ## Comparison with Standard Tools
 
@@ -324,13 +346,36 @@ except TzstFileNotFoundError:
 
 ### Setting up Development Environment
 
+This project uses **Hatch** as the build system and dependency manager, with configuration in `pyproject.toml`. Choose one of the following setup methods:
+
+#### Using pip (Traditional approach)
+
 ```bash
 git clone https://github.com/xixu-me/tzst.git
 cd tzst
 pip install -e .[dev]
 ```
 
+#### Using Hatch (Recommended for development)
+
+```bash
+git clone https://github.com/xixu-me/tzst.git
+cd tzst
+pip install hatch  # Install Hatch if not already installed
+hatch env create   # Create development environment
+hatch shell        # Activate development environment
+```
+
+The `pyproject.toml` file configures the entire build process, including:
+
+- Build system (hatchling)
+- Dependencies and optional development dependencies
+- Project metadata and entry points
+- Tool configurations (pytest, ruff, black)
+
 ### Running Tests
+
+#### Using pytest directly
 
 ```bash
 # Run all tests
@@ -343,7 +388,19 @@ pytest --cov=tzst --cov-report=html
 pytest tests/test_core.py
 ```
 
+#### Using Hatch
+
+```bash
+# Run tests in development environment
+hatch run pytest
+
+# Run with coverage
+hatch run pytest --cov=tzst --cov-report=html
+```
+
 ### Code Quality
+
+#### Using tools directly
 
 ```bash
 # Lint code
@@ -354,6 +411,16 @@ black src tests
 
 # Type checking (if mypy is installed)
 mypy src
+```
+
+#### Using Hatch
+
+```bash
+# Lint code
+hatch run ruff check src tests
+
+# Format code
+hatch run black src tests
 ```
 
 ### Building Documentation

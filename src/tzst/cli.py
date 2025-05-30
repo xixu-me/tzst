@@ -42,6 +42,7 @@ def cmd_add(args) -> int:
             return 1
 
         compression_level = getattr(args, "compression_level", 3)
+        use_temp_file = not getattr(args, "no_atomic", False)
 
         print(f"Creating archive: {archive_path}")
         for file_path in files:
@@ -49,7 +50,9 @@ def cmd_add(args) -> int:
 
         # Use atomic file operations by default for better reliability
         # This creates the archive in a temporary file first, then moves it atomically
-        create_archive(archive_path, files, compression_level, use_temp_file=True)
+        create_archive(
+            archive_path, files, compression_level, use_temp_file=use_temp_file
+        )
         print(f"Archive created successfully: {archive_path}")
         return 0
 
@@ -121,11 +124,14 @@ def cmd_extract_flat(args) -> int:
 
         output_dir = Path(args.output) if args.output else Path.cwd()
         members = args.files if hasattr(args, "files") and args.files else None
+        streaming = getattr(args, "streaming", False)
 
         print(f"Extracting from: {archive_path}")
         print(f"Output directory: {output_dir}")
 
-        extract_archive(archive_path, output_dir, members, flatten=True)
+        extract_archive(
+            archive_path, output_dir, members, flatten=True, streaming=streaming
+        )
         print("Extraction completed successfully")
         return 0
 
@@ -246,15 +252,22 @@ def create_parser() -> argparse.ArgumentParser:
     epilog = """
 Command Reference:
   Archive:
-    a, add, create     tzst a archive.tzst files...  [-l LEVEL]
+    a, add, create    tzst a archive.tzst files...  [-l LEVEL] [--no-atomic]
 
   Extract:
-    x, extract         tzst x archive.tzst [files...] [-o DIR]  # with paths
-    e, extract-flat    tzst e archive.tzst [files...] [-o DIR]  # without paths
+    x, extract        tzst x archive.tzst [files...] [-o DIR] [--streaming]
+    e, extract-flat   tzst e archive.tzst [files...] [-o DIR] [--streaming]
 
   Manage:
-    l, list            tzst l archive.tzst [-v]
-    t, test            tzst t archive.tzst
+    l, list           tzst l archive.tzst [-v] [--streaming]
+    t, test           tzst t archive.tzst [--streaming]
+
+Arguments:
+  -l, --level LEVEL   Compression level (1-22, default: 3)
+  -o, --output DIR    Output directory (default: current directory)
+  -v, --verbose       Show detailed information
+  --streaming         Use streaming mode for memory efficiency with large archives
+  --no-atomic         Disable atomic file operations (not recommended)
 
 Documentation:
   https://github.com/xixu-me/tzst#readme
@@ -267,6 +280,7 @@ Documentation:
         add_help=False,
     )
 
+    # Add global arguments
     subparsers = parser.add_subparsers(
         dest="command", title="Commands", help="Available commands", metavar="COMMAND"
     )
@@ -286,6 +300,11 @@ Documentation:
         choices=range(1, 23),
         metavar="LEVEL",
         help="Compression level (1-22, default: 3)",
+    )
+    parser_add.add_argument(
+        "--no-atomic",
+        action="store_true",
+        help="Disable atomic file operations (not recommended - creates archive directly without temporary file)",
     )
     parser_add.set_defaults(func=cmd_add)
 
@@ -317,6 +336,11 @@ Documentation:
     )
     parser_extract_flat.add_argument(
         "-o", "--output", help="Output directory (default: current directory)"
+    )
+    parser_extract_flat.add_argument(
+        "--streaming",
+        action="store_true",
+        help="Use streaming mode for memory efficiency with large archives",
     )
     parser_extract_flat.set_defaults(func=cmd_extract_flat)
 

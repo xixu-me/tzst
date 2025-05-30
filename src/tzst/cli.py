@@ -10,6 +10,12 @@ from .core import create_archive, extract_archive, list_archive, test_archive
 from .exceptions import TzstArchiveError, TzstDecompressionError
 
 
+def print_banner() -> None:
+    """Print the version and copyright banner."""
+    print()
+    print(f"tzst {__version__} : Copyright (c) 2025 Xi Xu")
+
+
 def format_size(size: int) -> str:
     """Format file size in human-readable format."""
     size_float = float(size)
@@ -240,7 +246,7 @@ Command Reference:
     parser.add_argument(
         "--version",
         action="version",
-        version=f"tzst {__version__} : Copyright (c) 2025 Xi Xu",
+        version=f"tzst {__version__}",
     )
 
     subparsers = parser.add_subparsers(
@@ -313,6 +319,9 @@ Command Reference:
 
 def main(argv: Optional[List[str]] = None) -> int:
     """Main entry point for the CLI."""
+    print_banner()
+    print()
+
     parser = create_parser()
     args = parser.parse_args(argv)
 

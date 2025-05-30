@@ -2,10 +2,10 @@
 
 A Python library for creating and manipulating `.tzst`/`.tar.zst` archives using Zstandard compression.
 
-[![CI/CD](https://github.com/xixu-me/tzst/workflows/CI/CD/badge.svg)](https://github.com/xixu-me/tzst/actions)
-[![PyPI version](https://badge.fury.io/py/tzst.svg)](https://badge.fury.io/py/tzst)
-[![Python versions](https://img.shields.io/pypi/pyversions/tzst.svg)](https://pypi.org/project/tzst/)
-[![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
+[![CI/CD](https://github.com/xixu-me/tzst/actions/workflows/ci.yml/badge.svg)](https://github.com/xixu-me/tzst/actions/workflows/ci.yml)
+[![PyPI - Version](https://img.shields.io/pypi/v/tzst)](https://pypi.org/project/tzst/)
+[![GitHub License](https://img.shields.io/github/license/xixu-me/tzst)](LICENSE)
+[![Sponsor](https://img.shields.io/badge/Sponsor-violet)](https://xi-xu.me/#sponsorships)
 
 ## Features
 
@@ -30,7 +30,7 @@ pip install tzst
 ```bash
 git clone https://github.com/xixu-me/tzst.git
 cd tzst
-pip install -e .
+pip install .
 ```
 
 ### Development Installation

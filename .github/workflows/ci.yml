@@ -85,7 +85,7 @@ jobs:
       name: pypi
       url: https://pypi.org/p/tzst
     permissions:
-      id-token: write # IMPORTANT: this permission is mandatory for trusted publishing
+      id-token: write
 
     steps:
       - name: Download build artifacts
@@ -96,3 +96,53 @@ jobs:
 
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
+
+  update_badges:
+    needs: [build, publish]
+    if: always() && needs.build.result == 'success'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event_name == 'pull_request' && github.head_ref || github.ref }}
+
+      - name: Wait if this is after a publish
+        if: github.event_name == 'release' && github.event.action == 'published'
+        run: sleep 30
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Fetch PyPI version
+        id: pypi_version
+        run: |
+          pip install requests
+          python -c "
+          import requests, json
+          try:
+              data = requests.get('https://pypi.org/pypi/tzst/json').json()
+              version = data['info']['version']
+              print(f'PyPI version: {version}')
+          except Exception as e:
+              print(f'Error fetching version: {e}')
+              version = 'unknown'
+          print(f'::set-output name=version::{version}')
+          "
+
+      - name: Update README badge
+        run: |
+          echo "Updating PyPI badge with version: ${{ steps.pypi_version.outputs.version }}"
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+
+      - name: Commit and push changes
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: "Update badges [skip ci]"
+          file_pattern: README.md
+          branch: ${{ github.event_name == 'pull_request' && github.head_ref || github.ref_name }}

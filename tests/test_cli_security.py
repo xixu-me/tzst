@@ -58,20 +58,18 @@ class TestCLISecurityFilters:
 
     def test_filter_with_other_options(self):
         """Test filter option combined with other options."""
-        parser = create_parser()
-
-        # Test with streaming and output directory
+        parser = create_parser()  # Test with streaming and output directory
         args = parser.parse_args(
             [
                 "x",
                 "test.tzst",
+                "file1.txt",
+                "file2.txt",
                 "--filter",
                 "tar",
                 "--streaming",
                 "-o",
                 "output_dir",
-                "file1.txt",
-                "file2.txt",
             ]
         )
         assert args.filter == "tar"

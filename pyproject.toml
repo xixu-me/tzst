@@ -22,7 +22,7 @@ classifiers = [
     "Topic :: System :: Archiving :: Compression",
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
-dependencies = ["zstandard>=0.23.0,<1.0.0"]
+dependencies = ["zstandard>=0.19.0,<1.0.0"]
 
 [project.optional-dependencies]
 dev = ["pytest>=7.0.0", "pytest-cov>=4.0.0", "ruff>=0.1.0", "black>=23.0.0"]

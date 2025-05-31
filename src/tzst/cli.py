@@ -272,6 +272,47 @@ def cmd_extract_flat(args) -> int:
         return 1
 
 
+def _print_verbose_listing(contents: list) -> None:
+    """Print detailed listing of archive contents.
+
+    Args:
+        contents: List of archive items with metadata
+    """
+    print(f"{'Mode':<10} {'Size':<10} {'Modified':<20} {'Name'}")
+    print("-" * 60)
+    for item in contents:
+        mode_str = oct(item.get("mode", 0))[-4:] if item.get("mode") else "----"
+        size_str = format_size(item["size"]) if item["is_file"] else "<DIR>"
+        mtime_str = item.get("mtime_str", "")[:19] if item.get("mtime_str") else ""
+        print(f"{mode_str:<10} {size_str:<10} {mtime_str:<20} {item['name']}")
+
+
+def _print_simple_listing(contents: list) -> None:
+    """Print simple listing of archive contents with summary.
+
+    Args:
+        contents: List of archive items
+    """
+    total_files = 0
+    total_dirs = 0
+    total_size = 0
+
+    for item in contents:
+        if item["is_file"]:
+            total_files += 1
+            total_size += item["size"]
+        elif item["is_dir"]:
+            total_dirs += 1
+        print(item["name"])
+
+    print()
+    total_msg = (
+        f"Total: {total_files} files, {total_dirs} directories, "
+        f"{format_size(total_size)}"
+    )
+    print(total_msg)
+
+
 def cmd_list(args) -> int:
     """Command handler for listing archive contents.
 
@@ -315,36 +356,9 @@ def cmd_list(args) -> int:
         contents = list_archive(archive_path, verbose=verbose, streaming=streaming)
 
         if verbose:
-            # Detailed listing
-            print(f"{'Mode':<10} {'Size':<10} {'Modified':<20} {'Name'}")
-            print("-" * 60)
-            for item in contents:
-                mode_str = oct(item.get("mode", 0))[-4:] if item.get("mode") else "----"
-                size_str = format_size(item["size"]) if item["is_file"] else "<DIR>"
-                mtime_str = (
-                    item.get("mtime_str", "")[:19] if item.get("mtime_str") else ""
-                )
-                print(f"{mode_str:<10} {size_str:<10} {mtime_str:<20} {item['name']}")
+            _print_verbose_listing(contents)
         else:
-            # Simple listing
-            total_files = 0
-            total_dirs = 0
-            total_size = 0
-
-            for item in contents:
-                if item["is_file"]:
-                    total_files += 1
-                    total_size += item["size"]
-                elif item["is_dir"]:
-                    total_dirs += 1
-                print(item["name"])
-
-            print()
-            total_msg = (
-                f"Total: {total_files} files, {total_dirs} directories, "
-                f"{format_size(total_size)}"
-            )
-            print(total_msg)
+            _print_simple_listing(contents)
 
         return 0
 

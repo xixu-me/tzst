@@ -466,10 +466,8 @@ Command Reference:
     a, add, create    tzst a archive.tzst files...  [-l LEVEL] [--no-atomic]
 
   Extract:
-    x, extract        tzst x archive.tzst [files...] [-o DIR] [--streaming] \\
-                                                     [--filter FILTER]
-    e, extract-flat   tzst e archive.tzst [files...] [-o DIR] [--streaming] \\
-                                                     [--filter FILTER]
+    x, extract        tzst x archive.tzst [files...] [-o DIR] [--streaming] [--filter FILTER]
+    e, extract-flat   tzst e archive.tzst [files...] [-o DIR] [--streaming] [--filter FILTER]
 
   Manage:
     l, list           tzst l archive.tzst [-v] [--streaming]
@@ -479,10 +477,8 @@ Arguments:
   -l, --level LEVEL   Compression level (1-22, default: 3)
   -o, --output DIR    Output directory (default: current directory)
   -v, --verbose       Show detailed information
-  --streaming         Use streaming mode for memory efficiency with large \\
-                      archives
-  --filter FILTER     Security filter for extraction: data (safest, default), \\
-                      tar, fully_trusted
+  --streaming         Use streaming mode for memory efficiency with large archives
+  --filter FILTER     Security filter for extraction: data (safest, default), tar, fully_trusted
   --no-atomic         Disable atomic file operations (not recommended)
 
 Security Note:

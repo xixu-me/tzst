@@ -33,9 +33,9 @@ jobs:
         run: |
           ruff check src tests
 
-      - name: Format check with black
+      - name: Format check with ruff
         run: |
-          black --check src tests
+          ruff format --check src tests
 
       - name: Run tests
         run: |

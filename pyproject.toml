@@ -8,7 +8,7 @@ dynamic = ["version"]
 description = "A Python library for creating and manipulating .tzst/.tar.zst archives"
 readme = "README.md"
 license = "BSD-3-Clause"
-requires-python = ">=3.8"
+requires-python = ">=3.12"
 authors = [{ name = "tzst contributors" }]
 keywords = ["tar", "zstandard", "compression", "archive"]
 classifiers = [
@@ -17,11 +17,8 @@ classifiers = [
     "License :: OSI Approved :: BSD License",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Topic :: System :: Archiving :: Compression",
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
@@ -56,7 +53,7 @@ python_functions = ["test_*"]
 addopts = "--cov=tzst --cov-report=term-missing --cov-report=html"
 
 [tool.ruff]
-target-version = "py38"
+target-version = "py312"
 line-length = 88
 
 [tool.ruff.lint]
@@ -77,5 +74,5 @@ ignore = [
 "tests/**/*" = ["E501"]
 
 [tool.black]
-target-version = ["py38", "py39", "py310", "py311", "py312"]
+target-version = ["py312", "py313"]
 line-length = 88

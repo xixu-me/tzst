@@ -3,7 +3,6 @@
 import argparse
 import sys
 from pathlib import Path
-from typing import List, Optional
 
 from . import __version__
 from .core import create_archive, extract_archive, list_archive, test_archive
@@ -30,7 +29,7 @@ def cmd_add(args) -> int:
     """Add/create archive command with atomic file operations."""
     try:
         archive_path = Path(args.archive)
-        files: List[Path] = [Path(f) for f in args.files]
+        files: list[Path] = [Path(f) for f in args.files]
 
         # Check if files exist
         missing_files = [f for f in files if not f.exists()]
@@ -407,7 +406,7 @@ Documentation:
     return parser
 
 
-def main(argv: Optional[List[str]] = None) -> int:
+def main(argv: list[str] | None = None) -> int:
     """Main entry point for the CLI."""
     print_banner()
     print()

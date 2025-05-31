@@ -5,15 +5,13 @@ import os
 import tarfile
 import tempfile
 import time
+from collections.abc import Callable, Sequence
 from pathlib import Path
-from typing import BinaryIO, Callable, List, Optional, Sequence, Union
+from typing import BinaryIO
 
 import zstandard as zstd
 
 from .exceptions import TzstArchiveError, TzstDecompressionError
-
-# Check if extraction filters are supported (Python 3.12+)
-EXTRACTION_FILTERS_SUPPORTED = hasattr(tarfile, "data_filter")
 
 
 class TzstArchive:
@@ -21,7 +19,7 @@ class TzstArchive:
 
     def __init__(
         self,
-        filename: Union[str, Path],
+        filename: str | Path,
         mode: str = "r",
         compression_level: int = 3,
         streaming: bool = False,
@@ -41,11 +39,14 @@ class TzstArchive:
         self.mode = mode
         self.compression_level = compression_level
         self.streaming = streaming
-        self._tarfile: Optional[tarfile.TarFile] = None
-        self._fileobj: Optional[BinaryIO] = None
-        self._compressed_stream: Optional[
-            Union[zstd.ZstdCompressionWriter, zstd.ZstdDecompressionReader, io.BytesIO]
-        ] = None
+        self._tarfile: tarfile.TarFile | None = None
+        self._fileobj: BinaryIO | None = None
+        self._compressed_stream: (
+            zstd.ZstdCompressionWriter
+            | zstd.ZstdDecompressionReader
+            | io.BytesIO
+            | None
+        ) = None
 
         # Validate mode
         valid_modes = ["r", "w", "a"]
@@ -162,8 +163,8 @@ class TzstArchive:
 
     def add(
         self,
-        name: Union[str, Path],
-        arcname: Optional[str] = None,
+        name: str | Path,
+        arcname: str | None = None,
         recursive: bool = True,
     ):
         """
@@ -187,11 +188,11 @@ class TzstArchive:
 
     def extract(
         self,
-        member: Optional[str] = None,
-        path: Union[str, Path] = ".",
+        member: str | None = None,
+        path: str | Path = ".",
         set_attrs: bool = True,
         numeric_owner: bool = False,
-        filter: Optional[Union[str, Callable]] = "data",
+        filter: str | Callable | None = "data",
     ):
         """
         Extract files from the archive.
@@ -233,18 +234,8 @@ class TzstArchive:
                 "Please use non-streaming mode for selective extraction, or extract all files."
             )
 
-        # Prepare extraction arguments
-        extract_kwargs = {}
-
-        # Add filter argument if supported (Python 3.12+)
-        if EXTRACTION_FILTERS_SUPPORTED:
-            extract_kwargs["filter"] = filter
-        elif filter is not None and filter != "data":
-            # Warn if user specified a filter but it's not supported
-            print(
-                "Warning: Extraction filters are not supported in this Python version. "
-                "Consider upgrading to Python 3.12+ for enhanced security features.",
-            )
+        # Prepare extraction arguments - filters are always supported in Python 3.12+
+        extract_kwargs = {"filter": filter}
 
         try:
             if member:
@@ -263,7 +254,7 @@ class TzstArchive:
             else:
                 raise
 
-    def extractfile(self, member: Union[str, tarfile.TarInfo]):
+    def extractfile(self, member: str | tarfile.TarInfo):
         """
         Extract a file-like object from the archive.
 
@@ -280,7 +271,7 @@ class TzstArchive:
 
         return self._tarfile.extractfile(member)
 
-    def getmembers(self) -> List[tarfile.TarInfo]:
+    def getmembers(self) -> list[tarfile.TarInfo]:
         """Get list of all members in the archive."""
         if not self._tarfile:
             raise RuntimeError("Archive not open")
@@ -289,7 +280,7 @@ class TzstArchive:
 
         return self._tarfile.getmembers()
 
-    def getnames(self) -> List[str]:
+    def getnames(self) -> list[str]:
         """Get list of all member names in the archive."""
         if not self._tarfile:
             raise RuntimeError("Archive not open")
@@ -298,7 +289,7 @@ class TzstArchive:
 
         return self._tarfile.getnames()
 
-    def list(self, verbose: bool = False) -> List[dict]:
+    def list(self, verbose: bool = False) -> list[dict]:
         """
         List contents of the archive.
 
@@ -379,8 +370,8 @@ class TzstArchive:
 
 
 def create_archive(
-    archive_path: Union[str, Path],
-    files: Sequence[Union[str, Path]],
+    archive_path: str | Path,
+    files: Sequence[str | Path],
     compression_level: int = 3,
     use_temp_file: bool = True,
 ) -> None:
@@ -442,7 +433,7 @@ def create_archive(
 
 def _create_archive_impl(
     archive_path: Path,
-    files: Sequence[Union[str, Path]],
+    files: Sequence[str | Path],
     compression_level: int,
 ) -> None:
     """Internal implementation for creating archives."""
@@ -477,12 +468,12 @@ def _create_archive_impl(
 
 
 def extract_archive(
-    archive_path: Union[str, Path],
-    extract_path: Union[str, Path] = ".",
-    members: Optional[List[str]] = None,
+    archive_path: str | Path,
+    extract_path: str | Path = ".",
+    members: list[str] | None = None,
     flatten: bool = False,
     streaming: bool = False,
-    filter: Optional[Union[str, Callable]] = "data",
+    filter: str | Callable | None = "data",
 ) -> None:
     """
     Extract files from a .tzst archive.
@@ -534,8 +525,8 @@ def extract_archive(
 
 
 def list_archive(
-    archive_path: Union[str, Path], verbose: bool = False, streaming: bool = False
-) -> List[dict]:
+    archive_path: str | Path, verbose: bool = False, streaming: bool = False
+) -> list[dict]:
     """
     List contents of a .tzst archive.
 
@@ -551,7 +542,7 @@ def list_archive(
         return archive.list(verbose=verbose)
 
 
-def test_archive(archive_path: Union[str, Path], streaming: bool = False) -> bool:
+def test_archive(archive_path: str | Path, streaming: bool = False) -> bool:
     """
     Test the integrity of a .tzst archive.
 

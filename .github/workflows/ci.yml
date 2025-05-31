@@ -123,7 +123,7 @@ jobs:
         run: |
           pip install requests
           python -c "
-          import requests, json
+          import requests, json, os
           try:
               data = requests.get('https://pypi.org/pypi/tzst/json').json()
               version = data['info']['version']
@@ -131,7 +131,8 @@ jobs:
           except Exception as e:
               print(f'Error fetching version: {e}')
               version = 'unknown'
-          print(f'::set-output name=version::{version}')
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
+              f.write(f'version={version}\n')
           "
 
       - name: Update README badge

@@ -109,6 +109,9 @@ tzst a archive.tzst file1.txt file2.txt
 # With compression level (1-22, default: 3)
 tzst a archive.tzst files/ -l 15
 
+# Disable atomic file operations (not recommended)
+tzst a archive.tzst files/ --no-atomic
+
 # Alternative commands
 tzst add archive.tzst files/
 tzst create archive.tzst files/
@@ -175,6 +178,7 @@ tzst t archive.tzst --streaming
 - `-l, --level LEVEL`: Set compression level 1-22 (create command)
 - `--streaming`: Enable streaming mode for memory-efficient processing of large archives
 - `--filter FILTER`: Security filter for extraction (extract commands only)
+- `--no-atomic`: Disable atomic file operations (create command only, not recommended)
 
 #### Streaming Mode
 

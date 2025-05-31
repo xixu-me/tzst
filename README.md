@@ -569,7 +569,7 @@ extract_archive(large_archive, "restore/", streaming=True)
 
 ## Requirements
 
-- Python 3.12 or higher
+- Python 3.12 or higher (including Python 3.14 pre-release)
 - zstandard >= 0.19.0
 
 ## Development

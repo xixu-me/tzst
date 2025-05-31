@@ -19,6 +19,7 @@ classifiers = [
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Topic :: System :: Archiving :: Compression",
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
@@ -53,7 +54,7 @@ python_functions = ["test_*"]
 addopts = "--cov=tzst --cov-report=term-missing --cov-report=html"
 
 [tool.ruff]
-target-version = "py312"
+target-version = "py314"
 line-length = 88
 
 [tool.ruff.lint]

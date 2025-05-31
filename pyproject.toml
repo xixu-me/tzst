@@ -59,20 +59,30 @@ python_functions = ["test_*"]
 addopts = "--cov=tzst --cov-report=term-missing --cov-report=html"
 
 [tool.ruff]
-target-version = "py312"
 line-length = 88
+target-version = "py312"
+src = ["src"]
 
 [tool.ruff.lint]
 select = [
-    "E",  # pycodestyle errors
-    "W",  # pycodestyle warnings
-    "F",  # pyflakes
-    "I",  # isort
-    "B",  # flake8-bugbear
-    "C4", # flake8-comprehensions
-    "UP", # pyupgrade
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "B",   # flake8-bugbear
+    "C90", # flake8-complexity
+    "C4",  # flake8-comprehensions
+    "UP",  # pyupgrade
+    "RUF", # ruff specific rules
 ]
+ignore = [
+    "E501", # line too long
+
+]
+fixable = ["ALL"]
 
 [tool.ruff.format]
 quote-style = "double"
 indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"

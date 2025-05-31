@@ -81,7 +81,11 @@ class TzstArchive:
         self.close()
 
     def open(self):
-        """Open the archive."""
+        """Open the archive.
+
+        See Also:
+            :meth:`close`: Method to close the archive
+        """
         try:
             if self.mode.startswith("r"):
                 # Read mode
@@ -174,6 +178,9 @@ class TzstArchive:
             name: Path to file or directory to add
             arcname: Alternative name for the file in the archive
             recursive: If True, add directories recursively
+
+        See Also:
+            :func:`create_archive`: Convenience function for creating archives
         """
         if not self._tarfile:
             raise RuntimeError("Archive not open")
@@ -218,6 +225,9 @@ class TzstArchive:
             In streaming mode, extracting specific members is not supported.
             Some extraction operations may be limited due to the sequential
             nature of streaming mode.
+
+        See Also:
+            :func:`extract_archive`: Convenience function for extracting archives
         """
         if not self._tarfile:
             raise RuntimeError("Archive not open")
@@ -298,6 +308,11 @@ class TzstArchive:
 
         Returns:
             List of file information dictionaries
+
+        See Also:
+            :meth:`getmembers`: Get TarInfo objects for all archive members
+            :meth:`getnames`: Get names of all archive members
+            :func:`list_archive`: Convenience function for listing archives
         """
         if not self._tarfile:
             raise RuntimeError("Archive not open")
@@ -343,6 +358,9 @@ class TzstArchive:
 
         Returns:
             True if archive is valid, False otherwise
+
+        See Also:
+            :func:`test_archive`: Convenience function for testing archive integrity
         """
         if not self._tarfile:
             raise RuntimeError("Archive not open")
@@ -384,6 +402,9 @@ def create_archive(
         compression_level: Zstandard compression level (1-22)
         use_temp_file: If True, create archive in temporary file first, then move
                       to final location for atomic operation
+
+    See Also:
+        :meth:`TzstArchive.add`: Method for adding files to an open archive
     """
     # Validate compression level
     if not 1 <= compression_level <= 22:
@@ -495,6 +516,9 @@ def extract_archive(
         Never extract archives from untrusted sources without proper filtering.
         The 'data' filter is recommended for most use cases as it prevents
         dangerous security issues like path traversal attacks.
+
+    See Also:
+        :meth:`TzstArchive.extract`: Method for extracting from an open archive
     """
     with TzstArchive(archive_path, "r", streaming=streaming) as archive:
         if flatten:
@@ -537,6 +561,9 @@ def list_archive(
 
     Returns:
         List of file information dictionaries
+
+    See Also:
+        :meth:`TzstArchive.list`: Method for listing an open archive
     """
     with TzstArchive(archive_path, "r", streaming=streaming) as archive:
         return archive.list(verbose=verbose)
@@ -552,6 +579,9 @@ def test_archive(archive_path: str | Path, streaming: bool = False) -> bool:
 
     Returns:
         True if archive is valid, False otherwise
+
+    See Also:
+        :meth:`TzstArchive.test`: Method for testing an open archive
     """
     try:
         # Open a fresh archive instance for testing

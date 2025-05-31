@@ -77,6 +77,7 @@ def cmd_add(args) -> int:
 
     See Also:
         :func:`tzst.create_archive`: The underlying function for archive creation
+        :meth:`TzstArchive.add`: The core method for adding files to archives
     """
     try:
         archive_path = Path(args.archive)
@@ -151,6 +152,7 @@ def cmd_extract_full(args) -> int:
 
     See Also:
         :func:`tzst.extract_archive`: The underlying function for extraction
+        :meth:`TzstArchive.extract`: The core method for extracting from archives
         :func:`cmd_extract_flat`: For flat extraction without directory structure
     """
     try:
@@ -226,6 +228,7 @@ def cmd_extract_flat(args) -> int:
 
     See Also:
         :func:`tzst.extract_archive`: The underlying function for extraction
+        :meth:`TzstArchive.extract`: The core method for extracting from archives
         :func:`cmd_extract_full`: For extraction with directory structure
     """
     try:
@@ -293,6 +296,7 @@ def cmd_list(args) -> int:
 
     See Also:
         :func:`tzst.list_archive`: The underlying function for listing contents
+        :meth:`TzstArchive.list`: The core method for listing archive contents
     """
     try:
         archive_path = Path(args.archive)
@@ -382,6 +386,7 @@ def cmd_test(args) -> int:
 
     See Also:
         :func:`tzst.test_archive`: The underlying function for integrity testing
+        :meth:`TzstArchive.test`: The core method for testing archive integrity
     """
     try:
         archive_path = Path(args.archive)

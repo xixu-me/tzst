@@ -462,24 +462,41 @@ def _create_archive_impl(
     if files:
         file_paths = [Path(f) for f in files if Path(f).exists()]
         if file_paths:
-            # Find the common parent directory
-            try:
-                common_parent = Path(os.path.commonpath([p.parent for p in file_paths]))
-            except ValueError:
-                # No common path, use parent of first file
-                common_parent = file_paths[0].parent
-
-            # Change to common parent directory to get relative paths
-            original_cwd = Path.cwd()
-            try:
-                os.chdir(common_parent)
+            # Special handling for current directory "."
+            if len(file_paths) == 1 and str(file_paths[0]) == ".":
+                # When adding current directory, add its contents without "./" prefix
                 with TzstArchive(archive_path, "w", compression_level) as archive:
-                    for file_path in file_paths:
-                        # Calculate relative path from common parent
-                        relative_path = file_path.relative_to(common_parent)
-                        archive.add(str(relative_path))
-            finally:
-                os.chdir(original_cwd)
+                    # Add all items in current directory
+                    for item in Path(".").iterdir():
+                        # Use item name as archive name to avoid "./" prefix
+                        item_name = str(item.name).replace("\\", "/")
+                        archive.add(str(item), arcname=item_name)
+            else:
+                # Find the common parent directory
+                try:
+                    common_parent = Path(
+                        os.path.commonpath([p.parent for p in file_paths])
+                    )
+                except ValueError:
+                    # No common path, use parent of first file
+                    common_parent = file_paths[0].parent
+
+                # Change to common parent directory to get relative paths
+                original_cwd = Path.cwd()
+                try:
+                    os.chdir(common_parent)
+                    with TzstArchive(archive_path, "w", compression_level) as archive:
+                        for file_path in file_paths:
+                            # Calculate relative path from common parent
+                            relative_path = file_path.relative_to(common_parent)
+                            # Normalize path separators and remove Windows prefixes
+                            path_str = str(relative_path).replace("\\", "/")
+                            if path_str.startswith("./") or path_str.startswith(".\\"):
+                                path_str = path_str[2:]
+                            # Use arcname to control the name in the archive
+                            archive.add(str(relative_path), arcname=path_str)
+                finally:
+                    os.chdir(original_cwd)
         else:
             raise FileNotFoundError("No valid files found")
     else:

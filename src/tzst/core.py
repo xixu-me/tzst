@@ -1,16 +1,5 @@
 """Core functionality for tzst archives."""
 
-# Compatibility fix for Python 3.14 - ByteString was removed from typing
-# This must be applied before importing zstandard
-import typing
-
-try:
-    from collections.abc import ByteString
-
-    typing.ByteString = ByteString
-except ImportError:
-    pass
-
 import io
 import os
 import tarfile

@@ -35,7 +35,7 @@ def cmd_add(args) -> int:
         missing_files = [f for f in files if not f.exists()]
         if missing_files:
             print(
-                f"Error: Files not found: {', '.join(map(str, missing_files))}",
+                f"Error: Files not found - {', '.join(map(str, missing_files))}",
                 file=sys.stderr,
             )
             return 1
@@ -52,7 +52,7 @@ def cmd_add(args) -> int:
         create_archive(
             archive_path, files, compression_level, use_temp_file=use_temp_file
         )
-        print(f"Archive created successfully: {archive_path}")
+        print(f"Archive created successfully - {archive_path}")
         return 0
 
     except FileNotFoundError as e:
@@ -69,7 +69,7 @@ def cmd_add(args) -> int:
         # Clean up any partial files - the atomic operations in create_archive handle this
         return 130  # Standard exit code for SIGINT
     except Exception as e:
-        print(f"Error creating archive: {e}", file=sys.stderr)
+        print(f"Error: Failed to create archive - {e}", file=sys.stderr)
         return 1
 
 
@@ -78,7 +78,7 @@ def cmd_extract_full(args) -> int:
     try:
         archive_path = Path(args.archive)
         if not archive_path.exists():
-            print(f"Error: Archive not found: {archive_path}", file=sys.stderr)
+            print(f"Error: Archive not found - {archive_path}", file=sys.stderr)
             return 1
 
         output_dir = Path(args.output) if args.output else Path.cwd()
@@ -117,7 +117,7 @@ def cmd_extract_full(args) -> int:
         print("\nOperation interrupted by user", file=sys.stderr)
         return 130
     except Exception as e:
-        print(f"Error extracting archive: {e}", file=sys.stderr)
+        print(f"Error: Failed to extract archive - {e}", file=sys.stderr)
         return 1
 
 
@@ -126,7 +126,7 @@ def cmd_extract_flat(args) -> int:
     try:
         archive_path = Path(args.archive)
         if not archive_path.exists():
-            print(f"Error: Archive not found: {archive_path}", file=sys.stderr)
+            print(f"Error: Archive not found - {archive_path}", file=sys.stderr)
             return 1
 
         output_dir = Path(args.output) if args.output else Path.cwd()
@@ -160,7 +160,7 @@ def cmd_extract_flat(args) -> int:
         print(f"Error: Archive operation failed - {e}", file=sys.stderr)
         return 1
     except Exception as e:
-        print(f"Error extracting archive: {e}", file=sys.stderr)
+        print(f"Error: Failed to extract archive - {e}", file=sys.stderr)
         return 1
 
 
@@ -169,7 +169,7 @@ def cmd_list(args) -> int:
     try:
         archive_path = Path(args.archive)
         if not archive_path.exists():
-            print(f"Error: Archive not found: {archive_path}", file=sys.stderr)
+            print(f"Error: Archive not found - {archive_path}", file=sys.stderr)
             return 1
 
         verbose = getattr(args, "verbose", False)
@@ -224,7 +224,7 @@ def cmd_list(args) -> int:
         print(f"Error: Archive operation failed - {e}", file=sys.stderr)
         return 1
     except Exception as e:
-        print(f"Error listing archive: {e}", file=sys.stderr)
+        print(f"Error: Failed to list archive - {e}", file=sys.stderr)
         return 1
 
 
@@ -233,7 +233,7 @@ def cmd_test(args) -> int:
     try:
         archive_path = Path(args.archive)
         if not archive_path.exists():
-            print(f"Error: Archive not found: {archive_path}", file=sys.stderr)
+            print(f"Error: Archive not found - {archive_path}", file=sys.stderr)
             return 1
 
         streaming = getattr(args, "streaming", False)
@@ -259,7 +259,7 @@ def cmd_test(args) -> int:
         print(f"Error: Archive operation failed - {e}", file=sys.stderr)
         return 1
     except Exception as e:
-        print(f"Error testing archive: {e}", file=sys.stderr)
+        print(f"Error: Failed to test archive - {e}", file=sys.stderr)
         return 1
 
 

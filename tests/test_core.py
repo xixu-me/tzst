@@ -128,7 +128,9 @@ class TestTzstArchive:
 
         # Results should be identical
         assert len(buffered_contents) == len(streaming_contents)
-        for buffered, streaming in zip(buffered_contents, streaming_contents):
+        for buffered, streaming in zip(
+            buffered_contents, streaming_contents, strict=True
+        ):
             assert buffered["name"] == streaming["name"]
             assert buffered["size"] == streaming["size"]
 
@@ -403,7 +405,9 @@ class TestStreamingMode:
 
         # Results should be identical
         assert len(buffered_contents) == len(streaming_contents)
-        for buffered, streaming in zip(buffered_contents, streaming_contents):
+        for buffered, streaming in zip(
+            buffered_contents, streaming_contents, strict=True
+        ):
             assert buffered["name"] == streaming["name"]
             assert buffered["size"] == streaming["size"]
 

@@ -59,7 +59,7 @@ class TestCLICommands:
         file_paths = [str(f) for f in sample_files if f.is_file()]
 
         # Run add command
-        result = main(["a", str(archive_path)] + file_paths)
+        result = main(["a", str(archive_path), *file_paths])
 
         assert result == 0
         assert archive_path.exists()
@@ -70,7 +70,7 @@ class TestCLICommands:
         file_paths = [str(f) for f in sample_files if f.is_file()]
 
         # Create archive first
-        main(["a", str(archive_path)] + file_paths)
+        main(["a", str(archive_path), *file_paths])
 
         # Run list command
         result = main(["l", str(archive_path)])
@@ -84,7 +84,7 @@ class TestCLICommands:
         extract_dir = temp_dir / "extracted"
 
         # Create archive first
-        main(["a", str(archive_path)] + file_paths)
+        main(["a", str(archive_path), *file_paths])
 
         # Run extract command
         result = main(["x", str(archive_path), "-o", str(extract_dir)])
@@ -98,7 +98,7 @@ class TestCLICommands:
         file_paths = [str(f) for f in sample_files if f.is_file()]
 
         # Create archive first
-        main(["a", str(archive_path)] + file_paths)
+        main(["a", str(archive_path), *file_paths])
 
         # Run test command
         result = main(["t", str(archive_path)])
@@ -137,9 +137,10 @@ class TestCLIErrorHandling:
 
         # Create a mock args object
         class MockArgs:
-            archive = str(temp_dir / "interrupt_test.tzst")
-            files = ["non_existent_file.txt"]
-            compression_level = 3
+            def __init__(self):
+                self.archive = str(temp_dir / "interrupt_test.tzst")
+                self.files = ["non_existent_file.txt"]
+                self.compression_level = 3
 
         # Test that the function handles FileNotFoundError properly
         result = cmd_add(MockArgs())
@@ -155,12 +156,12 @@ class TestCLIAliases:
         file_paths = [str(f) for f in sample_files if f.is_file()]
 
         # Test 'add' alias
-        result = main(["add", str(archive_path)] + file_paths)
+        result = main(["add", str(archive_path), *file_paths])
         assert result == 0
 
         # Test 'create' alias
         archive_path2 = temp_dir / "test2.tzst"
-        result = main(["create", str(archive_path2)] + file_paths)
+        result = main(["create", str(archive_path2), *file_paths])
         assert result == 0
 
     def test_extract_aliases(self, sample_files, temp_dir):
@@ -170,7 +171,7 @@ class TestCLIAliases:
         extract_dir = temp_dir / "extracted"
 
         # Create archive first
-        main(["a", str(archive_path)] + file_paths)
+        main(["a", str(archive_path), *file_paths])
 
         # Test 'extract' alias
         result = main(["extract", str(archive_path), "-o", str(extract_dir)])
@@ -182,7 +183,7 @@ class TestCLIAliases:
         file_paths = [str(f) for f in sample_files if f.is_file()]
 
         # Create archive first
-        main(["a", str(archive_path)] + file_paths)
+        main(["a", str(archive_path), *file_paths])
 
         # Test 'list' alias
         result = main(["list", str(archive_path)])
@@ -200,7 +201,7 @@ class TestCLIIntegration:
         extract_dir = temp_dir / "workflow_extracted"
 
         # Create archive
-        result = main(["a", str(archive_path)] + file_paths)
+        result = main(["a", str(archive_path), *file_paths])
         assert result == 0
         assert archive_path.exists()
 

@@ -10,7 +10,7 @@ body:
         Welcome! We're happy to help you with tzst. Please provide as much detail as possible so we can give you the best assistance.
 
         **Note:** For general questions, you might also consider:
-        - Checking the [README.md](../README.md) for common usage patterns
+        - Checking the [README.md](../../README.md) for common usage patterns
         - Looking at existing issues for similar questions
         - Reviewing the Python API documentation in the code
 

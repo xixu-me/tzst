@@ -142,7 +142,7 @@ jobs:
           git config --local user.name "GitHub Action"
 
       - name: Commit and push changes
-        uses: stefanzweifel/git-auto-commit-action@v4
+        uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "Update badges [skip ci]"
           file_pattern: README.md

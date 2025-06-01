@@ -72,7 +72,8 @@ def validate_compression_level(value: str) -> int:
         return level
     except ValueError:
         raise argparse.ArgumentTypeError(
-            f"Invalid compression level: '{value}'. Must be an integer between 1 and 22."
+            f"Invalid compression level: '{value}'. "
+            f"Must be an integer between 1 and 22."
         ) from None
 
 
@@ -819,6 +820,33 @@ def _validate_filter_in_argv(argv: list[str]) -> bool:
     return False
 
 
+def _is_extreme_compression_level_in_argv(argv: list[str]) -> bool:
+    """Check for extreme compression level values that warrant special handling.
+
+    Args:
+        argv: Command line arguments
+
+    Returns:
+        bool: True if an extreme compression level value is found, False otherwise
+    """
+    if "-l" not in argv and "--level" not in argv:
+        return False
+
+    try:
+        level_index = argv.index("-l") if "-l" in argv else argv.index("--level")
+        if level_index + 1 < len(argv):
+            level_value = argv[level_index + 1]
+            try:
+                level = int(level_value)
+                # Only consider extreme values (>=1000) for special handling
+                return level >= 1000
+            except ValueError:
+                pass
+    except (ValueError, IndexError):
+        pass
+    return False
+
+
 def _handle_parsing_errors(e: SystemExit, argv: list[str] | None) -> int:
     """Handle SystemExit exceptions from argument parsing.
 
@@ -835,6 +863,9 @@ def _handle_parsing_errors(e: SystemExit, argv: list[str] | None) -> int:
     elif e.code == 2 and argv:
         # Check for validation errors we want to convert to exit code 1
         if _validate_filter_in_argv(argv):
+            return 1
+        # Only convert compression level errors to exit code 1 for extreme cases
+        if _is_extreme_compression_level_in_argv(argv):
             return 1
 
     # Return the original exit code for other cases

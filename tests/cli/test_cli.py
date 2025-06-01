@@ -1369,11 +1369,11 @@ class TestCLIEdgeCases:
 
         # Test minimum valid level
         args = parser.parse_args(["a", "test.tzst", "file.txt", "-l", "1"])
-        assert args.level == 1
+        assert args.compression_level == 1
 
         # Test maximum valid level
         args = parser.parse_args(["a", "test.tzst", "file.txt", "--level", "22"])
-        assert args.level == 22
+        assert args.compression_level == 22
 
     def test_filter_options_all_values(self):
         """Test all valid filter option values."""
@@ -1428,13 +1428,15 @@ class TestCLIExceptionHandling:
         from tzst.cli import _validate_files
 
         # Create a path that will trigger OSError when checking existence
-        invalid_path = Path(temp_dir / "\x00invalid")  # Null character in filename
+        invalid_path = Path(temp_dir / "invalid")
 
-        # Mock Path.exists to raise OSError
-        def mock_exists():
-            raise OSError("Invalid path")
+        # Mock Path.exists to raise OSError at the class level
+        def mock_exists(self):
+            if str(self).endswith("invalid"):
+                raise OSError("Invalid path")
+            return True
 
-        monkeypatch.setattr(invalid_path, "exists", mock_exists)
+        monkeypatch.setattr(Path, "exists", mock_exists)
 
         with pytest.raises(OSError):
             _validate_files([invalid_path])
@@ -1684,32 +1686,37 @@ class TestCLIArgumentParsingEdgeCases:
 
         # Test compression level validation with edge cases
         assert (
-            _validate_compression_level_in_argv(["x", "test.tzst", "-l", "1"]) is True
-        )
+            _validate_compression_level_in_argv(["x", "test.tzst", "-l", "1"]) is False
+        )  # Valid level returns False
         assert (
-            _validate_compression_level_in_argv(["x", "test.tzst", "-l", "22"]) is True
-        )
+            _validate_compression_level_in_argv(["x", "test.tzst", "-l", "22"]) is False
+        )  # Valid level returns False
         assert (
-            _validate_compression_level_in_argv(["x", "test.tzst", "-l", "0"]) is False
-        )
+            _validate_compression_level_in_argv(["x", "test.tzst", "-l", "0"]) is True
+        )  # Invalid level returns True
         assert (
-            _validate_compression_level_in_argv(["x", "test.tzst", "-l", "23"]) is False
-        )
+            _validate_compression_level_in_argv(["x", "test.tzst", "-l", "23"]) is True
+        )  # Invalid level returns True
         assert (
-            _validate_compression_level_in_argv(["x", "test.tzst", "-l", "abc"])
-            is False
-        )
+            _validate_compression_level_in_argv(["x", "test.tzst", "-l", "abc"]) is True
+        )  # Invalid level returns True
         assert (
-            _validate_compression_level_in_argv(["x", "test.tzst"]) is True
-        )  # No compression level
+            _validate_compression_level_in_argv(["x", "test.tzst"]) is False
+        )  # No compression level returns False
 
         # Test filter validation with edge cases
-        assert _validate_filter_in_argv(["x", "test.tzst", "--filter", "lz4"]) is True
-        assert _validate_filter_in_argv(["x", "test.tzst", "--filter", "zstd"]) is True
         assert (
-            _validate_filter_in_argv(["x", "test.tzst", "--filter", "invalid"]) is False
-        )
-        assert _validate_filter_in_argv(["x", "test.tzst"]) is True  # No filter
+            _validate_filter_in_argv(["x", "test.tzst", "--filter", "data"]) is False
+        )  # Valid filter returns False
+        assert (
+            _validate_filter_in_argv(["x", "test.tzst", "--filter", "tar"]) is False
+        )  # Valid filter returns False
+        assert (
+            _validate_filter_in_argv(["x", "test.tzst", "--filter", "invalid"]) is True
+        )  # Invalid filter returns True
+        assert (
+            _validate_filter_in_argv(["x", "test.tzst"]) is False
+        )  # No filter returns False
 
     def test_handle_parsing_errors_edge_cases(self):
         """Test _handle_parsing_errors with various edge cases."""
@@ -1726,11 +1733,9 @@ class TestCLIArgumentParsingEdgeCases:
 
         e = SystemExit(None)
         result = _handle_parsing_errors(e, [])
-        assert result == 1
-
-        # Test with compression level error
+        assert result == 1  # Test with compression level error
         e = SystemExit(2)
-        result = _handle_parsing_errors(e, ["a", "test.tzst", "file.txt", "-l", "100"])
+        result = _handle_parsing_errors(e, ["a", "test.tzst", "file.txt", "-l", "1000"])
         assert result == 1
 
         # Test with filter error

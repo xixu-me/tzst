@@ -921,7 +921,7 @@ class TestCLISecurityFilterParsing:
         file_paths = [str(f) for f in sample_files if f.is_file()][:1]
 
         # Create archive first
-        result = main(["a", str(archive_path)] + file_paths)
+        result = main(["a", str(archive_path), *file_paths])
         assert result == 0
 
         # Test extraction with different filters

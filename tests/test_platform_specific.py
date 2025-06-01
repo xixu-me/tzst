@@ -119,7 +119,7 @@ class TestWindowsSpecificFeatures:
 
         if files_created:
             archive_path = temp_dir / "reserved_names.tzst"
-            result = main(["a", str(archive_path)] + files_created)
+            result = main(["a", str(archive_path), *files_created])
             # Should either succeed or fail gracefully
             assert result in [0, 1]
 
@@ -170,7 +170,7 @@ class TestUnicodeAndInternational:
 
         if files_created:
             archive_path = temp_dir / "unicode_content.tzst"
-            result = main(["a", str(archive_path)] + files_created)
+            result = main(["a", str(archive_path), *files_created])
             assert result == 0
 
             # Extract and verify content preservation
@@ -206,10 +206,9 @@ class TestUnicodeAndInternational:
 
         if files_created:
             archive_path = temp_dir / "unicode_filenames.tzst"
-            result = main(["a", str(archive_path)] + files_created)
+            result = main(["a", str(archive_path), *files_created])
 
             # On Windows PowerShell, this might fail due to encoding issues
-            # On Linux/Unix, this should succeed
             if sys.platform == "win32":
                 assert result in [0, 1]  # May fail on Windows
             else:
@@ -220,8 +219,7 @@ class TestPerformanceAndScalability:
     """Test performance-related scenarios and scalability."""
 
     def test_many_small_files_archive(self, temp_dir):
-        """Test archiving many small files efficiently."""
-        # Create 100 small files
+        """Test archiving many small files efficiently."""  # Create 100 small files
         files = []
         for i in range(100):
             small_file = temp_dir / f"small_{i:03d}.txt"
@@ -229,7 +227,7 @@ class TestPerformanceAndScalability:
             files.append(str(small_file))
 
         archive_path = temp_dir / "many_small.tzst"
-        result = main(["a", str(archive_path)] + files)
+        result = main(["a", str(archive_path), *files])
         assert result == 0
 
         # Verify archive integrity

@@ -336,9 +336,7 @@ class TestCLICompressionLevels:
             archive_path = temp_dir / f"level_{level}.tzst"
             result = main(["a", str(archive_path), *file_paths, "-l", str(level)])
             assert result == 0
-            assert archive_path.exists()
-
-    def test_invalid_compression_levels(self, sample_files, temp_dir):
+            assert archive_path.exists()    def test_invalid_compression_levels(self, sample_files, temp_dir):
         """Test invalid compression levels return proper error codes."""
         file_paths = [str(f) for f in sample_files if f.is_file()]
         archive_path = temp_dir / "invalid.tzst"
@@ -348,7 +346,7 @@ class TestCLICompressionLevels:
             result = main(
                 ["a", str(archive_path), *file_paths, "-l", str(invalid_level)]
             )
-            assert result == 1  # Should fail with error code 1
+            assert result == 2  # Should fail with error code 2
 
     def test_compression_level_boundary_values(self, sample_files, temp_dir):
         """Test boundary compression level values."""
@@ -699,8 +697,8 @@ class TestCLIEdgeCases:
         # Test extreme high compression (should be clamped to 22)
         archive_path = temp_dir / "extreme.tzst"
         result = main(["a", str(archive_path), *file_paths, "-l", "50"])
-        # Should succeed (clamped to valid range) or fail with error
-        assert result in [0, 1]
+        # Should fail with validation error code 2
+        assert result == 2
 
 
 class TestCLIPerformance:
@@ -1077,11 +1075,10 @@ class TestCompressionLevelValidation:
 
         for value in invalid_values:
             result = main(["a", str(archive_path), str(test_file), "-l", value])
-            assert result == 2, (
-                f"Non-numeric compression level '{value}' should return exit code 2"
+            assert result == 2, (                f"Non-numeric compression level '{value}' should return exit code 2"
             )
 
-    def test_compression_level_clamping(self, temp_dir):
+    def test_compression_level_extremes(self, temp_dir):
         """Test compression level validation with extreme values."""
         test_file = temp_dir / "test.txt"
         test_file.write_text("Test content")
@@ -1091,7 +1088,7 @@ class TestCompressionLevelValidation:
         result = main(["a", str(archive_path), str(test_file), "-l", "50"])
         assert result == 2, "Compression level 50 should return exit code 2"
 
-    def test_extreme_compression_levels(self, temp_dir):
+    def test_compression_level_boundary_validation(self, temp_dir):
         """Test extreme compression level values."""
         test_file = temp_dir / "test.txt"
         test_file.write_text("Test content")

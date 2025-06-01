@@ -621,6 +621,11 @@ Documentation:
         epilog=epilog,
         formatter_class=argparse.RawDescriptionHelpFormatter,
         add_help=True,
+    )  # Add version argument
+    parser.add_argument(
+        "--version",
+        action="version",
+        version=f"tzst {__version__} : Copyright (c) 2025 Xi Xu",
     )
 
     # Add global arguments
@@ -820,8 +825,6 @@ def _handle_parsing_errors(e: SystemExit, argv: list[str] | None) -> int:
         return 0
     elif e.code == 2 and argv:
         # Check for validation errors we want to convert to exit code 1
-        if _validate_compression_level_in_argv(argv):
-            return 1
         if _validate_filter_in_argv(argv):
             return 1
 

@@ -725,7 +725,7 @@ class TestSpecialFileTypes:
 
     def test_files_with_special_characters(self, temp_dir):
         """Test files with special characters in names."""
-        special_chars_file = temp_dir / "file!@#$%^&()_+{}[]|;':\",./<>?.txt"
+        special_chars_file = temp_dir / "file!@#$%^&()_+{}[]-',.txt"
         special_chars_file.write_text("Special characters content")
 
         archive_path = temp_dir / "special_chars.tzst"

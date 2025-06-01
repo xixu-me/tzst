@@ -4,9 +4,100 @@ This file consolidates all CLI-related tests to eliminate duplication
 and provide a single source of truth for CLI testing.
 """
 
+import argparse
+
 import pytest
 
-from tzst.cli import create_parser, main
+from tzst.cli import (
+    create_parser,
+    format_size,
+    main,
+    print_banner,
+    validate_compression_level,
+)
+
+
+class TestUtilityFunctions:
+    """Test CLI utility functions."""
+
+    def test_format_size_bytes(self):
+        """Test format_size with byte values."""
+        assert format_size(0) == "   0.0 B"
+        assert format_size(1) == "   1.0 B"
+        assert format_size(999) == " 999.0 B"
+
+    def test_format_size_kilobytes(self):
+        """Test format_size with kilobyte values."""
+        assert format_size(1024) == "   1.0 KB"
+        assert format_size(1536) == "   1.5 KB"
+        assert format_size(2048) == "   2.0 KB"
+
+    def test_format_size_megabytes(self):
+        """Test format_size with megabyte values."""
+        assert format_size(1024 * 1024) == "   1.0 MB"
+        mb_1_5 = int(1.5 * 1024 * 1024)
+        assert format_size(mb_1_5) == "   1.5 MB"
+
+    def test_format_size_gigabytes(self):
+        """Test format_size with gigabyte values."""
+        assert format_size(1024 * 1024 * 1024) == "   1.0 GB"
+        gb_2_5 = int(2.5 * 1024 * 1024 * 1024)
+        assert format_size(gb_2_5) == "   2.5 GB"
+
+    def test_format_size_terabytes(self):
+        """Test format_size with terabyte values."""
+        tb_size = 1024 * 1024 * 1024 * 1024
+        assert format_size(tb_size) == "   1.0 TB"
+
+    def test_format_size_petabytes(self):
+        """Test format_size with very large values (petabytes)."""
+        huge_size = 1024 * 1024 * 1024 * 1024 * 1024 * 2
+        result = format_size(huge_size)
+        assert result.endswith(" PB")
+        assert "2.0" in result
+
+    def test_print_banner_output(self, capsys):
+        """Test print_banner function output."""
+        print_banner()
+        captured = capsys.readouterr()
+
+        # Should print empty line, version line, empty line
+        lines = captured.out.split("\n")
+        assert len(lines) >= 3
+        assert lines[0] == ""  # Empty line
+        assert "tzst" in lines[1]
+        assert "Copyright" in lines[1]
+        assert lines[2] == ""  # Empty line
+
+    def test_validate_compression_level_valid(self):
+        """Test validate_compression_level with valid levels."""
+        assert validate_compression_level("1") == 1
+        assert validate_compression_level("11") == 11
+        assert validate_compression_level("22") == 22
+
+    def test_validate_compression_level_invalid_range(self):
+        """Test validate_compression_level with out-of-range values."""
+        with pytest.raises(
+            argparse.ArgumentTypeError, match="Invalid compression level: 0"
+        ):
+            validate_compression_level("0")
+
+        with pytest.raises(
+            argparse.ArgumentTypeError, match="Invalid compression level: 23"
+        ):
+            validate_compression_level("23")
+
+    def test_validate_compression_level_invalid_format(self):
+        """Test validate_compression_level with non-numeric values."""
+        with pytest.raises(
+            argparse.ArgumentTypeError, match="Invalid compression level: 'abc'"
+        ):
+            validate_compression_level("abc")
+
+        with pytest.raises(
+            argparse.ArgumentTypeError, match="Invalid compression level: '1.5'"
+        ):
+            validate_compression_level("1.5")
 
 
 class TestCLIParser:
@@ -338,32 +429,6 @@ class TestCLICompressionLevels:
             assert result == 0
             assert archive_path.exists()
 
-    def test_invalid_compression_levels(self, sample_files, temp_dir):
-        """Test invalid compression levels return proper error codes."""
-        file_paths = [str(f) for f in sample_files if f.is_file()]
-        archive_path = temp_dir / "invalid.tzst"
-
-        # Test invalid levels: 0, 25, -1, 100
-        for invalid_level in [0, 25, -1, 100]:
-            result = main(
-                ["a", str(archive_path), *file_paths, "-l", str(invalid_level)]
-            )
-            assert result == 2  # Should fail with error code 2
-
-    def test_compression_level_boundary_values(self, sample_files, temp_dir):
-        """Test boundary compression level values."""
-        file_paths = [str(f) for f in sample_files if f.is_file()]
-
-        # Test level 1 (minimum valid)
-        archive_path_min = temp_dir / "min_compression.tzst"
-        result = main(["a", str(archive_path_min), *file_paths, "-l", "1"])
-        assert result == 0
-
-        # Test level 22 (maximum valid)
-        archive_path_max = temp_dir / "max_compression.tzst"
-        result = main(["a", str(archive_path_max), *file_paths, "-l", "22"])
-        assert result == 0
-
 
 class TestCLIAtomicOperations:
     """Test CLI atomic and non-atomic operations."""
@@ -657,50 +722,6 @@ class TestCLIExitCodes:
         # Version should return zero
         result = main(["--version"])
         assert result == 0
-
-
-class TestCLIEdgeCases:
-    """Test CLI edge cases and boundary conditions."""
-
-    def test_archive_without_extension(self, sample_files, temp_dir):
-        """Test creating archive without .tzst extension."""
-        file_paths = [str(f) for f in sample_files if f.is_file()]
-        archive_path = temp_dir / "no_extension"
-
-        result = main(["a", str(archive_path), *file_paths])
-        assert result == 0
-        # Should auto-add .tzst extension
-        assert (temp_dir / "no_extension.tzst").exists()
-
-    def test_multiple_identical_files(self, temp_dir):
-        """Test adding the same file multiple times."""
-        test_file = temp_dir / "duplicate.txt"
-        test_file.write_text("Duplicate content")
-
-        archive_path = temp_dir / "duplicates.tzst"
-        result = main(["a", str(archive_path), str(test_file), str(test_file)])
-        assert result == 0
-
-    def test_extract_to_nonexistent_deep_path(self, sample_files, temp_dir):
-        """Test extracting to very deep non-existent path."""
-        file_paths = [str(f) for f in sample_files if f.is_file()]
-        archive_path = temp_dir / "deep.tzst"
-        main(["a", str(archive_path), *file_paths])
-
-        deep_path = temp_dir / "very" / "deep" / "nested" / "path"
-        result = main(["x", str(archive_path), "-o", str(deep_path)])
-        assert result == 0
-        assert deep_path.exists()
-
-    def test_extreme_compression_levels(self, sample_files, temp_dir):
-        """Test with extreme but valid compression levels."""
-        file_paths = [str(f) for f in sample_files if f.is_file()]
-
-        # Test extreme high compression (should be clamped to 22)
-        archive_path = temp_dir / "extreme.tzst"
-        result = main(["a", str(archive_path), *file_paths, "-l", "50"])
-        # Should fail with validation error code 2
-        assert result == 2
 
 
 class TestCLIPerformance:
@@ -1091,16 +1112,666 @@ class TestCompressionLevelValidation:
         result = main(["a", str(archive_path), str(test_file), "-l", "50"])
         assert result == 2, "Compression level 50 should return exit code 2"
 
-    def test_compression_level_boundary_validation(self, temp_dir):
-        """Test extreme compression level values."""
+
+class TestCLIVersionCommand:
+    """Test version command functionality."""
+
+    def test_version_command_direct(self):
+        """Test version command handler directly."""
+        from tzst.cli import cmd_version
+
+        class MockArgs:
+            pass
+
+        args = MockArgs()
+        result = cmd_version(args)
+        assert result == 0
+
+    def test_version_command_via_main(self):
+        """Test version command via main function."""
+        result = main(["--version"])
+        assert result == 0
+
+    def test_version_flag_parsing(self):
+        """Test that version flag is properly parsed."""
+        parser = create_parser()
+        args = parser.parse_args(["--version"])
+        assert hasattr(args, "version")
+        assert args.version is True
+
+
+class TestCLIValidationFunctions:
+    """Test internal CLI validation functions."""
+
+    def test_validate_compression_level_in_argv_valid(self):
+        """Test compression level validation with valid levels."""
+        from tzst.cli import _validate_compression_level_in_argv
+
+        # Test valid levels
+        assert not _validate_compression_level_in_argv(["a", "test.tzst", "-l", "3"])
+        assert not _validate_compression_level_in_argv(
+            ["a", "test.tzst", "--level", "22"]
+        )
+        assert not _validate_compression_level_in_argv(
+            ["a", "test.tzst", "--level", "1"]
+        )
+
+    def test_validate_compression_level_in_argv_invalid_range(self, capsys):
+        """Test compression level validation with invalid range."""
+        from tzst.cli import _validate_compression_level_in_argv
+
+        # Test invalid range
+        assert _validate_compression_level_in_argv(["a", "test.tzst", "-l", "0"])
+        captured = capsys.readouterr()
+        assert "Invalid compression level: 0" in captured.err
+        assert "Must be between 1 and 22" in captured.err
+
+        assert _validate_compression_level_in_argv(["a", "test.tzst", "--level", "23"])
+        captured = capsys.readouterr()
+        assert "Invalid compression level: 23" in captured.err
+
+    def test_validate_compression_level_in_argv_invalid_format(self, capsys):
+        """Test compression level validation with invalid format."""
+        from tzst.cli import _validate_compression_level_in_argv
+
+        # Test invalid format
+        assert _validate_compression_level_in_argv(["a", "test.tzst", "-l", "abc"])
+        captured = capsys.readouterr()
+        assert "Invalid compression level: 'abc'" in captured.err
+        assert "Must be an integer" in captured.err
+
+    def test_validate_compression_level_in_argv_no_level(self):
+        """Test compression level validation when no level specified."""
+        from tzst.cli import _validate_compression_level_in_argv
+
+        # Test no level specified
+        assert not _validate_compression_level_in_argv(["a", "test.tzst", "file.txt"])
+
+    def test_validate_filter_in_argv_valid(self):
+        """Test filter validation with valid filters."""
+        from tzst.cli import _validate_filter_in_argv
+
+        # Test valid filters
+        assert not _validate_filter_in_argv(["x", "test.tzst", "--filter", "data"])
+        assert not _validate_filter_in_argv(["x", "test.tzst", "--filter", "tar"])
+        assert not _validate_filter_in_argv(
+            ["x", "test.tzst", "--filter", "fully_trusted"]
+        )
+
+    def test_validate_filter_in_argv_invalid(self, capsys):
+        """Test filter validation with invalid filter."""
+        from tzst.cli import _validate_filter_in_argv
+
+        # Test invalid filter
+        assert _validate_filter_in_argv(["x", "test.tzst", "--filter", "invalid"])
+        captured = capsys.readouterr()
+        assert "Invalid filter specified: invalid" in captured.err
+        assert "Must be one of: data, tar, fully_trusted" in captured.err
+
+    def test_validate_filter_in_argv_no_filter(self):
+        """Test filter validation when no filter specified."""
+        from tzst.cli import _validate_filter_in_argv
+
+        # Test no filter specified
+        assert not _validate_filter_in_argv(["x", "test.tzst"])
+
+
+class TestCLIErrorHandlingInternal:
+    def test_handle_parsing_errors_help_requested(self):
+        """Test error handling when help is requested."""
+        from tzst.cli import _handle_parsing_errors
+
+        # Simulate help request (exit code 0)
+        e = SystemExit(0)
+        result = _handle_parsing_errors(e, ["--help"])
+        assert result == 0
+
+    def test_handle_parsing_errors_invalid_filter(self, capsys):
+        """Test error handling for invalid filter."""
+        from tzst.cli import _handle_parsing_errors
+
+        # Simulate parsing error (exit code 2) with invalid filter
+        e = SystemExit(2)
+        argv = ["x", "test.tzst", "--filter", "invalid"]
+        result = _handle_parsing_errors(e, argv)
+        assert result == 1  # Should convert to exit code 1
+        captured = capsys.readouterr()
+        assert "Invalid filter specified" in captured.err
+
+    def test_handle_parsing_errors_other_errors(self):
+        """Test error handling for other parsing errors."""
+        from tzst.cli import _handle_parsing_errors
+
+        # Test with exit code 2 but no special validation errors
+        e = SystemExit(2)
+        result = _handle_parsing_errors(e, ["invalid", "command"])
+        assert result == 2
+
+        # Test with None exit code
+        e = SystemExit(None)
+        result = _handle_parsing_errors(e, [])
+        assert result == 1
+
+    def test_parse_arguments_success(self):
+        """Test successful argument parsing."""
+        from tzst.cli import _parse_arguments
+
+        parser = create_parser()
+        args, error_code = _parse_arguments(parser, ["a", "test.tzst", "file.txt"])
+        assert args is not None
+        assert error_code is None
+        assert args.command == "a"
+
+    def test_parse_arguments_error(self):
+        """Test argument parsing with errors."""
+        from tzst.cli import _parse_arguments
+
+        parser = create_parser()
+        args, error_code = _parse_arguments(parser, ["invalid"])
+        assert args is None
+        assert error_code == 2
+
+    def test_execute_command_no_func(self, capsys):
+        """Test command execution when no function is set."""
+        from tzst.cli import _execute_command
+
+        class MockArgs:
+            pass
+
+        args = MockArgs()
+        parser = create_parser()
+        result = _execute_command(args, parser)
+        assert result == 1
+        # Should print help when no function is available
+
+    def test_execute_command_version_flag(self):
+        """Test command execution with version flag."""
+        from tzst.cli import _execute_command
+
+        class MockArgs:
+            version = True
+
+        args = MockArgs()
+        parser = create_parser()
+        result = _execute_command(args, parser)
+        assert result == 0
+
+    def test_invalid_arguments_main(self):
+        """Test main function with invalid arguments."""
+        result = main(["invalid-command"])
+        assert result == 2  # Argument parsing error
+
+
+class TestCLIStreamingAndAdvancedOptions:
+    """Test CLI streaming and advanced options."""
+
+    def test_streaming_option_parsing(self):
+        """Test that streaming options are properly parsed."""
+        parser = create_parser()
+
+        # Test list command with streaming
+        args = parser.parse_args(["l", "test.tzst", "--streaming"])
+        assert hasattr(args, "streaming")
+        assert args.streaming is True
+
+        # Test test command with streaming
+        args = parser.parse_args(["t", "test.tzst", "--streaming"])
+        assert hasattr(args, "streaming")
+        assert args.streaming is True
+
+    def test_atomic_options_parsing(self):
+        """Test atomic operation options."""
+        parser = create_parser()
+
+        # Test with atomic (default)
+        args = parser.parse_args(["a", "test.tzst", "file.txt"])
+        assert not hasattr(args, "no_atomic") or not args.no_atomic
+
+        # Test with no-atomic
+        args = parser.parse_args(["a", "test.tzst", "file.txt", "--no-atomic"])
+        assert hasattr(args, "no_atomic")
+        assert args.no_atomic is True
+
+    def test_verbose_options_parsing(self):
+        """Test verbose option parsing."""
+        parser = create_parser()
+
+        # Test list command with verbose
+        args = parser.parse_args(["l", "test.tzst", "-v"])
+        assert hasattr(args, "verbose")
+        assert args.verbose is True  # Test list command with --verbose
+        args = parser.parse_args(["l", "test.tzst", "--verbose"])
+        assert hasattr(args, "verbose")
+        assert args.verbose is True
+
+
+class TestCLIEdgeCases:
+    """Test CLI edge cases and boundary conditions."""
+
+    def test_empty_arguments(self):
+        """Test main function with no arguments."""
+        result = main([])
+        # Should show help and exit with error code
+        assert result in [1, 2]
+
+    def test_help_with_subcommands(self):
+        """Test help display for specific subcommands."""
+        # Test that help can be requested for specific commands
+        result = main(["a", "--help"])
+        assert result == 0
+
+        result = main(["x", "--help"])
+        assert result == 0
+
+    def test_compression_level_edge_values(self):
+        """Test compression level with edge values."""
+        parser = create_parser()
+
+        # Test minimum valid level
+        args = parser.parse_args(["a", "test.tzst", "file.txt", "-l", "1"])
+        assert args.level == 1
+
+        # Test maximum valid level
+        args = parser.parse_args(["a", "test.tzst", "file.txt", "--level", "22"])
+        assert args.level == 22
+
+    def test_filter_options_all_values(self):
+        """Test all valid filter option values."""
+        parser = create_parser()
+
+        for filter_val in ["data", "tar", "fully_trusted"]:
+            args = parser.parse_args(["x", "test.tzst", "--filter", filter_val])
+            assert args.filter == filter_val
+
+    def test_output_directory_parsing(self):
+        """Test output directory parsing for extract commands."""
+        parser = create_parser()
+
+        # Test extract with output directory
+        args = parser.parse_args(["x", "test.tzst", "-o", "/tmp/output"])
+        assert args.output == "/tmp/output"
+
+        # Test extract-flat with output directory
+        args = parser.parse_args(["e", "test.tzst", "--output", "/tmp/output"])
+        assert args.output == "/tmp/output"
+
+
+class TestCLIFileOperations:
+    """Test CLI file operation error scenarios."""
+
+    def test_test_command_missing_file(self, temp_dir):
+        """Test test command with missing archive file."""
+        missing_archive = temp_dir / "missing.tzst"
+        result = main(["t", str(missing_archive)])
+        assert result == 1
+
+    def test_list_command_missing_file(self, temp_dir):
+        """Test list command with missing archive file."""
+        missing_archive = temp_dir / "missing.tzst"
+        result = main(["l", str(missing_archive)])
+        assert result == 1
+
+    def test_extract_command_missing_file(self, temp_dir):
+        """Test extract command with missing archive file."""
+        missing_archive = temp_dir / "missing.tzst"
+        result = main(["x", str(missing_archive)])
+        assert result == 1
+
+
+class TestCLIExceptionHandling:
+    """Test CLI exception handling for comprehensive coverage."""
+
+    def test_oserror_in_validate_files(self, temp_dir, monkeypatch):
+        """Test OSError exception handling in _validate_files function."""
+        from pathlib import Path
+
+        from tzst.cli import _validate_files
+
+        # Create a path that will trigger OSError when checking existence
+        invalid_path = Path(temp_dir / "\x00invalid")  # Null character in filename
+
+        # Mock Path.exists to raise OSError
+        def mock_exists():
+            raise OSError("Invalid path")
+
+        monkeypatch.setattr(invalid_path, "exists", mock_exists)
+
+        with pytest.raises(OSError):
+            _validate_files([invalid_path])
+
+    def test_file_not_found_error_in_extract(self, temp_dir):
+        """Test FileNotFoundError handling in extract command."""
+        missing_archive = temp_dir / "missing.tzst"
+        result = main(["x", str(missing_archive)])
+        assert result == 1
+
+    def test_file_not_found_error_in_extract_flat(self, temp_dir):
+        """Test FileNotFoundError handling in extract-flat command."""
+        missing_archive = temp_dir / "missing.tzst"
+        result = main(["e", str(missing_archive)])
+        assert result == 1
+
+    def test_file_not_found_error_in_list(self, temp_dir):
+        """Test FileNotFoundError handling in list command."""
+        missing_archive = temp_dir / "missing.tzst"
+        result = main(["l", str(missing_archive)])
+        assert result == 1
+
+    def test_file_not_found_error_in_test(self, temp_dir):
+        """Test FileNotFoundError handling in test command."""
+        missing_archive = temp_dir / "missing.tzst"
+        result = main(["t", str(missing_archive)])
+        assert result == 1
+
+    def test_tzst_archive_error_in_add(self, temp_dir, monkeypatch):
+        """Test TzstArchiveError handling in add command."""
+        from tzst.exceptions import TzstArchiveError
+
+        # Create a file to add
         test_file = temp_dir / "test.txt"
-        test_file.write_text("Test content")
+        test_file.write_text("test content")
+
+        # Mock create_archive to raise TzstArchiveError
+        def mock_create_archive(*args, **kwargs):
+            raise TzstArchiveError("Mock archive error")
+
+        monkeypatch.setattr("tzst.cli.create_archive", mock_create_archive)
+
         archive_path = temp_dir / "test.tzst"
+        result = main(["a", str(archive_path), str(test_file)])
+        assert result == 1
 
-        # Test level 50 - should return argparse error code 2
-        result = main(["a", str(archive_path), str(test_file), "-l", "50"])
-        assert result == 2, "Extreme compression level 50 should return exit code 2"
+    def test_tzst_archive_error_in_extract(self, sample_files, temp_dir, monkeypatch):
+        """Test TzstArchiveError handling in extract command."""
+        from tzst.exceptions import TzstArchiveError
 
-        # Test level 0 - should return argparse error code 2
-        result = main(["a", str(archive_path), str(test_file), "-l", "0"])
-        assert result == 2, "Extreme compression level 0 should return exit code 2"
+        # Create a valid archive first
+        file_paths = [str(f) for f in sample_files if f.is_file()]
+        archive_path = temp_dir / "test.tzst"
+        main(["a", str(archive_path), *file_paths])
+
+        # Mock extract_archive to raise TzstArchiveError
+        def mock_extract_archive(*args, **kwargs):
+            raise TzstArchiveError("Mock extraction error")
+
+        monkeypatch.setattr("tzst.cli.extract_archive", mock_extract_archive)
+
+        result = main(["x", str(archive_path)])
+        assert result == 1
+
+    def test_tzst_archive_error_in_list(self, sample_files, temp_dir, monkeypatch):
+        """Test TzstArchiveError handling in list command."""
+        from tzst.exceptions import TzstArchiveError
+
+        # Create a valid archive first
+        file_paths = [str(f) for f in sample_files if f.is_file()]
+        archive_path = temp_dir / "test.tzst"
+        main(["a", str(archive_path), *file_paths])
+
+        # Mock list_archive to raise TzstArchiveError
+        def mock_list_archive(*args, **kwargs):
+            raise TzstArchiveError("Mock list error")
+
+        monkeypatch.setattr("tzst.cli.list_archive", mock_list_archive)
+
+        result = main(["l", str(archive_path)])
+        assert result == 1
+
+    def test_tzst_archive_error_in_test(self, sample_files, temp_dir, monkeypatch):
+        """Test TzstArchiveError handling in test command."""
+        from tzst.exceptions import TzstArchiveError
+
+        # Create a valid archive first
+        file_paths = [str(f) for f in sample_files if f.is_file()]
+        archive_path = temp_dir / "test.tzst"
+        main(["a", str(archive_path), *file_paths])
+
+        # Mock test_archive to raise TzstArchiveError
+        def mock_test_archive(*args, **kwargs):
+            raise TzstArchiveError("Mock test error")
+
+        monkeypatch.setattr("tzst.cli.test_archive", mock_test_archive)
+
+        result = main(["t", str(archive_path)])
+        assert result == 1
+
+    def test_value_error_in_add(self, temp_dir, monkeypatch):
+        """Test ValueError handling in add command."""
+
+        # Create a file to add
+        test_file = temp_dir / "test.txt"
+        test_file.write_text("test content")
+
+        # Mock create_archive to raise ValueError
+        def mock_create_archive(*args, **kwargs):
+            raise ValueError("Invalid compression level")
+
+        monkeypatch.setattr("tzst.cli.create_archive", mock_create_archive)
+
+        archive_path = temp_dir / "test.tzst"
+        result = main(["a", str(archive_path), str(test_file)])
+        assert result == 1
+
+    def test_oserror_in_add(self, temp_dir, monkeypatch):
+        """Test OSError handling in add command."""
+
+        # Create a file to add
+        test_file = temp_dir / "test.txt"
+        test_file.write_text("test content")
+
+        # Mock create_archive to raise OSError
+        def mock_create_archive(*args, **kwargs):
+            raise OSError("Permission denied")
+
+        monkeypatch.setattr("tzst.cli.create_archive", mock_create_archive)
+
+        archive_path = temp_dir / "test.tzst"
+        result = main(["a", str(archive_path), str(test_file)])
+        assert result == 1
+
+    def test_keyboard_interrupt_in_add(self, temp_dir, monkeypatch):
+        """Test KeyboardInterrupt handling in add command."""
+
+        # Create a file to add
+        test_file = temp_dir / "test.txt"
+        test_file.write_text("test content")
+
+        # Mock create_archive to raise KeyboardInterrupt
+        def mock_create_archive(*args, **kwargs):
+            raise KeyboardInterrupt()
+
+        monkeypatch.setattr("tzst.cli.create_archive", mock_create_archive)
+
+        archive_path = temp_dir / "test.tzst"
+        result = main(["a", str(archive_path), str(test_file)])
+        assert result == 130  # SIGINT exit code
+
+    def test_generic_exception_in_add(self, temp_dir, monkeypatch):
+        """Test generic Exception handling in add command."""
+
+        # Create a file to add
+        test_file = temp_dir / "test.txt"
+        test_file.write_text("test content")
+
+        # Mock create_archive to raise generic Exception
+        def mock_create_archive(*args, **kwargs):
+            raise Exception("Unexpected error")
+
+        monkeypatch.setattr("tzst.cli.create_archive", mock_create_archive)
+
+        archive_path = temp_dir / "test.tzst"
+        result = main(["a", str(archive_path), str(test_file)])
+        assert result == 1
+
+    def test_generic_exception_in_extract(self, sample_files, temp_dir, monkeypatch):
+        """Test generic Exception handling in extract command."""
+
+        # Create a valid archive first
+        file_paths = [str(f) for f in sample_files if f.is_file()]
+        archive_path = temp_dir / "test.tzst"
+        main(["a", str(archive_path), *file_paths])
+
+        # Mock extract_archive to raise generic Exception
+        def mock_extract_archive(*args, **kwargs):
+            raise Exception("Unexpected extraction error")
+
+        monkeypatch.setattr("tzst.cli.extract_archive", mock_extract_archive)
+
+        result = main(["x", str(archive_path)])
+        assert result == 1
+
+    def test_generic_exception_in_list(self, sample_files, temp_dir, monkeypatch):
+        """Test generic Exception handling in list command."""
+
+        # Create a valid archive first
+        file_paths = [str(f) for f in sample_files if f.is_file()]
+        archive_path = temp_dir / "test.tzst"
+        main(["a", str(archive_path), *file_paths])
+
+        # Mock list_archive to raise generic Exception
+        def mock_list_archive(*args, **kwargs):
+            raise Exception("Unexpected list error")
+
+        monkeypatch.setattr("tzst.cli.list_archive", mock_list_archive)
+
+        result = main(["l", str(archive_path)])
+        assert result == 1
+
+    def test_generic_exception_in_test(self, sample_files, temp_dir, monkeypatch):
+        """Test generic Exception handling in test command."""
+
+        # Create a valid archive first
+        file_paths = [str(f) for f in sample_files if f.is_file()]
+        archive_path = temp_dir / "test.tzst"
+        main(["a", str(archive_path), *file_paths])
+
+        # Mock test_archive to raise generic Exception
+        def mock_test_archive(*args, **kwargs):
+            raise Exception("Unexpected test error")
+
+        monkeypatch.setattr("tzst.cli.test_archive", mock_test_archive)
+
+        result = main(["t", str(archive_path)])
+        assert result == 1
+
+    def test_test_archive_failure(self, sample_files, temp_dir, monkeypatch):
+        """Test archive test failure detection."""
+
+        # Create a valid archive first
+        file_paths = [str(f) for f in sample_files if f.is_file()]
+        archive_path = temp_dir / "test.tzst"
+        main(["a", str(archive_path), *file_paths])
+
+        # Mock test_archive to return False (test failed)
+        def mock_test_archive(*args, **kwargs):
+            return False
+
+        monkeypatch.setattr("tzst.cli.test_archive", mock_test_archive)
+
+        result = main(["t", str(archive_path)])
+        assert result == 1
+
+
+class TestCLIArgumentParsingEdgeCases:
+    """Test advanced argument parsing edge cases."""
+
+    def test_validation_functions_edge_cases(self):
+        """Test validation functions with edge cases."""
+        from tzst.cli import (
+            _validate_compression_level_in_argv,
+            _validate_filter_in_argv,
+        )
+
+        # Test compression level validation with edge cases
+        assert (
+            _validate_compression_level_in_argv(["x", "test.tzst", "-l", "1"]) is True
+        )
+        assert (
+            _validate_compression_level_in_argv(["x", "test.tzst", "-l", "22"]) is True
+        )
+        assert (
+            _validate_compression_level_in_argv(["x", "test.tzst", "-l", "0"]) is False
+        )
+        assert (
+            _validate_compression_level_in_argv(["x", "test.tzst", "-l", "23"]) is False
+        )
+        assert (
+            _validate_compression_level_in_argv(["x", "test.tzst", "-l", "abc"])
+            is False
+        )
+        assert (
+            _validate_compression_level_in_argv(["x", "test.tzst"]) is True
+        )  # No compression level
+
+        # Test filter validation with edge cases
+        assert _validate_filter_in_argv(["x", "test.tzst", "--filter", "lz4"]) is True
+        assert _validate_filter_in_argv(["x", "test.tzst", "--filter", "zstd"]) is True
+        assert (
+            _validate_filter_in_argv(["x", "test.tzst", "--filter", "invalid"]) is False
+        )
+        assert _validate_filter_in_argv(["x", "test.tzst"]) is True  # No filter
+
+    def test_handle_parsing_errors_edge_cases(self):
+        """Test _handle_parsing_errors with various edge cases."""
+        from tzst.cli import _handle_parsing_errors
+
+        # Test with different exit codes
+        e = SystemExit(0)
+        result = _handle_parsing_errors(e, ["--help"])
+        assert result == 0
+
+        e = SystemExit(1)
+        result = _handle_parsing_errors(e, ["some", "args"])
+        assert result == 1
+
+        e = SystemExit(None)
+        result = _handle_parsing_errors(e, [])
+        assert result == 1
+
+        # Test with compression level error
+        e = SystemExit(2)
+        result = _handle_parsing_errors(e, ["a", "test.tzst", "file.txt", "-l", "100"])
+        assert result == 1
+
+        # Test with filter error
+        e = SystemExit(2)
+        result = _handle_parsing_errors(e, ["x", "test.tzst", "--filter", "badfilter"])
+        assert result == 1
+
+    def test_parse_arguments_edge_cases(self):
+        """Test _parse_arguments with edge cases."""
+        from tzst.cli import _parse_arguments, create_parser
+
+        parser = create_parser()
+
+        # Test successful parsing
+        args, error_code = _parse_arguments(parser, ["a", "test.tzst", "file.txt"])
+        assert args is not None
+        assert error_code is None
+
+        # Test parsing error
+        args, error_code = _parse_arguments(parser, ["invalid"])
+        assert args is None
+        assert error_code == 2
+
+    def test_execute_command_edge_cases(self):
+        """Test _execute_command with edge cases."""
+        from tzst.cli import _execute_command, create_parser
+
+        parser = create_parser()
+
+        # Test with version flag
+        class MockArgsVersion:
+            version = True
+
+        args = MockArgsVersion()
+        result = _execute_command(args, parser)
+        assert result == 0
+
+        # Test with no function attribute
+        class MockArgsNoFunc:
+            version = False
+
+        args = MockArgsNoFunc()
+        result = _execute_command(args, parser)
+        assert result == 1

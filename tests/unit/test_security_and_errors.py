@@ -119,6 +119,132 @@ class TestCompressionValidation:
                     archive_path, file_paths, compression_level=invalid_level
                 )
 
+    def test_specific_compression_level_validation(self, temp_dir):
+        """Test specific compression level validation to cover missing lines."""
+        import tempfile
+        from pathlib import Path
+
+        with tempfile.NamedTemporaryFile(suffix=".tzst", delete=False) as f:
+            archive_path = Path(f.name)
+
+        try:
+            # Test compression level too low (line 60)
+            with pytest.raises(ValueError, match="Invalid compression level '0'"):
+                TzstArchive(archive_path, mode="w", compression_level=0)
+
+            # Test compression level too high (line 66)
+            with pytest.raises(ValueError, match="Invalid compression level '23'"):
+                TzstArchive(archive_path, mode="w", compression_level=23)
+
+        finally:
+            archive_path.unlink(missing_ok=True)
+
+    def test_invalid_mode_validation(self, temp_dir):
+        """Test invalid mode validation to cover missing lines."""
+        import tempfile
+        from pathlib import Path
+
+        with tempfile.NamedTemporaryFile(suffix=".tzst", delete=False) as f:
+            archive_path = Path(f.name)
+
+        try:
+            # Test invalid mode (line 54)
+            with pytest.raises(ValueError, match="Invalid mode 'x'"):
+                TzstArchive(archive_path, mode="x")
+
+            # Test invalid mode with additional characters
+            with pytest.raises(ValueError, match="Invalid mode 'rb'"):
+                TzstArchive(archive_path, mode="rb")
+
+        finally:
+            archive_path.unlink(missing_ok=True)
+
+    def test_runtime_errors_for_wrong_mode_operations(self, temp_dir):
+        """Test RuntimeError for operations on wrong mode archives."""
+        import tempfile
+        from pathlib import Path
+
+        with tempfile.NamedTemporaryFile(suffix=".tzst", delete=False) as f:
+            archive_path = Path(f.name)
+
+        try:
+            # Create empty archive first
+            with TzstArchive(archive_path, mode="w") as archive:
+                pass
+
+            # Test read operations on write mode
+            with TzstArchive(archive_path, mode="w") as archive:
+                with pytest.raises(RuntimeError, match="Archive not open for reading"):
+                    archive.getmembers()
+
+                with pytest.raises(RuntimeError, match="Archive not open for reading"):
+                    archive.getnames()
+
+                with pytest.raises(RuntimeError, match="Archive not open for reading"):
+                    archive.extractfile("test")
+
+        finally:
+            archive_path.unlink(missing_ok=True)
+
+    def test_operations_on_closed_archive(self, temp_dir):
+        """Test operations on closed archive to cover missing lines."""
+        import tempfile
+        from pathlib import Path
+
+        with tempfile.NamedTemporaryFile(suffix=".tzst", delete=False) as f:
+            archive_path = Path(f.name)
+
+        try:
+            # Create and close archive
+            archive = TzstArchive(archive_path, mode="w")
+            archive.close()
+
+            # Test operations on closed archive
+            with pytest.raises(RuntimeError, match="Archive not open"):
+                archive.getmembers()
+
+            with pytest.raises(RuntimeError, match="Archive not open"):
+                archive.getnames()
+
+            with pytest.raises(RuntimeError, match="Archive not open"):
+                archive.extractfile("test")
+
+        finally:
+            archive_path.unlink(missing_ok=True)
+
+    def test_close_error_handling(self, temp_dir):
+        """Test error handling in close method."""
+        from pathlib import Path
+        from unittest.mock import MagicMock
+
+        # Create a mock archive that will raise exceptions during close
+        archive = TzstArchive.__new__(TzstArchive)
+        archive.path = Path("test.tzst")
+        archive.mode = "w"
+        archive.compression_level = 3
+
+        # Create mock objects that raise exceptions when closed
+        mock_tarfile = MagicMock()
+        mock_tarfile.close.side_effect = Exception("Mock tarfile close error")
+
+        mock_stream = MagicMock()
+        mock_stream.close.side_effect = Exception("Mock stream close error")
+
+        mock_fileobj = MagicMock()
+        mock_fileobj.close.side_effect = Exception("Mock fileobj close error")
+
+        archive._tarfile = mock_tarfile
+        archive._compressed_stream = mock_stream
+        archive._fileobj = mock_fileobj
+
+        # This should not raise an exception despite the mock exceptions
+        archive.close()
+
+        # Verify all close methods were called
+        mock_tarfile.close.assert_called_once()
+        mock_stream.close.assert_called_once()
+        mock_fileobj.close.assert_called_once()
+
 
 class TestSpecialFileTypes:
     """Test handling of special file types and edge cases."""
@@ -207,3 +333,100 @@ class TestAppendModeDocumentation:
         assert (
             "multiple archives" in error_msg.lower() or "recreate" in error_msg.lower()
         )
+
+
+class TestSpecificMissingLineCoverage:
+    """Test specific missing lines from coverage report."""
+
+    def test_invalid_mode_validation_specific(self, temp_dir):
+        """Test specific invalid mode validation to cover missing lines."""
+        import tempfile
+        from pathlib import Path
+
+        with tempfile.NamedTemporaryFile(suffix=".tzst", delete=False) as f:
+            archive_path = Path(f.name)
+
+        try:
+            # Test invalid mode (line 54)
+            with pytest.raises(ValueError, match="Invalid mode 'x'"):
+                TzstArchive(archive_path, mode="x")
+
+            # Test invalid mode with additional characters
+            with pytest.raises(ValueError, match="Invalid mode 'rb'"):
+                TzstArchive(archive_path, mode="rb")
+
+        finally:
+            archive_path.unlink(missing_ok=True)
+
+    def test_compression_level_validation_specific(self, temp_dir):
+        """Test specific compression level validation to cover missing lines."""
+        import tempfile
+        from pathlib import Path
+
+        with tempfile.NamedTemporaryFile(suffix=".tzst", delete=False) as f:
+            archive_path = Path(f.name)
+
+        try:
+            # Test compression level too low (line 60)
+            with pytest.raises(ValueError, match="Invalid compression level '0'"):
+                TzstArchive(archive_path, mode="w", compression_level=0)
+
+            # Test compression level too high (line 66)
+            with pytest.raises(ValueError, match="Invalid compression level '23'"):
+                TzstArchive(archive_path, mode="w", compression_level=23)
+
+        finally:
+            archive_path.unlink(missing_ok=True)
+
+    def test_runtime_errors_for_wrong_mode_operations(self, temp_dir):
+        """Test RuntimeError for operations on wrong mode archives."""
+        import tempfile
+        from pathlib import Path
+
+        with tempfile.NamedTemporaryFile(suffix=".tzst", delete=False) as f:
+            archive_path = Path(f.name)
+
+        try:
+            # Create empty archive first
+            with TzstArchive(archive_path, mode="w") as archive:
+                pass
+
+            # Test read operations on write mode
+            with TzstArchive(archive_path, mode="w") as archive:
+                with pytest.raises(RuntimeError, match="Archive not open for reading"):
+                    archive.getmembers()
+
+                with pytest.raises(RuntimeError, match="Archive not open for reading"):
+                    archive.getnames()
+
+                with pytest.raises(RuntimeError, match="Archive not open for reading"):
+                    archive.extractfile("test")
+
+        finally:
+            archive_path.unlink(missing_ok=True)
+
+    def test_operations_on_closed_archive_specific(self, temp_dir):
+        """Test operations on closed archive to cover missing lines."""
+        import tempfile
+        from pathlib import Path
+
+        with tempfile.NamedTemporaryFile(suffix=".tzst", delete=False) as f:
+            archive_path = Path(f.name)
+
+        try:
+            # Create and close archive
+            archive = TzstArchive(archive_path, mode="w")
+            archive.close()
+
+            # Test operations on closed archive
+            with pytest.raises(RuntimeError, match="Archive not open"):
+                archive.getmembers()
+
+            with pytest.raises(RuntimeError, match="Archive not open"):
+                archive.getnames()
+
+            with pytest.raises(RuntimeError, match="Archive not open"):
+                archive.extractfile("test")
+
+        finally:
+            archive_path.unlink(missing_ok=True)

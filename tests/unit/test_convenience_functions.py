@@ -178,3 +178,80 @@ class TestCompressionLevels:
 
             assert "compression level" in str(exc_info.value).lower()
             assert "1" in str(exc_info.value) and "22" in str(exc_info.value)
+
+
+class TestEdgeCaseCoverage:
+    """Test edge cases to improve coverage."""
+
+    def test_empty_files_list(self, temp_dir):
+        """Test create_archive with empty files list."""
+        archive_path = temp_dir / "empty.tzst"
+
+        # Should create an empty archive
+        create_archive(archive_path, [])
+
+        assert archive_path.exists()
+        contents = list_archive(archive_path)
+        assert len(contents) == 0
+
+    def test_create_archive_with_use_temp_file_false(self, temp_dir):
+        """Test creating archive with use_temp_file=False."""
+        test_file = temp_dir / "test.txt"
+        test_file.write_text("test content")
+        archive_path = temp_dir / "test.tzst"
+
+        # Test non-atomic mode
+        create_archive(archive_path, [str(test_file)], use_temp_file=False)
+
+        assert archive_path.exists()
+        contents = list_archive(archive_path)
+        assert len(contents) == 1
+
+    def test_extract_archive_to_specific_path(self, temp_dir):
+        """Test extracting archive to specific path."""
+        # Create test archive
+        test_file = temp_dir / "test.txt"
+        test_file.write_text("test content")
+        archive_path = temp_dir / "test.tzst"
+        create_archive(archive_path, [str(test_file)])
+
+        # Extract to specific directory
+        extract_dir = temp_dir / "extracted"
+        extract_archive(archive_path, extract_dir)
+
+        assert extract_dir.exists()
+        assert (extract_dir / "test.txt").exists()
+        assert (extract_dir / "test.txt").read_text() == "test content"
+
+    def test_list_archive_with_streaming(self, temp_dir):
+        """Test listing archive with streaming mode."""
+        test_file = temp_dir / "test.txt"
+        test_file.write_text("test content")
+        archive_path = temp_dir / "test.tzst"
+        create_archive(archive_path, [str(test_file)])
+
+        # Test with streaming=True
+        contents = list_archive(archive_path, streaming=True)
+        assert len(contents) == 1
+        assert contents[0]["name"] == "test.txt"
+
+    def test_test_archive_success(self, temp_dir):
+        """Test testing a valid archive."""
+        test_file = temp_dir / "test.txt"
+        test_file.write_text("test content")
+        archive_path = temp_dir / "test.tzst"
+        create_archive(archive_path, [str(test_file)])
+
+        # Test archive - should return True for valid archive
+        result = tzst_test_archive(archive_path)
+        assert result is True
+
+    def test_test_archive_failure(self, temp_dir):
+        """Test testing an invalid archive."""
+        # Create a file that's not a valid archive
+        invalid_archive = temp_dir / "invalid.tzst"
+        invalid_archive.write_text("This is not a valid archive")
+
+        # Test archive - should return False for invalid archive
+        result = tzst_test_archive(invalid_archive)
+        assert result is False

@@ -1033,3 +1033,74 @@ class TestCLIBoundaryConditions:
         except OSError:
             # Skip if filesystem doesn't support such long names
             pytest.skip("Filesystem doesn't support long filenames")
+
+
+class TestCompressionLevelValidation:
+    """Test compression level validation in CLI."""
+
+    def test_valid_compression_levels(self, temp_dir):
+        """Test that valid compression levels (1-22) work correctly."""
+        test_file = temp_dir / "test.txt"
+        test_file.write_text("Test content")
+
+        # Test boundary values and some middle values
+        valid_levels = [1, 2, 10, 22]
+
+        for level in valid_levels:
+            archive_path = temp_dir / f"test_level_{level}.tzst"
+            result = main(["a", str(archive_path), str(test_file), "-l", str(level)])
+            assert result == 0, f"Compression level {level} should be valid"
+
+    def test_invalid_compression_levels(self, temp_dir):
+        """Test that invalid compression levels return proper error codes."""
+        test_file = temp_dir / "test.txt"
+        test_file.write_text("Test content")
+        archive_path = temp_dir / "test.tzst"
+
+        # Test invalid levels that should return exit code 2 (argparse error)
+        invalid_levels = [0, 23, 50, 100, -1, -10]
+
+        for level in invalid_levels:
+            result = main(["a", str(archive_path), str(test_file), "-l", str(level)])
+            assert result == 2, (
+                f"Invalid compression level {level} should return exit code 2"
+            )
+
+    def test_non_numeric_compression_levels(self, temp_dir):
+        """Test that non-numeric compression levels return proper error codes."""
+        test_file = temp_dir / "test.txt"
+        test_file.write_text("Test content")
+        archive_path = temp_dir / "test.tzst"
+
+        # Test non-numeric values
+        invalid_values = ["abc", "1.5", "high", "max", ""]
+
+        for value in invalid_values:
+            result = main(["a", str(archive_path), str(test_file), "-l", value])
+            assert result == 2, (
+                f"Non-numeric compression level '{value}' should return exit code 2"
+            )
+
+    def test_compression_level_clamping(self, temp_dir):
+        """Test compression level validation with extreme values."""
+        test_file = temp_dir / "test.txt"
+        test_file.write_text("Test content")
+        archive_path = temp_dir / "test.tzst"
+
+        # Test level 50 - should return argparse error code 2
+        result = main(["a", str(archive_path), str(test_file), "-l", "50"])
+        assert result == 2, "Compression level 50 should return exit code 2"
+
+    def test_extreme_compression_levels(self, temp_dir):
+        """Test extreme compression level values."""
+        test_file = temp_dir / "test.txt"
+        test_file.write_text("Test content")
+        archive_path = temp_dir / "test.tzst"
+
+        # Test level 50 - should return argparse error code 2
+        result = main(["a", str(archive_path), str(test_file), "-l", "50"])
+        assert result == 2, "Extreme compression level 50 should return exit code 2"
+
+        # Test level 0 - should return argparse error code 2
+        result = main(["a", str(archive_path), str(test_file), "-l", "0"])
+        assert result == 2, "Extreme compression level 0 should return exit code 2"

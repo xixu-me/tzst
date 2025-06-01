@@ -50,6 +50,31 @@ def format_size(size: int) -> str:
     return f"{size_float:6.1f} PB"
 
 
+def validate_compression_level(value: str) -> int:
+    """Validate and return compression level.
+
+    Args:
+        value: String value from command line
+
+    Returns:
+        int: Valid compression level (1-22)
+
+    Raises:
+        argparse.ArgumentTypeError: If value is not a valid compression level
+    """
+    try:
+        level = int(value)
+        if not 1 <= level <= 22:
+            raise argparse.ArgumentTypeError(
+                f"Invalid compression level: {level}. Must be between 1 and 22."
+            )
+        return level
+    except ValueError:
+        raise argparse.ArgumentTypeError(
+            f"Invalid compression level: '{value}'. Must be an integer between 1 and 22."
+        )
+
+
 def cmd_add(args) -> int:
     """Command handler for creating/adding to archives.
 
@@ -511,9 +536,8 @@ Documentation:
         "-l",
         "--level",
         dest="compression_level",
-        type=int,
+        type=validate_compression_level,
         default=3,
-        choices=range(1, 23),
         metavar="LEVEL",
         help="Compression level (1-22, default: 3)",
     )
@@ -628,6 +652,7 @@ def main(argv: list[str] | None = None) -> int:
         int: Exit code for the program
             - 0: Success
             - 1: No command specified (help displayed)
+            - 2: Argument parsing error (invalid arguments)
             - Other codes: Specific to individual command handlers
 
     Note:
@@ -642,7 +667,12 @@ def main(argv: list[str] | None = None) -> int:
     print()
 
     parser = create_parser()
-    args = parser.parse_args(argv)
+
+    try:
+        args = parser.parse_args(argv)
+    except SystemExit as e:
+        # Handle argparse errors (invalid arguments, help, etc.)
+        return e.code if e.code is not None else 1
 
     if not hasattr(args, "func"):
         parser.print_help()

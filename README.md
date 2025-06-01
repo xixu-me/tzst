@@ -467,7 +467,7 @@ We welcome contributions! Please read our [Contributing Guide](CONTRIBUTING.md) 
 ### Quick Start for Contributors
 
 ```bash
-git clone https://github.com/your-username/tzst.git
+git clone https://github.com/xixu-me/tzst.git
 cd tzst
 pip install -e .[dev]
 python -m pytest tests/

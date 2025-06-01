@@ -20,6 +20,7 @@ def print_banner() -> None:
     """
     print()
     print(f"tzst {__version__} : Copyright (c) 2025 Xi Xu")
+    print()
 
 
 def format_size(size: int) -> str:
@@ -563,6 +564,16 @@ def cmd_test(args) -> int:
         return 1
 
 
+def cmd_version(args) -> int:
+    """Command handler for version display.
+
+    Returns:
+        int: Exit code (always 0)
+    """
+    # Version is already printed in print_banner(), so just exit
+    return 0
+
+
 def create_parser() -> argparse.ArgumentParser:
     """Create and configure the command-line argument parser.
 
@@ -621,11 +632,9 @@ Documentation:
         epilog=epilog,
         formatter_class=argparse.RawDescriptionHelpFormatter,
         add_help=True,
-    )  # Add version argument
+    )
     parser.add_argument(
-        "--version",
-        action="version",
-        version=f"tzst {__version__} : Copyright (c) 2025 Xi Xu",
+        "--version", action="store_true", help="show version information and exit"
     )
 
     # Add global arguments
@@ -859,6 +868,10 @@ def _execute_command(args, parser) -> int:
     Returns:
         int: Exit code from command execution
     """
+    # Handle --version flag
+    if hasattr(args, "version") and args.version:
+        return cmd_version(args)
+
     if not hasattr(args, "func"):
         parser.print_help()
         return 1
@@ -893,7 +906,6 @@ def main(argv: list[str] | None = None) -> int:
         :func:`create_parser`: Creates the argument parser used by this function
     """
     print_banner()
-    print()
 
     parser = create_parser()
     args, error_code = _parse_arguments(parser, argv)

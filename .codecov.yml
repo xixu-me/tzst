@@ -1,0 +1,33 @@
+coverage:
+  status:
+    project:
+      default:
+        target: auto
+        threshold: 1%
+        informational: true
+    patch:
+      default:
+        target: auto
+        threshold: 1%
+        informational: true
+
+  # Report coverage for all files, even if not touched in PR
+  report:
+    exclude_labels:
+      - "skip-coverage"
+
+comment:
+  layout: "reach,diff,flags,tree"
+  behavior: default
+  require_changes: false
+
+# Files to ignore in coverage
+ignore:
+  - "tests/*"
+  - "**/__pycache__/*"
+  - "**/htmlcov/*"
+  - "setup.py"
+
+# GitHub Checks integration
+github_checks:
+  annotations: true

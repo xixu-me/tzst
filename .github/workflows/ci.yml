@@ -39,15 +39,14 @@ jobs:
 
       - name: Run tests
         run: |
-          pytest -v --cov=tzst --cov-report=xml
+          pytest --cov=tzst --cov-branch --cov-report=xml
 
       - name: Upload coverage to Codecov
         if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.12'
         uses: codecov/codecov-action@v5
         with:
-          file: ./coverage.xml
-          flags: unittests
-          name: codecov-umbrella
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: xixu-me/tzst
 
   build:
     needs: test

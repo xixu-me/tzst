@@ -762,7 +762,7 @@ class TestCLIRealWorldScenarios:
         extract_dir = temp_dir / "no_atomic_extracted"
         result = main(["x", str(archive_path), "-o", str(extract_dir)])
         assert result == 0
-        extracted_file = extract_dir / "test_no_atomic_extracted" / "test_no_atomic.txt"
+        extracted_file = extract_dir / "test_no_atomic.txt"
         assert extracted_file.exists()
 
     def test_no_atomic_flag_in_subdirectory(self, temp_dir):

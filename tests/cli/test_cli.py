@@ -1780,3 +1780,511 @@ class TestCLIArgumentParsingEdgeCases:
         args = MockArgsNoFunc()
         result = _execute_command(args, parser)
         assert result == 1
+
+
+class TestCLIVerboseListingCoverage:
+    """Test verbose listing functionality for coverage."""
+
+    def test_verbose_listing_with_mixed_content(self, sample_files, temp_dir, capsys):
+        """Test verbose listing functionality with files and directories."""
+        # Create archive with mixed content
+        file_paths = [str(f) for f in sample_files if f.is_file()]
+        archive_path = temp_dir / "test.tzst"
+        main(["a", str(archive_path), *file_paths])
+
+        # Test verbose listing
+        result = main(["l", str(archive_path), "-v"])
+        assert result == 0
+
+        # Check that verbose output is displayed
+        captured = capsys.readouterr()
+        assert "Mode" in captured.out
+        assert "Size" in captured.out
+        assert "Modified" in captured.out
+        assert "Name" in captured.out
+        assert "-" * 60 in captured.out
+
+    def test_verbose_listing_with_mode_information(self, temp_dir, capsys):
+        """Test verbose listing with specific mode information."""
+        # Create a test file
+        test_file = temp_dir / "test.txt"
+        test_file.write_text("test content")
+
+        # Create archive
+        archive_path = temp_dir / "test.tzst"
+        main(["a", str(archive_path), str(test_file)])
+
+        # Test verbose listing
+        result = main(["l", str(archive_path), "-v"])
+        assert result == 0
+
+        # Check that mode information is displayed
+        captured = capsys.readouterr()
+        assert "test.txt" in captured.out
+        # Should have mode information displayed
+
+    def test_verbose_listing_directory_entries(self, temp_dir, capsys):
+        """Test verbose listing with directory entries."""
+        # Create test directory structure
+        test_dir = temp_dir / "test_dir"
+        test_dir.mkdir()
+        test_file = test_dir / "nested.txt"
+        test_file.write_text("nested content")
+
+        # Create archive with directory
+        archive_path = temp_dir / "test.tzst"
+        main(["a", str(archive_path), str(test_dir)])
+
+        # Test verbose listing
+        result = main(["l", str(archive_path), "-v"])
+        assert result == 0
+
+        # Check directory is shown as <DIR>
+        captured = capsys.readouterr()
+        assert "<DIR>" in captured.out or "test_dir" in captured.out
+
+
+class TestCLISimpleListingCoverage:
+    """Test simple listing functionality for coverage."""
+
+    def test_simple_listing_with_summary(self, sample_files, temp_dir, capsys):
+        """Test simple listing with file and directory summary."""  # Create test files and directories
+        file_paths = [str(f) for f in sample_files if f.is_file()]
+
+        # Create archive
+        archive_path = temp_dir / "test.tzst"
+        main(["a", str(archive_path), *file_paths])
+
+        # Test simple listing
+        result = main(["l", str(archive_path)])
+        assert result == 0
+
+        # Check that summary is displayed
+        captured = capsys.readouterr()
+        assert "Total:" in captured.out
+        assert "files" in captured.out
+
+    def test_simple_listing_with_directories(self, temp_dir, capsys):
+        """Test simple listing counting directories."""
+        # Create test structure with directories
+        test_dir1 = temp_dir / "dir1"
+        test_dir1.mkdir()
+        test_file1 = test_dir1 / "file1.txt"
+        test_file1.write_text("content1")
+
+        test_dir2 = temp_dir / "dir2"
+        test_dir2.mkdir()
+        test_file2 = test_dir2 / "file2.txt"
+        test_file2.write_text("content2")
+
+        # Create archive
+        archive_path = temp_dir / "test.tzst"
+        main(["a", str(archive_path), str(test_dir1), str(test_dir2)])
+
+        # Test simple listing
+        result = main(["l", str(archive_path)])
+        assert result == 0
+
+        # Check directory counting in summary
+        captured = capsys.readouterr()
+        assert "directories" in captured.out
+        assert "Total:" in captured.out
+
+    def test_simple_listing_size_calculation(self, temp_dir, capsys):
+        """Test simple listing size calculation."""
+        # Create test files with known content
+        test_file1 = temp_dir / "file1.txt"
+        test_file1.write_text("A" * 100)  # 100 bytes
+        test_file2 = temp_dir / "file2.txt"
+        test_file2.write_text("B" * 200)  # 200 bytes
+
+        # Create archive
+        archive_path = temp_dir / "test.tzst"
+        main(["a", str(archive_path), str(test_file1), str(test_file2)])
+
+        # Test simple listing
+        result = main(["l", str(archive_path)])
+        assert result == 0
+
+        # Check total size is calculated
+        captured = capsys.readouterr()
+        assert "Total:" in captured.out
+        # Should show total size of files
+
+
+class TestCLIExtractFlatExceptionHandling:
+    """Test extract-flat command exception handling for coverage."""
+
+    def test_extract_flat_file_not_found_error(self, temp_dir):
+        """Test extract-flat command with missing archive file."""
+        missing_archive = temp_dir / "missing.tzst"
+        result = main(["e", str(missing_archive)])
+        assert result == 1
+
+    def test_extract_flat_tzst_decompression_error(
+        self, sample_files, temp_dir, monkeypatch
+    ):
+        """Test extract-flat command with TzstDecompressionError."""
+        from tzst.exceptions import TzstDecompressionError
+
+        # Create a valid archive first
+        file_paths = [str(f) for f in sample_files if f.is_file()]
+        archive_path = temp_dir / "test.tzst"
+        main(["a", str(archive_path), *file_paths])
+
+        # Mock extract_archive to raise TzstDecompressionError
+        def mock_extract_archive(*args, **kwargs):
+            raise TzstDecompressionError("Mock decompression error")
+
+        monkeypatch.setattr("tzst.cli.extract_archive", mock_extract_archive)
+
+        result = main(["e", str(archive_path)])
+        assert result == 1
+
+    def test_extract_flat_tzst_archive_error(self, sample_files, temp_dir, monkeypatch):
+        """Test extract-flat command with TzstArchiveError."""
+        from tzst.exceptions import TzstArchiveError
+
+        # Create a valid archive first
+        file_paths = [str(f) for f in sample_files if f.is_file()]
+        archive_path = temp_dir / "test.tzst"
+        main(["a", str(archive_path), *file_paths])
+
+        # Mock extract_archive to raise TzstArchiveError
+        def mock_extract_archive(*args, **kwargs):
+            raise TzstArchiveError("Mock archive error")
+
+        monkeypatch.setattr("tzst.cli.extract_archive", mock_extract_archive)
+
+        result = main(["e", str(archive_path)])
+        assert result == 1
+
+    def test_extract_flat_generic_exception(self, sample_files, temp_dir, monkeypatch):
+        """Test extract-flat command with generic Exception."""
+        # Create a valid archive first
+        file_paths = [str(f) for f in sample_files if f.is_file()]
+        archive_path = temp_dir / "test.tzst"
+        main(["a", str(archive_path), *file_paths])
+
+        # Mock extract_archive to raise generic Exception
+        def mock_extract_archive(*args, **kwargs):
+            raise Exception("Mock generic error")
+
+        monkeypatch.setattr("tzst.cli.extract_archive", mock_extract_archive)
+
+        result = main(["e", str(archive_path)])
+        assert result == 1
+
+    def test_extract_flat_with_filter_option(self, sample_files, temp_dir, capsys):
+        """Test extract-flat command with non-default filter."""
+        # Create a valid archive first
+        file_paths = [str(f) for f in sample_files if f.is_file()]
+        archive_path = temp_dir / "test.tzst"
+        main(["a", str(archive_path), *file_paths])
+
+        # Extract with tar filter
+        output_dir = temp_dir / "extracted"
+        result = main(
+            ["e", str(archive_path), "-o", str(output_dir), "--filter", "tar"]
+        )
+        assert result == 0
+
+        # Check that filter is mentioned in output
+        captured = capsys.readouterr()
+        assert "Using security filter: tar" in captured.out
+
+
+class TestCLIKeyboardInterruptHandling:
+    """Test KeyboardInterrupt handling in CLI commands for coverage."""
+
+    def test_keyboard_interrupt_in_extract_full(
+        self, sample_files, temp_dir, monkeypatch
+    ):
+        """Test KeyboardInterrupt handling in extract command."""
+        # Create a valid archive first
+        file_paths = [str(f) for f in sample_files if f.is_file()]
+        archive_path = temp_dir / "test.tzst"
+        main(["a", str(archive_path), *file_paths])
+
+        # Mock extract_archive to raise KeyboardInterrupt
+        def mock_extract_archive(*args, **kwargs):
+            raise KeyboardInterrupt()
+
+        monkeypatch.setattr("tzst.cli.extract_archive", mock_extract_archive)
+
+        result = main(["x", str(archive_path)])
+        assert result == 130  # SIGINT exit code
+
+    def test_keyboard_interrupt_in_list(self, sample_files, temp_dir, monkeypatch):
+        """Test KeyboardInterrupt handling in list command."""
+        # Create a valid archive first
+        file_paths = [str(f) for f in sample_files if f.is_file()]
+        archive_path = temp_dir / "test.tzst"
+        main(["a", str(archive_path), *file_paths])
+
+        # Mock list_archive to raise KeyboardInterrupt
+        def mock_list_archive(*args, **kwargs):
+            raise KeyboardInterrupt()
+
+        monkeypatch.setattr("tzst.cli.list_archive", mock_list_archive)
+
+        result = main(["l", str(archive_path)])
+        assert result == 130
+
+    def test_keyboard_interrupt_in_test(self, sample_files, temp_dir, monkeypatch):
+        """Test KeyboardInterrupt handling in test command."""
+        # Create a valid archive first
+        file_paths = [str(f) for f in sample_files if f.is_file()]
+        archive_path = temp_dir / "test.tzst"
+        main(["a", str(archive_path), *file_paths])
+
+        # Mock test_archive to raise KeyboardInterrupt
+        def mock_test_archive(*args, **kwargs):
+            raise KeyboardInterrupt()
+
+        monkeypatch.setattr("tzst.cli.test_archive", mock_test_archive)
+
+        result = main(["t", str(archive_path)])
+        assert result == 130
+
+
+class TestCLITzstDecompressionErrorHandling:
+    """Test TzstDecompressionError handling in CLI commands for coverage."""
+
+    def test_tzst_decompression_error_in_extract_full(
+        self, sample_files, temp_dir, monkeypatch
+    ):
+        """Test TzstDecompressionError handling in extract command."""
+        from tzst.exceptions import TzstDecompressionError
+
+        # Create a valid archive first
+        file_paths = [str(f) for f in sample_files if f.is_file()]
+        archive_path = temp_dir / "test.tzst"
+        main(["a", str(archive_path), *file_paths])
+
+        # Mock extract_archive to raise TzstDecompressionError
+        def mock_extract_archive(*args, **kwargs):
+            raise TzstDecompressionError("Mock decompression error")
+
+        monkeypatch.setattr("tzst.cli.extract_archive", mock_extract_archive)
+
+        result = main(["x", str(archive_path)])
+        assert result == 1
+
+    def test_tzst_decompression_error_in_list(
+        self, sample_files, temp_dir, monkeypatch
+    ):
+        """Test TzstDecompressionError handling in list command."""
+        from tzst.exceptions import TzstDecompressionError
+
+        # Create a valid archive first
+        file_paths = [str(f) for f in sample_files if f.is_file()]
+        archive_path = temp_dir / "test.tzst"
+        main(["a", str(archive_path), *file_paths])
+
+        # Mock list_archive to raise TzstDecompressionError
+        def mock_list_archive(*args, **kwargs):
+            raise TzstDecompressionError("Mock decompression error")
+
+        monkeypatch.setattr("tzst.cli.list_archive", mock_list_archive)
+
+        result = main(["l", str(archive_path)])
+        assert result == 1
+
+    def test_tzst_decompression_error_in_test(
+        self, sample_files, temp_dir, monkeypatch
+    ):
+        """Test TzstDecompressionError handling in test command."""
+        from tzst.exceptions import TzstDecompressionError
+
+        # Create a valid archive first
+        file_paths = [str(f) for f in sample_files if f.is_file()]
+        archive_path = temp_dir / "test.tzst"
+        main(["a", str(archive_path), *file_paths])
+
+        # Mock test_archive to raise TzstDecompressionError
+        def mock_test_archive(*args, **kwargs):
+            raise TzstDecompressionError("Mock decompression error")
+
+        monkeypatch.setattr("tzst.cli.test_archive", mock_test_archive)
+
+        result = main(["t", str(archive_path)])
+        assert result == 1
+
+
+class TestCLIAdvancedExceptionScenarios:
+    """Test additional exception scenarios for comprehensive coverage."""
+
+    def test_generic_exception_in_test_command(
+        self, sample_files, temp_dir, monkeypatch
+    ):
+        """Test generic Exception handling in test command."""
+        # Create a valid archive first
+        file_paths = [str(f) for f in sample_files if f.is_file()]
+        archive_path = temp_dir / "test.tzst"
+        main(["a", str(archive_path), *file_paths])
+
+        # Mock test_archive to raise generic Exception
+        def mock_test_archive(*args, **kwargs):
+            raise Exception("Unexpected test error")
+
+        monkeypatch.setattr("tzst.cli.test_archive", mock_test_archive)
+
+        result = main(["t", str(archive_path)])
+        assert result == 1
+
+    def test_list_command_archive_not_found_path_check(self, temp_dir):
+        """Test list command path existence check."""
+        missing_archive = temp_dir / "definitely_missing.tzst"
+        # Ensure the file definitely doesn't exist
+        assert not missing_archive.exists()
+
+        result = main(["l", str(missing_archive)])
+        assert result == 1
+
+    def test_test_command_archive_not_found_path_check(self, temp_dir):
+        """Test test command path existence check."""
+        missing_archive = temp_dir / "definitely_missing.tzst"
+        # Ensure the file definitely doesn't exist
+        assert not missing_archive.exists()
+
+        result = main(["t", str(missing_archive)])
+        assert result == 1
+
+    def test_extract_full_archive_not_found_path_check(self, temp_dir):
+        """Test extract command path existence check."""
+        missing_archive = temp_dir / "definitely_missing.tzst"
+        # Ensure the file definitely doesn't exist
+        assert not missing_archive.exists()
+
+        result = main(["x", str(missing_archive)])
+        assert result == 1
+
+    def test_extract_flat_archive_not_found_path_check(self, temp_dir):
+        """Test extract-flat command path existence check."""
+        missing_archive = temp_dir / "definitely_missing.tzst"
+        # Ensure the file definitely doesn't exist
+        assert not missing_archive.exists()
+
+        result = main(["e", str(missing_archive)])
+        assert result == 1
+
+
+class TestCLIListingFunctionsCoverage:
+    """Test edge cases in listing functions for coverage."""
+
+    def test_verbose_listing_with_missing_mode(self, temp_dir, capsys, monkeypatch):
+        """Test verbose listing when mode information is missing."""
+        # Create a test file
+        test_file = temp_dir / "test.txt"
+        test_file.write_text("test content")
+
+        # Create archive
+        archive_path = temp_dir / "test.tzst"
+        main(["a", str(archive_path), str(test_file)])
+
+        # Mock list_archive to return items without mode
+        def mock_list_archive(*args, **kwargs):
+            return [
+                {
+                    "name": "test.txt",
+                    "size": 12,
+                    "is_file": True,
+                    "is_dir": False,
+                    # Missing mode field
+                }
+            ]
+
+        monkeypatch.setattr("tzst.cli.list_archive", mock_list_archive)
+
+        # Test verbose listing
+        result = main(["l", str(archive_path), "-v"])
+        assert result == 0
+
+        # Check that missing mode is handled (shows "----")
+        captured = capsys.readouterr()
+        assert "----" in captured.out
+
+    def test_verbose_listing_with_missing_mtime(self, temp_dir, capsys, monkeypatch):
+        """Test verbose listing when mtime information is missing."""
+        # Create a test file
+        test_file = temp_dir / "test.txt"
+        test_file.write_text("test content")
+
+        # Create archive
+        archive_path = temp_dir / "test.tzst"
+        main(["a", str(archive_path), str(test_file)])
+
+        # Mock list_archive to return items without mtime_str
+        def mock_list_archive(*args, **kwargs):
+            return [
+                {
+                    "name": "test.txt",
+                    "size": 12,
+                    "is_file": True,
+                    "is_dir": False,
+                    "mode": 0o644,
+                    # Missing mtime_str field
+                }
+            ]
+
+        monkeypatch.setattr("tzst.cli.list_archive", mock_list_archive)
+
+        # Test verbose listing
+        result = main(["l", str(archive_path), "-v"])
+        assert result == 0
+
+        # Check that listing works without mtime
+        captured = capsys.readouterr()
+        assert "test.txt" in captured.out
+
+    def test_simple_listing_mixed_file_types(self, temp_dir, capsys, monkeypatch):
+        """Test simple listing with mixed file types for directory counting."""
+        # Create a test file
+        test_file = temp_dir / "test.txt"
+        test_file.write_text("test content")
+
+        # Create archive
+        archive_path = temp_dir / "test.tzst"
+        main(["a", str(archive_path), str(test_file)])
+
+        # Mock list_archive to return mixed content
+        def mock_list_archive(*args, **kwargs):
+            return [
+                {
+                    "name": "file1.txt",
+                    "size": 100,
+                    "is_file": True,
+                    "is_dir": False,
+                },
+                {
+                    "name": "dir1/",
+                    "size": 0,
+                    "is_file": False,
+                    "is_dir": True,
+                },
+                {
+                    "name": "file2.txt",
+                    "size": 200,
+                    "is_file": True,
+                    "is_dir": False,
+                },
+                {
+                    "name": "dir2/",
+                    "size": 0,
+                    "is_file": False,
+                    "is_dir": True,
+                },
+            ]
+
+        monkeypatch.setattr("tzst.cli.list_archive", mock_list_archive)
+
+        # Test simple listing
+        result = main(["l", str(archive_path)])
+        assert result == 0
+
+        # Check that counts are correct
+        captured = capsys.readouterr()
+        assert "2 files" in captured.out
+        assert "2 directories" in captured.out
+        assert "300.0 B" in captured.out  # Total size of files

@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "tzst"
 dynamic = ["version"]
-description = "A Python library for creating and manipulating .tzst/.tar.zst archives"
+description = "The next-generation Python library engineered for modern archive management, leveraging cutting-edge Zstandard compression to deliver superior performance, security, and reliability"
 readme = "README.md"
 license = "BSD-3-Clause"
 requires-python = ">=3.12"

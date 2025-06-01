@@ -1,4 +1,4 @@
-"""tzst - A Python library for creating and manipulating .tzst/.tar.zst archives."""
+"""tzst - The next-generation Python library engineered for modern archive management, leveraging cutting-edge Zstandard compression to deliver superior performance, security, and reliability."""
 
 __version__ = "1.1.0"
 

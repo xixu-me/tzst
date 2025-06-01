@@ -57,9 +57,7 @@ def validate_compression_level(value: str) -> int:
         value: String value from command line
 
     Returns:
-        int: Valid compression level (1-22)
-
-    Raises:
+        int: Valid compression level (1-22)    Raises:
         argparse.ArgumentTypeError: If value is not a valid compression level
     """
     try:
@@ -72,7 +70,7 @@ def validate_compression_level(value: str) -> int:
     except ValueError:
         raise argparse.ArgumentTypeError(
             f"Invalid compression level: '{value}'. Must be an integer between 1 and 22."
-        )
+        ) from None
 
 
 def cmd_add(args) -> int:

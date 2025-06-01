@@ -75,6 +75,142 @@ def validate_compression_level(value: str) -> int:
         ) from None
 
 
+def _process_file_paths(file_args: list[str]) -> list[Path]:
+    """Process file arguments into resolved Path objects.
+
+    Args:
+        file_args: List of file path strings from command line
+
+    Returns:
+        list[Path]: List of resolved Path objects
+    """
+    files: list[Path] = []
+    for file_arg in file_args:
+        file_path = Path(file_arg).resolve()
+        files.append(file_path)
+    return files
+
+
+def _validate_files(files: list[Path]) -> list[Path]:
+    """Validate that files exist and are accessible.
+
+    Args:
+        files: List of Path objects to validate
+
+    Returns:
+        list[Path]: List of missing files (empty if all files exist)
+
+    Raises:
+        OSError: If a file cannot be accessed due to permissions or invalid characters
+    """
+    missing_files = []
+    for f in files:
+        try:
+            if not f.exists():
+                missing_files.append(f)
+        except OSError as e:
+            # Handle path issues (invalid characters, permissions, etc.)
+            print(f"Error: Cannot access file '{f}' - {e}", file=sys.stderr)
+            raise
+    return missing_files
+
+
+def _extract_add_params(args) -> tuple[int, bool]:
+    """Extract compression parameters from arguments.
+
+    Args:
+        args: Parsed command line arguments
+
+    Returns:
+        tuple[int, bool]: (compression_level, use_temp_file)
+    """
+    compression_level = getattr(args, "compression_level", 3)
+    use_temp_file = not getattr(args, "no_atomic", False)
+    return compression_level, use_temp_file
+
+
+def _prepare_archive_creation(args) -> tuple[Path, list[Path], int, bool] | int:
+    """Prepare and validate inputs for archive creation.
+
+    Args:
+        args: Parsed command line arguments
+
+    Returns:
+        tuple or int: Either (archive_path, files, compression_level, use_temp_file)
+                     or error code if validation fails
+    """
+    archive_path = Path(args.archive)
+    files = _process_file_paths(args.files)
+
+    # Validate files
+    missing_files = _validate_files(files)
+    if missing_files:
+        print(
+            f"Error: Files not found - {', '.join(map(str, missing_files))}",
+            file=sys.stderr,
+        )
+        return 1
+
+    compression_level, use_temp_file = _extract_add_params(args)
+    return archive_path, files, compression_level, use_temp_file
+
+
+def _execute_archive_creation(
+    archive_path: Path, files: list[Path], compression_level: int, use_temp_file: bool
+) -> int:
+    """Execute the archive creation process.
+
+    Args:
+        archive_path: Path where archive will be created
+        files: List of files to add to archive
+        compression_level: Compression level to use
+        use_temp_file: Whether to use atomic file operations
+
+    Returns:
+        int: Exit code (0 for success, non-zero for failure)
+    """
+    print(f"Creating archive: {archive_path}")
+    for file_path in files:
+        print(f"  Adding: {file_path}")
+
+    # Use atomic file operations by default for better reliability
+    # This creates the archive in a temporary file first, then moves it
+    create_archive(archive_path, files, compression_level, use_temp_file=use_temp_file)
+    print(f"Archive created successfully - {archive_path}")
+    return 0
+
+
+def _handle_archive_creation_exceptions(func, *args, **kwargs) -> int:
+    """Handle exceptions during archive creation.
+
+    Args:
+        func: Function to execute
+        *args: Positional arguments for func
+        **kwargs: Keyword arguments for func
+
+    Returns:
+        int: Exit code based on exception type
+    """
+    try:
+        return func(*args, **kwargs)
+    except OSError:
+        return 1  # Error already printed in _validate_files
+    except ValueError as e:
+        print(f"Error: Invalid parameter - {e}", file=sys.stderr)
+        return 1
+    except TzstArchiveError as e:
+        print(f"Error: Archive operation failed - {e}", file=sys.stderr)
+        return 1
+    except KeyboardInterrupt:
+        print("\nOperation interrupted by user", file=sys.stderr)
+        # Clean up any partial files - the atomic operations in create_archive
+        # handle this
+        return 130  # Standard exit code for SIGINT
+    except Exception as e:
+        print(f"Error: Failed to create archive - {e}", file=sys.stderr)
+        return 1
+
+
 def cmd_add(args) -> int:
     """Command handler for creating/adding to archives.
 
@@ -98,69 +234,24 @@ def cmd_add(args) -> int:
     Note:
         This function uses atomic file operations by default, creating the
         archive in a temporary file first, then atomically moving it to the
-        final location to prevent incomplete archives.    See Also:
+        final location to prevent incomplete archives.
+
+    See Also:
         :func:`tzst.create_archive`: The underlying function for archive creation
         :meth:`TzstArchive.add`: The core method for adding files to archives
     """
-    try:
-        archive_path = Path(args.archive)
-        files: list[Path] = []
 
-        # Process files with proper path handling for special characters
-        for file_arg in args.files:
-            file_path = Path(file_arg).resolve()
-            files.append(file_path)
+    def _create_archive_workflow():
+        preparation_result = _prepare_archive_creation(args)
+        if isinstance(preparation_result, int):
+            return preparation_result
 
-        # Check if files exist with better error reporting
-        missing_files = []
-        for f in files:
-            try:
-                if not f.exists():
-                    missing_files.append(f)
-            except OSError as e:
-                # Handle path issues (invalid characters, permissions, etc.)
-                print(f"Error: Cannot access file '{f}' - {e}", file=sys.stderr)
-                return 1
-
-        if missing_files:
-            print(
-                f"Error: Files not found - {', '.join(map(str, missing_files))}",
-                file=sys.stderr,
-            )
-            return 1
-
-        compression_level = getattr(args, "compression_level", 3)
-        use_temp_file = not getattr(args, "no_atomic", False)
-
-        print(f"Creating archive: {archive_path}")
-        for file_path in files:
-            print(f"  Adding: {file_path}")
-
-        # Use atomic file operations by default for better reliability
-        # This creates the archive in a temporary file first, then moves it
-        create_archive(
-            archive_path, files, compression_level, use_temp_file=use_temp_file
+        archive_path, files, compression_level, use_temp_file = preparation_result
+        return _execute_archive_creation(
+            archive_path, files, compression_level, use_temp_file
         )
-        print(f"Archive created successfully - {archive_path}")
-        return 0
 
-    except FileNotFoundError as e:
-        print(f"Error: File not found - {e}", file=sys.stderr)
-        return 1
-    except ValueError as e:
-        print(f"Error: Invalid parameter - {e}", file=sys.stderr)
-        return 1
-    except TzstArchiveError as e:
-        print(f"Error: Archive operation failed - {e}", file=sys.stderr)
-        return 1
-    except KeyboardInterrupt:
-        print("\nOperation interrupted by user", file=sys.stderr)
-        # Clean up any partial files - the atomic operations in create_archive
-        # handle this
-        return 130  # Standard exit code for SIGINT
-    except Exception as e:
-        print(f"Error: Failed to create archive - {e}", file=sys.stderr)
-        return 1
+    return _handle_archive_creation_exceptions(_create_archive_workflow)
 
 
 def cmd_extract_full(args) -> int:
@@ -648,6 +739,130 @@ Documentation:
     return parser
 
 
+def _validate_compression_level_in_argv(argv: list[str]) -> bool:
+    """Check for compression level validation errors in argv.
+
+    Args:
+        argv: Command line arguments
+
+    Returns:
+        bool: True if an error was found and handled, False otherwise
+    """
+    if "-l" not in argv and "--level" not in argv:
+        return False
+
+    try:
+        level_index = argv.index("-l") if "-l" in argv else argv.index("--level")
+        if level_index + 1 < len(argv):
+            level_value = argv[level_index + 1]
+            try:
+                level = int(level_value)
+                if not 1 <= level <= 22:
+                    print(
+                        f"Invalid compression level: {level}. "
+                        f"Must be between 1 and 22.",
+                        file=sys.stderr,
+                    )
+                    return True
+            except ValueError:
+                print(
+                    f"Invalid compression level: '{level_value}'. "
+                    f"Must be an integer between 1 and 22.",
+                    file=sys.stderr,
+                )
+                return True
+    except (ValueError, IndexError):
+        pass
+    return False
+
+
+def _validate_filter_in_argv(argv: list[str]) -> bool:
+    """Check for filter validation errors in argv.
+
+    Args:
+        argv: Command line arguments
+
+    Returns:
+        bool: True if an error was found and handled, False otherwise
+    """
+    if "--filter" not in argv:
+        return False
+
+    try:
+        filter_index = argv.index("--filter")
+        if filter_index + 1 < len(argv):
+            filter_value = argv[filter_index + 1]
+            valid_filters = ["data", "tar", "fully_trusted"]
+            if filter_value not in valid_filters:
+                print(
+                    f"Invalid filter specified: {filter_value}. "
+                    f"Must be one of: {', '.join(valid_filters)}",
+                    file=sys.stderr,
+                )
+                return True
+    except (ValueError, IndexError):
+        pass
+    return False
+
+
+def _handle_parsing_errors(e: SystemExit, argv: list[str] | None) -> int:
+    """Handle SystemExit exceptions from argument parsing.
+
+    Args:
+        e: SystemExit exception from argparse
+        argv: Command line arguments, if any
+
+    Returns:
+        int: Appropriate exit code
+    """
+    # Help was requested
+    if e.code == 0:
+        return 0
+    elif e.code == 2 and argv:
+        # Check for validation errors we want to convert to exit code 1
+        if _validate_compression_level_in_argv(argv):
+            return 1
+        if _validate_filter_in_argv(argv):
+            return 1
+
+    # Return the original exit code for other cases
+    return int(e.code) if e.code is not None else 1
+
+
+def _parse_arguments(parser, argv: list[str] | None):
+    """Parse command line arguments with error handling.
+
+    Args:
+        parser: The argument parser
+        argv: Command line arguments
+
+    Returns:
+        tuple: (args, error_code) where error_code is None for success
+    """
+    try:
+        args = parser.parse_args(argv)
+        return args, None
+    except SystemExit as e:
+        return None, _handle_parsing_errors(e, argv)
+
+
+def _execute_command(args, parser) -> int:
+    """Execute the parsed command.
+
+    Args:
+        args: Parsed command line arguments
+        parser: The argument parser for help display
+
+    Returns:
+        int: Exit code from command execution
+    """
+    if not hasattr(args, "func"):
+        parser.print_help()
+        return 1
+
+    return args.func(args)
+
+
 def main(argv: list[str] | None = None) -> int:
     """Main entry point for the tzst command-line interface.
 
@@ -678,65 +893,12 @@ def main(argv: list[str] | None = None) -> int:
     print()
 
     parser = create_parser()
+    args, error_code = _parse_arguments(parser, argv)
 
-    try:
-        args = parser.parse_args(argv)
-    except SystemExit as e:
-        # Handle different types of argparse errors
-        if e.code == 0:  # Help was requested
-            return 0
-        elif e.code == 2 and argv:
-            # Check for validation errors we want to convert to exit code 1
-            # Check for compression level errors
-            if "-l" in argv or "--level" in argv:
-                try:
-                    level_index = (
-                        argv.index("-l") if "-l" in argv else argv.index("--level")
-                    )
-                    if level_index + 1 < len(argv):
-                        level_value = argv[level_index + 1]
-                        try:
-                            level = int(level_value)
-                            if not 1 <= level <= 22:
-                                print(
-                                    f"Invalid compression level: {level}. "
-                                    f"Must be between 1 and 22.",
-                                    file=sys.stderr,
-                                )
-                                return 1
-                        except ValueError:
-                            print(
-                                f"Invalid compression level: '{level_value}'. "
-                                f"Must be an integer between 1 and 22.",
-                                file=sys.stderr,
-                            )
-                            return 1
-                except (ValueError, IndexError):
-                    pass  # Check for invalid filter errors
-            if "--filter" in argv:
-                try:
-                    filter_index = argv.index("--filter")
-                    if filter_index + 1 < len(argv):
-                        filter_value = argv[filter_index + 1]
-                        valid_filters = ["data", "tar", "fully_trusted"]
-                        if filter_value not in valid_filters:
-                            print(
-                                f"Invalid filter specified: {filter_value}. "
-                                f"Must be one of: {', '.join(valid_filters)}",
-                                file=sys.stderr,
-                            )
-                            return 1
-                except (ValueError, IndexError):
-                    pass
+    if error_code is not None:
+        return error_code
 
-        # Return the original exit code for other cases
-        return int(e.code) if e.code is not None else 1
-
-    if not hasattr(args, "func"):
-        parser.print_help()
-        return 1
-
-    return args.func(args)
+    return _execute_command(args, parser)
 
 
 if __name__ == "__main__":

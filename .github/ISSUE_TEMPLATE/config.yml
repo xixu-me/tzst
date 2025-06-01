@@ -1,0 +1,14 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 📖 Documentation
+    url: https://github.com/xixu-me/tzst#readme
+    about: Check the README for usage instructions and examples
+  - name: 🔒 Security Vulnerabilities (Private)
+    url: mailto:security@xi-xu.me
+    about: For critical security vulnerabilities, please report privately via email
+  - name: 💬 Discussions
+    url: https://github.com/xixu-me/tzst/discussions
+    about: Ask questions and discuss ideas with the community
+  - name: 📊 PyPI Package
+    url: https://pypi.org/project/tzst/
+    about: Download and install tzst from PyPI

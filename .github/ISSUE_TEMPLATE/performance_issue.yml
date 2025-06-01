@@ -1,0 +1,219 @@
+name: Performance Issue
+description: Report performance problems, memory usage, or speed issues
+title: "[PERFORMANCE] "
+labels: ["performance", "needs-triage"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for reporting a performance issue! Performance problems can be tricky to diagnose, so please provide as much detail as possible.
+
+  - type: checkboxes
+    id: search
+    attributes:
+      label: Search for existing issues
+      description: Please search existing issues before creating a new one.
+      options:
+        - label: I have searched for existing performance issues and didn't find a duplicate
+          required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: tzst Version
+      description: What version of tzst are you using?
+      placeholder: "e.g., 1.0.0"
+    validations:
+      required: true
+
+  - type: input
+    id: python-version
+    attributes:
+      label: Python Version
+      description: What version of Python are you using?
+      placeholder: "e.g., 3.12.0"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Operating System
+      description: What operating system are you using?
+      options:
+        - Windows
+        - macOS
+        - Linux (Ubuntu)
+        - Linux (CentOS/RHEL)
+        - Linux (Arch)
+        - Linux (Other)
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: performance-type
+    attributes:
+      label: Performance Issue Type
+      description: What type of performance problem are you experiencing?
+      options:
+        - Slow compression speed
+        - Slow decompression speed
+        - High memory usage
+        - High CPU usage
+        - Slow file I/O
+        - Poor scaling with large files
+        - Poor scaling with many files
+        - Streaming mode performance
+        - CLI responsiveness
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Performance Issue Description
+      description: Describe the performance problem you're experiencing.
+      placeholder: |
+        Describe what performance issue you're seeing.
+        Be specific about what operations are slow or using too much memory.
+    validations:
+      required: true
+
+  - type: textarea
+    id: benchmark-data
+    attributes:
+      label: Benchmark Data
+      description: Provide timing, memory usage, or other measurable data.
+      placeholder: |
+        Operation: Creating 1GB archive
+        Time taken: 45 seconds
+        Memory usage: 2GB RAM
+        CPU usage: 100% for entire duration
+
+        Expected: ~15 seconds, <500MB RAM
+    validations:
+      required: true
+
+  - type: textarea
+    id: data-characteristics
+    attributes:
+      label: Data Characteristics
+      description: Describe the files/data you're working with.
+      placeholder: |
+        - Total size: 
+        - Number of files: 
+        - File types: 
+        - Average file size: 
+        - Directory structure depth: 
+        - Compression level used: 
+        - Archive format (.tzst or .tar.zst):
+    validations:
+      required: true
+
+  - type: textarea
+    id: system-specs
+    attributes:
+      label: System Specifications
+      description: Provide details about your system hardware.
+      placeholder: |
+        - CPU: 
+        - RAM: 
+        - Storage type (SSD/HDD): 
+        - Available disk space: 
+        - Network storage (if applicable):
+    validations:
+      required: true
+
+  - type: dropdown
+    id: usage-pattern
+    attributes:
+      label: Usage Pattern
+      description: How are you using tzst?
+      options:
+        - Command Line Interface (CLI)
+        - Python API with small archives
+        - Python API with large archives
+        - Python API with many small files
+        - Streaming mode
+        - Batch processing multiple archives
+        - Interactive usage
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to Reproduce
+      description: Detailed steps to reproduce the performance issue.
+      placeholder: |
+        1. Create test data of size X...
+        2. Run command `tzst a archive.tzst ...`
+        3. Monitor performance with [tool]...
+        4. Observe slow performance...
+    validations:
+      required: true
+
+  - type: textarea
+    id: comparison
+    attributes:
+      label: Performance Comparison
+      description: How does tzst performance compare to other tools or previous versions?
+      placeholder: |
+        Comparison with other tools (tar, gzip, etc.):
+        - Tool A: X seconds, Y MB memory
+        - Tool B: X seconds, Y MB memory
+        - tzst: X seconds, Y MB memory
+
+        Comparison with previous tzst versions (if applicable):
+        - Version X.X.X: timing/memory
+        - Current version: timing/memory
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: performance-factors
+    attributes:
+      label: Performance Factors
+      description: Please check any that apply to your situation.
+      options:
+        - label: Issue occurs with atomic file operations enabled
+        - label: Issue occurs with streaming mode enabled
+        - label: Issue occurs with high compression levels (15+)
+        - label: Issue occurs with low compression levels (1-5)
+        - label: Issue occurs with Unicode filenames
+        - label: Issue occurs with symbolic links
+        - label: Issue occurs with many small files
+        - label: Issue occurs with few large files
+        - label: Issue occurs on network storage
+        - label: Issue occurs during extraction
+        - label: Issue occurs during compression
+        - label: Issue is reproducible consistently
+
+  - type: textarea
+    id: profiling-data
+    attributes:
+      label: Profiling Data
+      description: If you've done any profiling, please include the results.
+      placeholder: |
+        Include any profiling data you've collected:
+        - Python profiler output
+        - Memory profiler results
+        - System monitoring data
+        - etc.
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Any other context that might help diagnose the performance issue.
+      placeholder: |
+        - Are you running other resource-intensive programs?
+        - Any specific system configurations?
+        - Any other relevant details?
+    validations:
+      required: false

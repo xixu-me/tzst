@@ -1,0 +1,147 @@
+name: Feature Request
+description: Suggest a new feature or enhancement for tzst
+title: "[FEATURE] "
+labels: ["enhancement", "needs-triage"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for suggesting a new feature! Please provide as much detail as possible about your request.
+
+  - type: checkboxes
+    id: search
+    attributes:
+      label: Search for existing requests
+      description: Please search existing issues and discussions before creating a new feature request.
+      options:
+        - label: I have searched for existing feature requests and didn't find a duplicate
+          required: true
+
+  - type: dropdown
+    id: feature-type
+    attributes:
+      label: Feature Type
+      description: What type of feature are you requesting?
+      options:
+        - New CLI command or option
+        - New Python API functionality
+        - Performance improvement
+        - New compression options
+        - Enhanced error handling
+        - Security enhancement
+        - Cross-platform compatibility
+        - Integration with other tools
+        - Documentation improvement
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem Description
+      description: What problem would this feature solve? What use case would it enable?
+      placeholder: |
+        Describe the problem or limitation you're experiencing.
+        What use case would this feature enable?
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Solution
+      description: Describe the solution you'd like to see implemented.
+      placeholder: |
+        Describe your proposed solution in detail.
+        How would users interact with this feature?
+    validations:
+      required: true
+
+  - type: textarea
+    id: examples
+    attributes:
+      label: Usage Examples
+      description: Provide examples of how this feature would be used.
+      placeholder: |
+        # CLI example:
+        tzst new-command archive.tzst --new-option
+
+        # Python API example:
+        from tzst import TzstArchive
+        with TzstArchive("archive.tzst") as archive:
+            archive.new_method()
+    validations:
+      required: false
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: What alternatives have you considered? Why isn't the current functionality sufficient?
+      placeholder: |
+        Describe any alternative solutions you've considered.
+        Why don't existing features meet your needs?
+    validations:
+      required: false
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority Level
+      description: How important is this feature to you?
+      options:
+        - Critical (blocks important workflows)
+        - High (would significantly improve workflow)
+        - Medium (nice to have)
+        - Low (minor convenience)
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: compatibility
+    attributes:
+      label: Compatibility Considerations
+      description: Please check any that apply to your feature request.
+      options:
+        - label: This feature should maintain backward compatibility
+        - label: This feature may require breaking changes
+        - label: This feature should work on all supported platforms
+        - label: This feature is platform-specific
+        - label: This feature affects file format compatibility
+        - label: This feature affects performance significantly
+        - label: This feature requires new dependencies
+
+  - type: textarea
+    id: implementation
+    attributes:
+      label: Implementation Ideas
+      description: Do you have any ideas about how this could be implemented?
+      placeholder: |
+        If you have technical knowledge about how this could be implemented,
+        please share your ideas here. This is optional but helpful.
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: Contribution Interest
+      description: Would you be interested in contributing to this feature?
+      options:
+        - label: I would be interested in implementing this feature
+        - label: I would be interested in testing this feature
+        - label: I would be interested in writing documentation for this feature
+        - label: I can provide ongoing feedback during development
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Any other context, links, or information that would help understand this request.
+      placeholder: |
+        Add any other context about the feature request here.
+        Links to similar features in other tools, academic papers, etc.
+    validations:
+      required: false

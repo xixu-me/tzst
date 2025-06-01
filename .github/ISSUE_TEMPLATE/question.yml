@@ -1,0 +1,206 @@
+name: Question or Support
+description: Ask a question about using tzst or get help with a specific use case
+title: "[QUESTION] "
+labels: ["question", "support"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Welcome! We're happy to help you with tzst. Please provide as much detail as possible so we can give you the best assistance.
+
+        **Note:** For general questions, you might also consider:
+        - Checking the [README.md](../README.md) for common usage patterns
+        - Looking at existing issues for similar questions
+        - Reviewing the Python API documentation in the code
+
+  - type: checkboxes
+    id: search
+    attributes:
+      label: Search for existing answers
+      description: Please search existing issues and documentation before asking.
+      options:
+        - label: I have searched existing issues and documentation for an answer
+          required: true
+
+  - type: dropdown
+    id: question-type
+    attributes:
+      label: Question Type
+      description: What type of question do you have?
+      options:
+        - How to use a specific feature
+        - Best practices recommendation
+        - Performance optimization help
+        - Platform-specific usage
+        - Integration with other tools
+        - Troubleshooting help
+        - Feature availability/roadmap
+        - Contributing guidance
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: question
+    attributes:
+      label: Your Question
+      description: What would you like to know about tzst?
+      placeholder: |
+        Ask your question clearly and specifically:
+        - What are you trying to accomplish?
+        - What specific help do you need?
+        - What have you already tried?
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Context and Use Case
+      description: Provide context about your situation and what you're trying to accomplish.
+      placeholder: |
+        Help us understand your situation:
+        - What are you building or working on?
+        - What constraints or requirements do you have?
+        - Why are you using tzst for this task?
+        - What's your experience level with similar tools?
+    validations:
+      required: true
+
+  - type: textarea
+    id: attempted-solutions
+    attributes:
+      label: What You've Tried
+      description: What have you already attempted? Include code, commands, or approaches you've tried.
+      placeholder: |
+        Describe what you've already tried:
+        ```bash
+        # Command you tried
+        tzst a archive.tzst files/
+        ```
+
+        ```python
+        # Python code you tried
+        from tzst import create_archive
+        create_archive("test.tzst", ["files/"])
+        ```
+
+        - Approach 1: [what happened]
+        - Approach 2: [what happened]
+    validations:
+      required: false
+
+  - type: input
+    id: tzst-version
+    attributes:
+      label: tzst Version
+      description: What version of tzst are you using?
+      placeholder: "e.g., 1.0.0"
+    validations:
+      required: false
+
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Platform
+      description: What platform are you using?
+      options:
+        - Windows
+        - macOS
+        - Linux
+        - Not platform-specific
+        - Multiple platforms
+    validations:
+      required: false
+
+  - type: dropdown
+    id: usage-context
+    attributes:
+      label: Usage Context
+      description: How are you planning to use tzst?
+      options:
+        - Command line tool for personal use
+        - Command line tool in scripts/automation
+        - Python library in application
+        - Python library for data processing
+        - Integration with existing workflow
+        - Learning/educational purposes
+        - Contributing to tzst development
+        - Other
+    validations:
+      required: false
+
+  - type: textarea
+    id: data-characteristics
+    attributes:
+      label: Data Characteristics (if relevant)
+      description: If your question involves specific types of data, describe it.
+      placeholder: |
+        If relevant to your question:
+        - Types of files you're working with: 
+        - Approximate data size: 
+        - Number of files: 
+        - Special requirements (performance, security, etc.):
+    validations:
+      required: false
+
+  - type: textarea
+    id: expected-outcome
+    attributes:
+      label: Desired Outcome
+      description: What would be the ideal solution or outcome for your question?
+      placeholder: |
+        Describe what you're hoping to achieve:
+        - Specific functionality you want
+        - Performance characteristics needed
+        - Integration requirements
+        - etc.
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: help-areas
+    attributes:
+      label: Areas Where You Need Help
+      description: Check the areas where you need assistance.
+      options:
+        - label: Understanding basic tzst concepts
+        - label: Choosing the right commands/API methods
+        - label: Optimizing performance
+        - label: Handling large files or archives
+        - label: Platform-specific considerations
+        - label: Error handling and troubleshooting
+        - label: Security considerations
+        - label: Integration with other tools/workflows
+        - label: Python API usage
+        - label: CLI usage and scripting
+        - label: Compression settings and trade-offs
+        - label: File format compatibility
+
+  - type: dropdown
+    id: urgency
+    attributes:
+      label: Urgency Level
+      description: How urgent is this question for you?
+      options:
+        - Not urgent (general learning)
+        - Somewhat urgent (current project)
+        - Urgent (blocking my work)
+        - Very urgent (production issue)
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional-info
+    attributes:
+      label: Additional Information
+      description: Any other information that might help us answer your question.
+      placeholder: |
+        Anything else that might be relevant:
+        - Links to similar questions or resources you've found
+        - Specific error messages (if applicable)
+        - Related tools or technologies you're using
+        - Any constraints or limitations you're working with
+    validations:
+      required: false

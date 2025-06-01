@@ -1,0 +1,233 @@
+name: Documentation Issue
+description: Report issues with documentation, examples, or request documentation improvements
+title: "[DOCS] "
+labels: ["documentation", "needs-triage"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for helping improve tzst documentation! Clear documentation is essential for user experience.
+
+  - type: checkboxes
+    id: search
+    attributes:
+      label: Search for existing issues
+      description: Please search existing issues before creating a new one.
+      options:
+        - label: I have searched for existing documentation issues and didn't find a duplicate
+          required: true
+
+  - type: dropdown
+    id: doc-type
+    attributes:
+      label: Documentation Type
+      description: What type of documentation issue is this?
+      options:
+        - README.md
+        - CONTRIBUTING.md
+        - API documentation (docstrings)
+        - CLI help text
+        - Code examples
+        - Installation instructions
+        - Error messages
+        - Security documentation
+        - Performance guidelines
+        - Platform-specific notes
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: issue-category
+    attributes:
+      label: Issue Category
+      description: What type of documentation issue are you reporting?
+      options:
+        - Missing documentation
+        - Incorrect/outdated information
+        - Unclear or confusing explanation
+        - Missing examples
+        - Broken links or references
+        - Formatting issues
+        - Typos or grammar errors
+        - Translation issues
+        - Accessibility improvements
+        - New documentation request
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Issue Description
+      description: Describe the documentation issue in detail.
+      placeholder: |
+        Clearly describe the documentation problem:
+        - What information is missing, incorrect, or unclear?
+        - Where did you encounter this issue?
+        - What were you trying to accomplish?
+    validations:
+      required: true
+
+  - type: textarea
+    id: location
+    attributes:
+      label: Documentation Location
+      description: Where is this documentation located?
+      placeholder: |
+        Specify the location:
+        - File name: README.md, CONTRIBUTING.md, etc.
+        - Section: "Installation", "API Reference", etc.
+        - Line numbers (if applicable): 
+        - URL (if online documentation):
+    validations:
+      required: true
+
+  - type: textarea
+    id: current-content
+    attributes:
+      label: Current Content
+      description: What does the current documentation say? (copy the relevant text)
+      placeholder: |
+        Copy the current text that is problematic:
+        ```
+        [Paste current documentation text here]
+        ```
+    validations:
+      required: false
+
+  - type: textarea
+    id: expected-content
+    attributes:
+      label: Suggested Improvement
+      description: What should the documentation say instead?
+      placeholder: |
+        Provide your suggested improvement:
+        - Corrected information
+        - Clearer explanation
+        - Additional examples
+        - Better formatting
+    validations:
+      required: true
+
+  - type: textarea
+    id: examples-needed
+    attributes:
+      label: Examples Needed
+      description: What examples would help illustrate this documentation?
+      placeholder: |
+        Suggest specific examples:
+        - Code examples showing usage
+        - Command-line examples
+        - Common use cases
+        - Error handling examples
+    validations:
+      required: false
+
+  - type: dropdown
+    id: user-level
+    attributes:
+      label: Target User Level
+      description: What level of user would benefit from this documentation improvement?
+      options:
+        - Beginner (first-time users)
+        - Intermediate (some experience)
+        - Advanced (power users)
+        - Developer (contributing to tzst)
+        - All users
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: documentation-areas
+    attributes:
+      label: Related Documentation Areas
+      description: Which areas of documentation are related to this issue?
+      options:
+        - label: Installation and setup
+        - label: Basic usage and getting started
+        - label: CLI commands and options
+        - label: Python API reference
+        - label: Performance and optimization
+        - label: Security considerations
+        - label: Platform-specific information
+        - label: Troubleshooting and error handling
+        - label: Advanced usage patterns
+        - label: Integration with other tools
+        - label: Contributing guidelines
+        - label: Development setup
+
+  - type: dropdown
+    id: discovery-context
+    attributes:
+      label: How did you discover this issue?
+      description: What were you doing when you found this documentation problem?
+      options:
+        - Reading documentation to learn tzst
+        - Following installation instructions
+        - Looking for specific API information
+        - Trying to solve a problem
+        - Reviewing code examples
+        - Contributing to the project
+        - Teaching/helping others
+        - Other
+    validations:
+      required: false
+
+  - type: textarea
+    id: user-journey
+    attributes:
+      label: User Journey Context
+      description: Describe what you were trying to accomplish when you encountered this issue.
+      placeholder: |
+        Help us understand the context:
+        - What task were you trying to complete?
+        - What information were you looking for?
+        - What confusion or frustration did you experience?
+        - How did this impact your ability to use tzst?
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: improvement-type
+    attributes:
+      label: Improvement Type
+      description: What type of improvement would help most?
+      options:
+        - label: More detailed explanations
+        - label: Step-by-step tutorials
+        - label: More code examples
+        - label: Better organization/structure
+        - label: Visual aids (diagrams, screenshots)
+        - label: Cross-references to related topics
+        - label: Troubleshooting guides
+        - label: FAQ section
+        - label: Video or interactive content
+        - label: Beginner-friendly explanations
+        - label: Advanced technical details
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Any other context that would help improve the documentation.
+      placeholder: |
+        Additional information:
+        - Your experience level with similar tools
+        - Documentation from other projects that you found helpful
+        - Specific use cases that need better coverage
+        - Any other relevant details
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: contribution-interest
+    attributes:
+      label: Contribution Interest
+      description: Would you be interested in helping improve this documentation?
+      options:
+        - label: I would be interested in writing/improving this documentation
+        - label: I would be interested in reviewing documentation changes
+        - label: I can provide feedback on documentation drafts
+        - label: I can help with testing documentation examples

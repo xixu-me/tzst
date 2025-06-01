@@ -1,0 +1,239 @@
+name: Platform-Specific Issue
+description: Report issues specific to Windows, macOS, Linux, or other platforms
+title: "[PLATFORM] "
+labels: ["platform-specific", "needs-triage"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for reporting a platform-specific issue! These issues help us ensure tzst works correctly across all supported platforms.
+
+  - type: checkboxes
+    id: search
+    attributes:
+      label: Search for existing issues
+      description: Please search existing issues before creating a new one.
+      options:
+        - label: I have searched for existing platform-specific issues and didn't find a duplicate
+          required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: tzst Version
+      description: What version of tzst are you using?
+      placeholder: "e.g., 1.0.0"
+    validations:
+      required: true
+
+  - type: input
+    id: python-version
+    attributes:
+      label: Python Version
+      description: What version of Python are you using?
+      placeholder: "e.g., 3.12.0"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Primary Platform (where issue occurs)
+      description: What operating system are you experiencing the issue on?
+      options:
+        - Windows 11
+        - Windows 10
+        - Windows (other version)
+        - macOS (latest)
+        - macOS (older version)
+        - Ubuntu (latest LTS)
+        - Ubuntu (other version)
+        - CentOS/RHEL
+        - Arch Linux
+        - Alpine Linux
+        - Debian
+        - Other Linux distribution
+        - FreeBSD
+        - Other Unix-like OS
+    validations:
+      required: true
+
+  - type: input
+    id: platform-details
+    attributes:
+      label: Platform Details
+      description: Specific version, architecture, or other platform details.
+      placeholder: "e.g., Windows 10 Pro 22H2, x64 / Ubuntu 22.04.3 LTS, arm64 / macOS 13.5, x86_64"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: cross-platform-test
+    attributes:
+      label: Cross-Platform Testing
+      description: Have you tested this on other platforms?
+      options:
+        - "No, only tested on the affected platform"
+        - "Yes, works correctly on other platforms"
+        - "Yes, same issue occurs on other platforms"
+        - "Partially tested on other platforms"
+    validations:
+      required: true
+
+  - type: textarea
+    id: other-platforms
+    attributes:
+      label: Other Platform Results
+      description: If you tested on other platforms, what were the results?
+      placeholder: |
+        Platform 1: Working correctly / Same issue / Different issue / Not tested
+        Platform 2: Working correctly / Same issue / Different issue / Not tested
+        Platform 3: Working correctly / Same issue / Different issue / Not tested
+    validations:
+      required: false
+
+  - type: dropdown
+    id: issue-category
+    attributes:
+      label: Issue Category
+      description: What type of platform-specific issue is this?
+      options:
+        - File path handling (Windows path limits, Unix paths)
+        - File permissions and attributes
+        - Symbolic links and special files
+        - Character encoding and Unicode
+        - File system limitations
+        - Archive compatibility across platforms
+        - CLI behavior differences
+        - Installation or packaging issues
+        - Performance differences
+        - Security or permissions model
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Issue Description
+      description: Describe the platform-specific issue you're experiencing.
+      placeholder: |
+        Describe the issue in detail. 
+        Be specific about what behavior you're seeing that differs from expected or from other platforms.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to Reproduce
+      description: Steps to reproduce the issue on the affected platform.
+      placeholder: |
+        1. Create files with [specific characteristics]...
+        2. Run `tzst a archive.tzst ...` 
+        3. Observe platform-specific behavior...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected Behavior
+      description: What behavior did you expect? How does it work on other platforms?
+      placeholder: |
+        Expected behavior (or behavior on other platforms):
+        - Should create archive successfully
+        - Should preserve file attributes
+        - etc.
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual-behavior
+    attributes:
+      label: Actual Behavior
+      description: What actually happens on this platform?
+      placeholder: |
+        Actual behavior on [platform]:
+        - Error message: 
+        - Unexpected results: 
+        - Different file handling:
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: platform-features
+    attributes:
+      label: Platform-Specific Features Involved
+      description: Check any platform-specific features that are involved in this issue.
+      options:
+        - label: Windows long paths (>260 characters)
+        - label: Windows reserved filenames (CON, PRN, AUX, etc.)
+        - label: Windows file attributes (hidden, system, etc.)
+        - label: Windows case-insensitive filesystem
+        - label: Unix/Linux file permissions (chmod)
+        - label: Unix/Linux symbolic links
+        - label: Unix/Linux hard links
+        - label: Unix/Linux special files (devices, pipes, etc.)
+        - label: macOS resource forks or extended attributes
+        - label: macOS case-insensitive but case-preserving filesystem
+        - label: Unicode normalization differences
+        - label: Path separator differences (/ vs \)
+        - label: Network filesystem behaviors
+        - label: Container or virtualized environment
+
+  - type: textarea
+    id: file-examples
+    attributes:
+      label: Problematic File Examples
+      description: Provide examples of files or paths that cause issues.
+      placeholder: |
+        Examples of files that cause problems:
+        - "CON.txt" (Windows reserved name)
+        - "file with very long path/..." (path length issues)
+        - "файл.txt" (Unicode characters)
+        - Symbolic link: link -> target
+    validations:
+      required: false
+
+  - type: textarea
+    id: environment-details
+    attributes:
+      label: Environment Details
+      description: Additional environment information specific to your platform.
+      placeholder: |
+        - Filesystem type: NTFS/ext4/APFS/etc.
+        - Case sensitivity: case-sensitive/case-insensitive
+        - Python installation method: system/conda/pyenv/etc.
+        - Admin/root privileges: yes/no
+        - Antivirus software (if Windows): 
+        - Container environment: Docker/WSL/etc.
+    validations:
+      required: false
+
+  - type: textarea
+    id: workaround
+    attributes:
+      label: Workaround
+      description: Have you found any platform-specific workarounds?
+      placeholder: |
+        Any workarounds you've discovered for this platform:
+        - Using different file names
+        - Different command options
+        - Platform-specific configuration
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Any other platform-specific context that might be relevant.
+      placeholder: |
+        - Related to company/enterprise policies?
+        - Specific hardware configurations?
+        - Network or security restrictions?
+        - Other relevant platform details?
+    validations:
+      required: false

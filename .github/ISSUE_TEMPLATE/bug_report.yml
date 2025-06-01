@@ -1,0 +1,180 @@
+name: Bug Report
+description: Report a bug or unexpected behavior in tzst
+title: "[BUG] "
+labels: ["bug", "needs-triage"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for taking the time to report a bug! Please provide as much detail as possible to help us reproduce and fix the issue.
+
+  - type: checkboxes
+    id: search
+    attributes:
+      label: Search for existing issues
+      description: Please search existing issues before creating a new one.
+      options:
+        - label: I have searched for existing issues and didn't find a duplicate
+          required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: tzst Version
+      description: What version of tzst are you using?
+      placeholder: "e.g., 1.0.0"
+    validations:
+      required: true
+
+  - type: input
+    id: python-version
+    attributes:
+      label: Python Version
+      description: What version of Python are you using?
+      placeholder: "e.g., 3.12.0"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Operating System
+      description: What operating system are you using?
+      options:
+        - Windows
+        - macOS
+        - Linux (Ubuntu)
+        - Linux (CentOS/RHEL)
+        - Linux (Arch)
+        - Linux (Other)
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: usage-type
+    attributes:
+      label: Usage Type
+      description: How are you using tzst?
+      options:
+        - Command Line Interface (CLI)
+        - Python API
+        - Both CLI and Python API
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug Description
+      description: A clear and concise description of what the bug is.
+      placeholder: Describe what happened and what you expected to happen.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to Reproduce
+      description: Detailed steps to reproduce the bug.
+      placeholder: |
+        1. Create a file/directory structure...
+        2. Run the command `tzst a archive.tzst ...`
+        3. Observe the error...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What did you expect to happen?
+      placeholder: Describe the expected behavior.
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual Behavior
+      description: What actually happened? Include any error messages or stack traces.
+      placeholder: |
+        Include full error messages, stack traces, or unexpected output here.
+        Use code blocks (```) for formatting.
+    validations:
+      required: true
+
+  - type: textarea
+    id: archive-details
+    attributes:
+      label: Archive Details (if applicable)
+      description: Information about the archive or files involved.
+      placeholder: |
+        - Archive size: 
+        - Number of files: 
+        - File types: 
+        - Compression level used: 
+        - Special file types (symlinks, executables, etc.):
+    validations:
+      required: false
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment Details
+      description: Additional environment information that might be relevant.
+      placeholder: |
+        - Available disk space: 
+        - Memory (RAM): 
+        - File system type: 
+        - Any special permissions or restrictions: 
+        - Antivirus software (if relevant):
+    validations:
+      required: false
+
+  - type: dropdown
+    id: workaround
+    attributes:
+      label: Workaround Available
+      description: Have you found any workaround for this issue?
+      options:
+        - "No workaround found"
+        - "Partial workaround available"
+        - "Full workaround available"
+    validations:
+      required: false
+
+  - type: textarea
+    id: workaround-details
+    attributes:
+      label: Workaround Details
+      description: If you found a workaround, please describe it here.
+      placeholder: Describe any workaround you've found.
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: additional-info
+    attributes:
+      label: Additional Information
+      description: Please check any that apply to your situation.
+      options:
+        - label: This is a regression (worked in a previous version)
+        - label: This affects large files (>100MB)
+        - label: This affects archives with many files (>1000)
+        - label: This involves Unicode/international characters
+        - label: This involves symbolic links or special files
+        - label: This affects atomic file operations
+        - label: This affects streaming mode
+        - label: This involves compression level edge cases
+        - label: This is platform-specific behavior
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Any other context, screenshots, or information that might help.
+      placeholder: Add any other context about the problem here.
+    validations:
+      required: false

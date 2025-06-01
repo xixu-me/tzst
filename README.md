@@ -11,17 +11,16 @@
 
 ## Features
 
-- **High Compression**: Uses Zstandard compression for excellent compression ratios and speed
+- **High Compression**: Zstandard compression for excellent compression ratios and speed
 - **Tar Compatibility**: Creates standard tar archives compressed with Zstandard
-- **Command Line Interface**: Easy-to-use CLI with intuitive commands and streaming support
+- **Command Line Interface**: Intuitive CLI with streaming support and comprehensive options
 - **Python API**: Clean, Pythonic API for programmatic use
 - **Cross-Platform**: Works on Windows, macOS, and Linux
 - **Multiple Extensions**: Supports both `.tzst` and `.tar.zst` extensions
-- **Flexible Extraction**: Extract with full paths or flatten directory structure
 - **Memory Efficient**: Streaming mode for handling large archives with minimal memory usage
 - **Atomic Operations**: Safe file operations with automatic cleanup on interruption
-- **Enhanced Error Handling**: Clear error messages with helpful alternatives and suggestions
 - **Secure by Default**: Uses the 'data' filter for maximum security during extraction
+- **Enhanced Error Handling**: Clear error messages with helpful alternatives
 
 ## Installation
 
@@ -41,7 +40,7 @@ pip install .
 
 ### Development Installation
 
-This project uses [Hatch](https://hatch.pypa.io/) as the build system, configured in `pyproject.toml`. For development:
+This project uses [Hatch](https://hatch.pypa.io/) as the build system:
 
 ```bash
 git clone https://github.com/xixu-me/tzst.git
@@ -49,11 +48,9 @@ cd tzst
 pip install -e .[dev]
 ```
 
-Alternatively, if you have [Hatch](https://hatch.pypa.io/) installed:
+Alternatively, with [Hatch](https://hatch.pypa.io/) installed:
 
 ```bash
-git clone https://github.com/xixu-me/tzst.git
-cd tzst
 hatch env create
 hatch shell
 ```
@@ -62,7 +59,7 @@ hatch shell
 
 ### Command Line Usage
 
-> **Recommended**: The `uvx tzst` command is highly recommended for running tzst without installation and with significantly better performance. [uv](https://github.com/astral-sh/uv) provides faster package resolution and execution compared to standard pip/python approaches. See the [uv's documentation](https://docs.astral.sh/uv/) for more details.
+> **Recommended**: Use `uvx tzst` for running without installation and better performance. See [uv documentation](https://docs.astral.sh/uv/) for details.
 
 ```bash
 # Create an archive
@@ -97,8 +94,6 @@ for item in contents:
 
 ## Command Line Interface
 
-The `tzst` command provides a comprehensive CLI for archive operations:
-
 ### Archive Operations
 
 #### Create Archive
@@ -109,9 +104,6 @@ tzst a archive.tzst file1.txt file2.txt
 
 # With compression level (1-22, default: 3)
 tzst a archive.tzst files/ -l 15
-
-# Disable atomic file operations (not recommended)
-tzst a archive.tzst files/ --no-atomic
 
 # Alternative commands
 tzst add archive.tzst files/
@@ -133,7 +125,7 @@ tzst x archive.tzst file1.txt dir/file2.txt
 # Extract without directory structure (flat)
 tzst e archive.tzst -o output/
 
-# Use streaming mode for large archives (reduces memory usage)
+# Use streaming mode for large archives
 tzst x archive.tzst --streaming -o output/
 ```
 
@@ -156,7 +148,7 @@ tzst l archive.tzst --streaming -v
 # Test archive integrity
 tzst t archive.tzst
 
-# Test with streaming mode for large archives
+# Test with streaming mode
 tzst t archive.tzst --streaming
 ```
 
@@ -172,37 +164,14 @@ tzst t archive.tzst --streaming
 
 ### CLI Options
 
-#### Global Options
-
 - `-v, --verbose`: Enable verbose output
 - `-o, --output DIR`: Specify output directory (extract commands)
 - `-l, --level LEVEL`: Set compression level 1-22 (create command)
-- `--streaming`: Enable streaming mode for memory-efficient processing of large archives
-- `--filter FILTER`: Security filter for extraction (extract commands only)
-- `--no-atomic`: Disable atomic file operations (create command only, not recommended)
+- `--streaming`: Enable streaming mode for memory-efficient processing
+- `--filter FILTER`: Security filter for extraction (data/tar/fully_trusted)
+- `--no-atomic`: Disable atomic file operations (not recommended)
 
-#### Streaming Mode
-
-The `--streaming` flag is available for extract, list, and test operations:
-
-```bash
-# Memory-efficient operations on large archives
-tzst x large_archive.tzst --streaming
-tzst l large_archive.tzst --streaming -v
-tzst t large_archive.tzst --streaming
-```
-
-**Benefits of streaming mode:**
-
-- Significantly reduced memory usage for large archives
-- Better performance when processing archives that don't fit in memory
-- Automatic cleanup of resources
-
-**Note:** Some advanced operations may be limited in streaming mode.
-
-#### Security Filters
-
-For enhanced security when extracting archives from untrusted sources, tzst provides extraction filters:
+### Security Filters
 
 ```bash
 # Extract with maximum security (default)
@@ -217,17 +186,13 @@ tzst x archive.tzst --filter fully_trusted
 
 **Security Filter Options:**
 
-- `data` (default, recommended): Most secure option. Blocks dangerous files like device files, absolute paths, and paths outside the extraction directory. Sets safe permissions and clears user/group metadata.
-- `tar`: Standard tar compatibility. Blocks absolute paths and directory traversal but allows more file types and metadata.
-- `fully_trusted`: No security restrictions. Only use with completely trusted archives as it can be exploited for path traversal attacks.
-
-**Security Warning:** Always use the default `data` filter when extracting archives from untrusted sources. Never use `fully_trusted` unless you completely trust the archive source.
+- `data` (default): Most secure. Blocks dangerous files, absolute paths, and paths outside extraction directory
+- `tar`: Standard tar compatibility. Blocks absolute paths and directory traversal
+- `fully_trusted`: No security restrictions. Only use with completely trusted archives
 
 ## Python API
 
 ### TzstArchive Class
-
-The main class for working with tzst archives:
 
 ```python
 from tzst import TzstArchive
@@ -242,34 +207,20 @@ with TzstArchive("archive.tzst", "r") as archive:
     # List contents
     contents = archive.list(verbose=True)
     
-    # Extract specific file with security filter
+    # Extract with security filter
     archive.extract("file.txt", "output/", filter="data")
-    
-    # Extract all files (uses 'data' filter by default for security)
-    archive.extract(path="output/")
-    
-    # Extract with different security levels
-    archive.extract(path="output/", filter="tar")        # Standard tar compatibility
-    archive.extract(path="output/", filter="data")       # Maximum security (default)
-    # archive.extract(path="output/", filter="fully_trusted")  # Only for trusted archives!
     
     # Test integrity
     is_valid = archive.test()
 
-# For large archives, use streaming mode to reduce memory usage
+# For large archives, use streaming mode
 with TzstArchive("large_archive.tzst", "r", streaming=True) as archive:
-    # Streaming mode is more memory efficient but may limit some operations
-    contents = archive.list(verbose=True)
     archive.extract(path="output/")
 ```
 
 **Important Limitations:**
 
-- **Append Mode Not Supported**: The `TzstArchive` class does not support append mode (`"a"`). If you need to add files to an existing archive, you must either:
-  1. Create multiple separate archives
-  2. Recreate the entire archive with all files
-  3. Use standard tar and compress separately with external tools
-  4. Extract the existing archive, add new files, and recompress
+- **Append Mode Not Supported**: Create multiple archives or recreate the entire archive instead
 
 ### Convenience Functions
 
@@ -278,29 +229,20 @@ with TzstArchive("large_archive.tzst", "r", streaming=True) as archive:
 ```python
 from tzst import create_archive
 
-# Create archive with atomic file operations (default behavior)
+# Create with atomic operations (default)
 create_archive(
     archive_path="backup.tzst",
     files=["documents/", "photos/", "config.txt"],
     compression_level=10
 )
-
-# Disable atomic operations if needed (not recommended)
-create_archive(
-    archive_path="backup.tzst", 
-    files=["documents/"],
-    use_temp_file=False
-)
 ```
-
-**Atomic File Operations**: By default, `create_archive()` uses atomic file operations to prevent incomplete archives if the process is interrupted. The archive is first created in a temporary file, then atomically moved to the final location upon successful completion.
 
 #### extract_archive()
 
 ```python
 from tzst import extract_archive
 
-# Extract with directory structure (uses 'data' filter by default for security)
+# Extract with security (default: 'data' filter)
 extract_archive("backup.tzst", "restore/")
 
 # Extract specific files
@@ -309,11 +251,7 @@ extract_archive("backup.tzst", "restore/", members=["config.txt"])
 # Flatten directory structure
 extract_archive("backup.tzst", "restore/", flatten=True)
 
-# Extract with different security filters
-extract_archive("backup.tzst", "restore/", filter="data")  # Maximum security (default)
-extract_archive("backup.tzst", "restore/", filter="tar")   # Standard tar compatibility
-
-# For large archives, use streaming mode for memory efficiency
+# Use streaming for large archives
 extract_archive("large_backup.tzst", "restore/", streaming=True)
 ```
 
@@ -324,17 +262,12 @@ from tzst import list_archive
 
 # Simple listing
 files = list_archive("backup.tzst")
-for file_info in files:
-    print(file_info["name"])
 
 # Detailed listing
 files = list_archive("backup.tzst", verbose=True)
-for file_info in files:
-    print(f"{file_info['name']}: {file_info['size']} bytes, "
-          f"modified: {file_info['mtime_str']}")
 
-# Use streaming mode for large archives
-files = list_archive("large_backup.tzst", verbose=True, streaming=True)
+# Streaming for large archives
+files = list_archive("large_backup.tzst", streaming=True)
 ```
 
 #### test_archive()
@@ -345,15 +278,15 @@ from tzst import test_archive
 # Basic integrity test
 if test_archive("backup.tzst"):
     print("Archive is valid")
-else:
-    print("Archive is corrupted")
 
-# Test large archive with streaming mode
+# Test with streaming
 if test_archive("large_backup.tzst", streaming=True):
     print("Large archive is valid")
 ```
 
-## File Extensions
+## Advanced Features
+
+### File Extensions
 
 The library automatically handles file extensions with intelligent normalization:
 
@@ -361,13 +294,6 @@ The library automatically handles file extensions with intelligent normalization
 - `.tar.zst` - Alternative standard extension
 - Auto-detection when opening existing archives
 - Automatic extension addition when creating archives
-
-**Extension Behavior:**
-
-- If no extension is provided, `.tzst` is automatically added
-- Inconsistent extensions (e.g., `.txt`) are normalized to `.tzst`
-- Both `.tzst` and `.tar.zst` are treated as valid and equivalent
-- Opening archives automatically detects the correct format regardless of extension
 
 ```python
 # These all create valid archives
@@ -377,7 +303,7 @@ create_archive("backup", files)          # Creates backup.tzst
 create_archive("backup.txt", files)      # Creates backup.tzst (normalized)
 ```
 
-## Compression Levels
+### Compression Levels
 
 Zstandard compression levels range from 1 (fastest) to 22 (best compression):
 
@@ -386,20 +312,52 @@ Zstandard compression levels range from 1 (fastest) to 22 (best compression):
 - **Level 10-15**: Better compression, slower
 - **Level 20-22**: Maximum compression, much slower
 
+### Streaming Mode
+
+Use streaming mode for memory-efficient processing of large archives:
+
+**Benefits:**
+
+- Significantly reduced memory usage
+- Better performance for archives that don't fit in memory
+- Automatic cleanup of resources
+
+**When to Use:**
+
+- Archives larger than 100MB
+- Limited memory environments
+- Processing archives with many large files
+
 ```python
-# Fast compression
-create_archive("fast.tzst", files, compression_level=1)
+# Example: Processing a large backup archive
+from tzst import extract_archive, list_archive, test_archive
 
-# Balanced (default)
-create_archive("balanced.tzst", files, compression_level=3)
+large_archive = "backup_500gb.tzst"
 
-# Maximum compression
-create_archive("compressed.tzst", files, compression_level=22)
+# Memory-efficient operations
+is_valid = test_archive(large_archive, streaming=True)
+contents = list_archive(large_archive, streaming=True, verbose=True)
+extract_archive(large_archive, "restore/", streaming=True)
 ```
 
-## Error Handling and Recovery
+### Atomic Operations
 
-The library provides comprehensive error handling with specific exception types and helpful error messages:
+All file creation operations use atomic file operations by default:
+
+- Archives created in temporary files first, then atomically moved
+- Automatic cleanup if process is interrupted
+- No risk of corrupted or incomplete archives
+- Cross-platform compatibility
+
+```python
+# Atomic operations enabled by default
+create_archive("important.tzst", files)  # Safe from interruption
+
+# Can be disabled if needed (not recommended)
+create_archive("test.tzst", files, use_temp_file=False)
+```
+
+### Error Handling
 
 ```python
 from tzst import TzstArchive
@@ -416,161 +374,41 @@ try:
         archive.extract()
 except TzstDecompressionError:
     print("Failed to decompress archive")
-except TzstArchiveError:
-    print("Archive operation failed")
 except TzstFileNotFoundError:
     print("Archive file not found")
 except KeyboardInterrupt:
     print("Operation interrupted by user")
-    # Cleanup is handled automatically
+    # Cleanup handled automatically
 ```
 
-### Enhanced Error Messages
+## Performance and Comparison
 
-The library now provides enhanced error messages with clear alternatives:
+### Performance Tips
 
-```python
-# Append mode is not supported, but errors provide helpful alternatives
-try:
-    with TzstArchive("archive.tzst", "a") as archive:
-        archive.add("newfile.txt")
-except NotImplementedError as e:
-    print(e)  # Detailed message with alternatives:
-    # "Append mode is not supported for tzst archives.
-    #  Alternatives: 1) Create multiple archives, 2) Recreate the archive,
-    #  3) Use standard tar and compress separately."
-```
+1. **Compression levels**: Level 3 is optimal for most use cases
+2. **Streaming**: Use for archives larger than 100MB
+3. **Batch operations**: Add multiple files in single session
+4. **File types**: Already compressed files won't compress much further
 
-## Safety and Recovery
+### vs Other Tools
 
-### Atomic File Operations
+**vs tar + gzip:**
 
-All file creation operations use atomic file operations by default to ensure data integrity:
+- Better compression ratios
+- Faster decompression
+- Modern algorithm
 
-- **Archive Creation**: Archives are created in temporary files first, then atomically moved to final location
-- **Interruption Safety**: Automatic cleanup if process is interrupted (Ctrl+C, system shutdown)
-- **No Partial Files**: No risk of corrupted or incomplete archives in the final location
-- **Cross-Platform**: Works reliably on Windows, macOS, and Linux file systems
+**vs tar + xz:**
 
-**Which Operations Are Atomic:**
+- Significantly faster compression
+- Similar compression ratios
+- Better speed/compression trade-off
 
-- `create_archive()` function (when `use_temp_file=True`, which is default)
-- Creating new archives via `TzstArchive` class in write mode
-- CLI archive creation commands (`tzst a`, `tzst add`, `tzst create`)
+**vs zip:**
 
-**Which Operations Are Not Atomic:**
-
-- Extraction operations (files are written directly to destination)
-- Reading operations (no file modifications)
-- Operations with `use_temp_file=False` (not recommended)
-
-```python
-# Atomic operations are enabled by default
-create_archive("important.tzst", files)  # Safe from interruption
-
-# Can be disabled if needed (not recommended)
-create_archive("test.tzst", files, use_temp_file=False)
-
-# Archive class also uses atomic operations
-with TzstArchive("backup.tzst", "w") as archive:
-    archive.add("documents/")  # Safe from interruption
-```
-
-### Enhanced Error Messages
-
-The library provides comprehensive error handling with specific exception types and helpful error messages:
-
-```python
-# Append mode example with helpful alternatives
-try:
-    with TzstArchive("archive.tzst", "a") as archive:
-        archive.add("newfile.txt")
-except NotImplementedError as e:
-    print(e)  # Detailed message with alternatives:
-    # "Append mode is not supported for tzst archives.
-    #  Alternatives: 1) Create multiple archives, 2) Recreate the archive,
-    #  3) Use standard tar and compress separately."
-```
-
-### Recovery and Cleanup
-
-The library automatically handles cleanup in various failure scenarios:
-
-- **Process Interruption**: Temporary files are automatically cleaned up
-- **Disk Space Issues**: Partial files are removed if creation fails
-- **Permission Errors**: No incomplete archives are left behind
-- **Memory Errors**: Resources are properly released
-
-## Performance Tips
-
-1. **Choose appropriate compression levels**: Level 3 is usually optimal for most use cases
-2. **Use streaming for large archives**: Enable streaming mode (`streaming=True`) for archives larger than 100MB to reduce memory usage significantly
-3. **Atomic file operations**: The library uses atomic file operations by default to prevent incomplete archives on interruption - archives are created in temporary files first, then moved atomically
-4. **Batch operations**: Add multiple files in a single archive session when possible
-5. **Consider file types**: Already compressed files (images, videos) won't compress much further
-6. **CLI streaming options**: Use `--streaming` flag in CLI commands for memory-efficient processing of large archives
-7. **Compression level selection**: Higher levels (15-22) provide better compression but take significantly longer
-
-## Memory Usage and Streaming
-
-### Memory Usage Guidelines
-
-- **Small archives (<10MB)**: Standard mode is recommended for simplicity
-- **Medium archives (10MB-100MB)**: Either mode works well, consider file count and system resources
-- **Large archives (>100MB)**: Strongly recommend streaming mode to prevent memory exhaustion
-- **Very large archives (>1GB)**: Always use streaming mode; standard mode may cause system instability
-- **Limited memory environments**: Use streaming mode regardless of archive size
-
-### Streaming Mode Benefits
-
-- **Reduced Memory Usage**: Process archives without loading entire contents into memory
-- **Large File Support**: Handle archives larger than available RAM
-- **Better Performance**: Improved performance for sequential access patterns
-- **Resource Management**: Automatic cleanup of file handles and temporary resources
-
-### When to Use Streaming
-
-- Archives larger than 100MB
-- Limited memory environments
-- Processing archives with many large files
-- Automated backup/restore operations
-
-```python
-# Example: Processing a large backup archive
-from tzst import extract_archive, list_archive, test_archive
-
-# Memory-efficient operations
-large_archive = "backup_500gb.tzst"
-
-# Test integrity with minimal memory usage
-is_valid = test_archive(large_archive, streaming=True)
-
-# List contents without loading entire archive
-contents = list_archive(large_archive, streaming=True, verbose=True)
-
-# Extract with streaming for large archives
-extract_archive(large_archive, "restore/", streaming=True)
-```
-
-## Comparison with Standard Tools
-
-### vs tar + gzip
-
-- **Better compression**: Zstandard typically achieves better compression ratios than gzip
-- **Faster decompression**: Zstandard decompresses faster than gzip
-- **Modern algorithm**: Zstandard is a more modern compression algorithm
-
-### vs tar + xz
-
-- **Faster compression**: Zstandard is significantly faster than xz at similar compression levels
-- **Comparable compression**: Similar compression ratios to xz
-- **Better balance**: Better speed/compression trade-off
-
-### vs zip
-
-- **Better compression**: Generally better compression than zip
-- **Preserves permissions**: Maintains Unix file permissions and metadata
-- **Streaming support**: Better support for large files and streaming
+- Better compression
+- Preserves Unix permissions and metadata
+- Better streaming support
 
 ## Requirements
 
@@ -581,9 +419,7 @@ extract_archive(large_archive, "restore/", streaming=True)
 
 ### Setting up Development Environment
 
-This project uses **Hatch** as the build system and dependency manager, with configuration in `pyproject.toml`. Choose one of the following setup methods:
-
-#### Using pip (Traditional approach)
+This project uses **Hatch** as the build system:
 
 ```bash
 git clone https://github.com/xixu-me/tzst.git
@@ -591,107 +427,60 @@ cd tzst
 pip install -e .[dev]
 ```
 
-#### Using Hatch (Recommended for development)
+Or with Hatch:
 
 ```bash
-git clone https://github.com/xixu-me/tzst.git
-cd tzst
-pip install hatch  # Install Hatch if not already installed
-hatch env create   # Create development environment
-hatch shell        # Activate development environment
+pip install hatch
+hatch env create
+hatch shell
 ```
-
-The `pyproject.toml` file configures the entire build process, including:
-
-- Build system (hatchling)
-- Dependencies and optional development dependencies
-- Project metadata and entry points
-- Tool configurations (pytest, ruff, black)
 
 ### Running Tests
 
-#### Using pytest directly
-
 ```bash
-# Run all tests
-pytest
-
-# Run with coverage
+# Using pytest
 pytest --cov=tzst --cov-report=html
 
-# Run specific test file
-pytest tests/test_core.py
-```
-
-#### Using Hatch
-
-```bash
-# Run tests in development environment
-hatch run pytest
-
-# Run with coverage
+# Using Hatch
 hatch run pytest --cov=tzst --cov-report=html
 ```
 
-### Code Quality Tools
-
-#### Using tools directly
+### Code Quality
 
 ```bash
-# Check code quality with Ruff
+# Check code quality
 ruff check src tests
 
-# Format code with Black
-black src tests
-
-# Type checking (if mypy is installed)
-mypy src
+# Format code
+ruff format src tests
 ```
 
-#### Using Hatch
+## Contributing
+
+We welcome contributions! Please read our [Contributing Guide](CONTRIBUTING.md) for:
+
+- Development setup and project structure
+- Code style guidelines and best practices  
+- Testing requirements and writing tests
+- Pull request process and review workflow
+
+### Quick Start for Contributors
 
 ```bash
-# Check code quality with Ruff
-hatch run ruff check src tests
-
-# Format code with Black
-hatch run black src tests
+git clone https://github.com/your-username/tzst.git
+cd tzst
+pip install -e .[dev]
+python -m pytest tests/
 ```
 
-### Building and Distribution
+### Types of Contributions Welcome
 
-```bash
-# Install build dependencies
-pip install build
-
-# Build wheel and source distribution
-python -m build
-
-# Using Hatch for building
-hatch build
-```
-
-### Project Documentation
-
-The `pyproject.toml` file serves as the central configuration for the entire project:
-
-```toml
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
-
-[project]
-name = "tzst"
-description = "A Python library for creating and manipulating .tzst/.tar.zst archives"
-# ... additional metadata
-```
-
-Key configuration sections:
-
-- **Build system**: Uses Hatchling for modern Python packaging
-- **Dependencies**: Runtime and optional development dependencies  
-- **Entry points**: CLI command registration
-- **Tool configurations**: pytest, ruff, black, and other development tools
+- 🐛 **Bug fixes** - Fix issues in existing functionality
+- ✨ **Features** - Add new capabilities to the library
+- 📚 **Documentation** - Improve or add documentation
+- 🧪 **Tests** - Add or improve test coverage
+- ⚡ **Performance** - Optimize existing code
+- 🔒 **Security** - Address security vulnerabilities
 
 ## Acknowledgments
 

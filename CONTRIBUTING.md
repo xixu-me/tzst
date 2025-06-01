@@ -32,7 +32,7 @@ This project follows the principles of respectful collaboration. Please be kind,
 1. **Fork and clone the repository:**
 
    ```bash
-   git clone https://github.com/your-username/tzst.git
+   git clone https://github.com/xixu-me/tzst.git
    cd tzst
    ```
 

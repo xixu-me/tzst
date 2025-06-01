@@ -7,7 +7,7 @@
 [![GitHub License](https://img.shields.io/github/license/xixu-me/tzst)](LICENSE)
 [![Sponsor](https://img.shields.io/badge/Sponsor-violet)](https://xi-xu.me/#sponsorships)
 
-A Python library for creating and manipulating `.tzst`/`.tar.zst` archives using Zstandard compression.
+**tzst** is a next-generation Python library engineered for modern archive management, leveraging cutting-edge Zstandard compression to deliver superior performance, security, and reliability. Built exclusively for Python 3.12+, this enterprise-grade solution combines atomic operations, streaming efficiency, and a meticulously crafted API to redefine how developers handle `.tzst`/`.tar.zst` archives in production environments.
 
 ## Features
 

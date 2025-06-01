@@ -461,13 +461,28 @@ def _create_archive_impl(
     # Find common parent directory for relative paths
     if files:
         file_paths = [Path(f) for f in files if Path(f).exists()]
-        if file_paths:
-            # Special handling for current directory "."
-            if len(file_paths) == 1 and str(file_paths[0]) == ".":
-                # When adding current directory, add its contents without "./" prefix
+        if file_paths:  # Special handling for current directory "."
+            current_dir = Path.cwd().resolve()
+            if len(file_paths) == 1 and (
+                str(file_paths[0]) == "." or file_paths[0].resolve() == current_dir
+            ):  # When adding current directory, add its contents without "./" prefix
                 with TzstArchive(archive_path, "w", compression_level) as archive:
-                    # Add all items in current directory
+                    # Add all items in current directory, excluding archive and temp files
+                    archive_abs_path = archive_path.resolve()
+                    archive_name = archive_path.name
                     for item in Path(".").iterdir():
+                        item_abs_path = item.resolve()
+                        # Skip archives and temp files for consistency
+                        if (
+                            item_abs_path == archive_abs_path
+                            or item.name == archive_name
+                            or (
+                                item.name.startswith(".") and item.name.endswith(".tmp")
+                            )
+                            or item.suffix.lower() in [".tzst", ".zst"]
+                            or item.name.lower().endswith(".tar.zst")
+                        ):
+                            continue
                         # Use item name as archive name to avoid "./" prefix
                         item_name = str(item.name).replace("\\", "/")
                         archive.add(str(item), arcname=item_name)

@@ -5,6 +5,8 @@ including TzstArchive class, convenience functions, error handling,
 and various operational modes.
 """
 
+import os
+from pathlib import Path
 from unittest.mock import patch
 
 import pytest
@@ -966,3 +968,417 @@ class TestSecurityEdgeCases:
                 archive.extract(path=extract_dir, filter="invalid_filter_name")
             except (ValueError, TypeError):
                 pass  # Expected behavior for invalid filter
+
+
+class TestCurrentDirectoryArchiving:
+    """Test current directory archiving bug fixes."""
+
+    def test_current_directory_dot_contents_without_wrapper(self, temp_dir):
+        """Test that archiving '.' includes directory contents
+        without wrapper folder."""
+        # Create test files in a subdirectory to work from
+        work_dir = temp_dir / "work_space"
+        work_dir.mkdir()
+
+        # Create test files
+        file1 = work_dir / "file1.txt"
+        file2 = work_dir / "file2.txt"
+        subdir = work_dir / "subdir"
+        subdir.mkdir()
+        file3 = subdir / "file3.txt"
+
+        file1.write_text("Content 1")
+        file2.write_text("Content 2")
+        file3.write_text("Content 3")
+
+        # Change to work directory and create archive with "."
+        original_cwd = os.getcwd()
+        try:
+            os.chdir(work_dir)
+            archive_path = work_dir / "test_dot.tzst"
+
+            # Create archive using "." parameter
+            create_archive(archive_path, ["."])
+
+            # List archive contents
+            contents = list_archive(archive_path)
+            content_names = [item["name"] for item in contents]
+
+            # Should contain files without "./" prefix or wrapper directory
+            assert "file1.txt" in content_names
+            assert "file2.txt" in content_names
+            assert "subdir/file3.txt" in content_names
+
+            # Should NOT contain "." or "./" entries
+            assert "." not in content_names
+            assert "./" not in content_names
+
+            # Extract and verify structure
+            extract_dir = temp_dir / "extracted"
+            extract_archive(archive_path, extract_dir)
+
+            # Files should be at root level of extraction
+            assert (extract_dir / "file1.txt").exists()
+            assert (extract_dir / "file2.txt").exists()
+            assert (extract_dir / "subdir" / "file3.txt").exists()
+
+            # Verify content
+            assert (extract_dir / "file1.txt").read_text() == "Content 1"
+            assert (extract_dir / "file2.txt").read_text() == "Content 2"
+            assert (extract_dir / "subdir" / "file3.txt").read_text() == "Content 3"
+
+        finally:
+            os.chdir(original_cwd)
+
+    def test_current_directory_resolved_path(self, temp_dir):
+        """Test that archiving current directory by resolved path works correctly."""
+        # Create test files in a subdirectory to work from
+        work_dir = temp_dir / "work_space2"
+        work_dir.mkdir()
+
+        # Create test files
+        file1 = work_dir / "test_file.txt"
+        file1.write_text("Test content")
+
+        # Change to work directory and create archive with resolved current directory
+        original_cwd = os.getcwd()
+        try:
+            os.chdir(work_dir)
+            archive_path = work_dir / "test_resolved.tzst"
+            current_path = Path.cwd()
+
+            # Create archive using resolved current directory path
+            create_archive(archive_path, [str(current_path)])
+
+            # List archive contents
+            contents = list_archive(archive_path)
+            content_names = [item["name"] for item in contents]
+
+            # Should contain files without directory wrapper
+            assert "test_file.txt" in content_names
+
+            # Should NOT contain the directory name itself
+            assert work_dir.name not in content_names
+
+        finally:
+            os.chdir(original_cwd)
+
+    def test_current_directory_vs_normal_archiving(self, temp_dir):
+        """Test difference between current directory and normal directory archiving."""
+        # Create test structure
+        work_dir = temp_dir / "work_dir"
+        work_dir.mkdir()
+        other_dir = temp_dir / "other_dir"
+        other_dir.mkdir()
+
+        # Create identical files in both directories
+        (work_dir / "shared.txt").write_text("Shared content")
+        (other_dir / "shared.txt").write_text("Shared content")
+
+        original_cwd = os.getcwd()
+        try:
+            # Archive current directory with "."
+            os.chdir(work_dir)
+            current_archive = work_dir / "current.tzst"
+            create_archive(current_archive, ["."])
+            current_contents = list_archive(current_archive)
+            current_names = [item["name"] for item in current_contents]
+
+            # Archive other directory normally
+            normal_archive = work_dir / "normal.tzst"
+            create_archive(normal_archive, [str(other_dir)])
+            normal_contents = list_archive(normal_archive)
+            normal_names = [item["name"] for item in normal_contents]
+
+            # Current directory archiving should have file at root
+            assert "shared.txt" in current_names
+
+            # Normal directory archiving should have directory wrapper
+            assert f"{other_dir.name}/shared.txt" in normal_names
+            assert "shared.txt" not in normal_names  # Should not be at root
+
+        finally:
+            os.chdir(original_cwd)
+
+
+class TestTemporaryFileExclusion:
+    """Test temporary file exclusion bug fixes."""
+
+    def test_exclude_temp_files_with_tmp_in_middle(self, temp_dir):
+        """Test that temporary files with .tmp in the middle are excluded."""
+        # Create test files including problematic temp files
+        work_dir = temp_dir / "temp_test"
+        work_dir.mkdir()
+
+        # Regular files that should be included
+        regular_file = work_dir / "regular.txt"
+        regular_file.write_text("Regular content")
+
+        # Temporary files that should be excluded
+        temp_file1 = work_dir / ".a.tzst.9uztm81l.tmp"
+        temp_file2 = work_dir / ".backup.abc123.tmp"
+        temp_file3 = work_dir / ".test.random.tmp"
+
+        temp_file1.write_text("Temp content 1")
+        temp_file2.write_text("Temp content 2")
+        temp_file3.write_text("Temp content 3")
+
+        # Files that look like temp files but shouldn't be excluded
+        not_temp1 = work_dir / "something.tmp"  # Doesn't start with .
+        not_temp2 = work_dir / ".config"  # Starts with . but no .tmp
+        not_temp3 = work_dir / ".tmpfile"  # Has tmp but not as separate component
+
+        not_temp1.write_text("Not temp 1")
+        not_temp2.write_text("Not temp 2")
+        not_temp3.write_text("Not temp 3")
+
+        original_cwd = os.getcwd()
+        try:
+            os.chdir(work_dir)
+            archive_path = work_dir / "temp_exclusion.tzst"
+
+            # Create archive with current directory
+            create_archive(archive_path, ["."])
+
+            # List archive contents
+            contents = list_archive(archive_path)
+            content_names = [item["name"] for item in contents]
+
+            # Regular file should be included
+            assert "regular.txt" in content_names
+
+            # Files that look like temp but aren't should be included
+            assert "something.tmp" in content_names
+            assert ".config" in content_names
+            assert ".tmpfile" in content_names
+
+            # Actual temp files should be excluded
+            assert ".a.tzst.9uztm81l.tmp" not in content_names
+            assert ".backup.abc123.tmp" not in content_names
+            assert ".test.random.tmp" not in content_names
+
+        finally:
+            os.chdir(original_cwd)
+
+    def test_exclude_traditional_temp_files(self, temp_dir):
+        """Test that traditional .tmp files are still excluded."""
+        work_dir = temp_dir / "traditional_temp"
+        work_dir.mkdir()
+
+        # Regular file
+        regular_file = work_dir / "document.txt"
+        regular_file.write_text("Document content")
+
+        # Traditional temp files
+        temp_file1 = work_dir / ".temp.tmp"
+        temp_file2 = work_dir / ".backup.tmp"
+
+        temp_file1.write_text("Traditional temp 1")
+        temp_file2.write_text("Traditional temp 2")
+
+        original_cwd = os.getcwd()
+        try:
+            os.chdir(work_dir)
+            archive_path = work_dir / "traditional_temp.tzst"
+
+            create_archive(archive_path, ["."])
+
+            contents = list_archive(archive_path)
+            content_names = [item["name"] for item in contents]
+
+            # Regular file should be included
+            assert "document.txt" in content_names
+
+            # Traditional temp files should be excluded
+            assert ".temp.tmp" not in content_names
+            assert ".backup.tmp" not in content_names
+
+        finally:
+            os.chdir(original_cwd)
+
+    def test_archive_file_self_exclusion(self, temp_dir):
+        """Test that the archive file itself is excluded from the archive."""
+        work_dir = temp_dir / "self_exclusion"
+        work_dir.mkdir()
+
+        # Create some files
+        file1 = work_dir / "include_me.txt"
+        file1.write_text("Include this")
+
+        original_cwd = os.getcwd()
+        try:
+            os.chdir(work_dir)
+            archive_path = work_dir / "self_test.tzst"
+
+            create_archive(archive_path, ["."])
+
+            contents = list_archive(archive_path)
+            content_names = [item["name"] for item in contents]
+
+            # Regular file should be included
+            assert "include_me.txt" in content_names
+
+            # Archive file itself should not be included
+            assert "self_test.tzst" not in content_names
+
+        finally:
+            os.chdir(original_cwd)
+
+    def test_temp_file_patterns_comprehensive(self, temp_dir):
+        """Test comprehensive temporary file pattern matching."""
+        work_dir = temp_dir / "comprehensive_temp"
+        work_dir.mkdir()
+
+        # Files that should be excluded (start with . and contain .tmp)
+        excluded_files = [
+            ".file.tmp",
+            ".archive.abc123.tmp",
+            ".backup.random.tmp",
+            ".test.xyz.tmp",
+            ".a.tzst.9uztm81l.tmp",  # The original bug case
+            ".something.else.tmp",
+        ]
+
+        # Files that should be included
+        included_files = [
+            "normal.txt",
+            "file.tmp",  # No leading dot
+            ".config",  # Leading dot but no .tmp
+            ".tmpfile",  # Has tmp but not as separate component
+            "tmp.txt",  # tmp not in the pattern
+            ".file.temp",  # Similar but not .tmp
+        ]
+
+        # Create all files
+        for filename in excluded_files + included_files:
+            (work_dir / filename).write_text(f"Content of {filename}")
+
+        original_cwd = os.getcwd()
+        try:
+            os.chdir(work_dir)
+            archive_path = work_dir / "comprehensive.tzst"
+
+            create_archive(archive_path, ["."])
+
+            contents = list_archive(archive_path)
+            content_names = [item["name"] for item in contents]
+
+            # Check that included files are present
+            for filename in included_files:
+                assert filename in content_names, f"File {filename} should be included"
+
+            # Check that excluded files are not present
+            for filename in excluded_files:
+                assert filename not in content_names, (
+                    f"File {filename} should be excluded"
+                )
+
+        finally:
+            os.chdir(original_cwd)
+
+
+class TestCurrentDirectoryEdgeCases:
+    """Test edge cases for current directory archiving."""
+
+    def test_empty_current_directory(self, temp_dir):
+        """Test archiving empty current directory."""
+        empty_dir = temp_dir / "empty_work"
+        empty_dir.mkdir()
+
+        original_cwd = os.getcwd()
+        try:
+            os.chdir(empty_dir)
+            archive_path = empty_dir / "empty.tzst"
+
+            create_archive(archive_path, ["."])
+
+            contents = list_archive(archive_path)
+            content_names = [item["name"] for item in contents]
+
+            # Should only contain the archive file exclusion, so be empty
+            # (archive file itself should be excluded)
+            assert len(content_names) == 0
+
+        finally:
+            os.chdir(original_cwd)
+
+    def test_current_directory_with_subdirectories(self, temp_dir):
+        """Test current directory archiving with nested subdirectories."""
+        work_dir = temp_dir / "nested_work"
+        work_dir.mkdir()
+
+        # Create nested structure
+        level1 = work_dir / "level1"
+        level2 = level1 / "level2"
+        level3 = level2 / "level3"
+
+        level1.mkdir()
+        level2.mkdir()
+        level3.mkdir()
+
+        # Create files at various levels
+        (work_dir / "root.txt").write_text("Root level")
+        (level1 / "l1.txt").write_text("Level 1")
+        (level2 / "l2.txt").write_text("Level 2")
+        (level3 / "l3.txt").write_text("Level 3")
+
+        original_cwd = os.getcwd()
+        try:
+            os.chdir(work_dir)
+            archive_path = work_dir / "nested.tzst"
+
+            create_archive(archive_path, ["."])
+
+            contents = list_archive(archive_path)
+            content_names = [item["name"] for item in contents]
+
+            # Should preserve directory structure without wrapper
+            assert "root.txt" in content_names
+            assert "level1/l1.txt" in content_names
+            assert "level1/level2/l2.txt" in content_names
+            assert "level1/level2/level3/l3.txt" in content_names
+
+            # Extract and verify structure
+            extract_dir = temp_dir / "nested_extracted"
+            extract_archive(archive_path, extract_dir)
+
+            assert (extract_dir / "root.txt").exists()
+            assert (extract_dir / "level1" / "l1.txt").exists()
+            assert (extract_dir / "level1" / "level2" / "l2.txt").exists()
+            assert (extract_dir / "level1" / "level2" / "level3" / "l3.txt").exists()
+
+        finally:
+            os.chdir(original_cwd)
+
+    def test_atomic_vs_non_atomic_current_directory(self, temp_dir):
+        """Test that atomic and non-atomic modes work the same for current directory."""
+        work_dir = temp_dir / "atomic_test"
+        work_dir.mkdir()
+
+        # Create test files
+        (work_dir / "test1.txt").write_text("Test content 1")
+        (work_dir / "test2.txt").write_text("Test content 2")
+
+        original_cwd = os.getcwd()
+        try:
+            os.chdir(work_dir)
+
+            # Test atomic mode
+            atomic_archive = work_dir / "atomic.tzst"
+            create_archive(atomic_archive, ["."], use_temp_file=True)
+            atomic_contents = list_archive(atomic_archive)
+            atomic_names = [item["name"] for item in atomic_contents]
+
+            # Test non-atomic mode
+            non_atomic_archive = work_dir / "non_atomic.tzst"
+            create_archive(non_atomic_archive, ["."], use_temp_file=False)
+            non_atomic_contents = list_archive(non_atomic_archive)
+            non_atomic_names = [item["name"] for item in non_atomic_contents]
+
+            # Both should have the same contents
+            assert set(atomic_names) == set(non_atomic_names)
+            assert "test1.txt" in atomic_names
+            assert "test2.txt" in atomic_names
+
+        finally:
+            os.chdir(original_cwd)

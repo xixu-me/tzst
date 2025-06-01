@@ -10,6 +10,8 @@ on:
 
 jobs:
   test:
+    permissions:
+      contents: read
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -50,6 +52,8 @@ jobs:
 
   build:
     needs: test
+    permissions:
+      contents: read
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

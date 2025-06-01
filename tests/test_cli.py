@@ -336,7 +336,9 @@ class TestCLICompressionLevels:
             archive_path = temp_dir / f"level_{level}.tzst"
             result = main(["a", str(archive_path), *file_paths, "-l", str(level)])
             assert result == 0
-            assert archive_path.exists()    def test_invalid_compression_levels(self, sample_files, temp_dir):
+            assert archive_path.exists()
+
+    def test_invalid_compression_levels(self, sample_files, temp_dir):
         """Test invalid compression levels return proper error codes."""
         file_paths = [str(f) for f in sample_files if f.is_file()]
         archive_path = temp_dir / "invalid.tzst"
@@ -1075,7 +1077,8 @@ class TestCompressionLevelValidation:
 
         for value in invalid_values:
             result = main(["a", str(archive_path), str(test_file), "-l", value])
-            assert result == 2, (                f"Non-numeric compression level '{value}' should return exit code 2"
+            assert result == 2, (
+                f"Non-numeric compression level '{value}' should return exit code 2"
             )
 
     def test_compression_level_extremes(self, temp_dir):

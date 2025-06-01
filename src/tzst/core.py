@@ -479,13 +479,17 @@ def _create_archive_impl(
                     )
                 except ValueError:
                     # No common path, use parent of first file
-                    common_parent = file_paths[0].parent
-
-                # Change to common parent directory to get relative paths
+                    common_parent = file_paths[
+                        0
+                    ].parent  # Change to common parent directory to get relative paths
                 original_cwd = Path.cwd()
+                # Convert archive path to absolute to avoid issues when changing working directory
+                absolute_archive_path = archive_path.resolve()
                 try:
                     os.chdir(common_parent)
-                    with TzstArchive(archive_path, "w", compression_level) as archive:
+                    with TzstArchive(
+                        absolute_archive_path, "w", compression_level
+                    ) as archive:
                         for file_path in file_paths:
                             # Calculate relative path from common parent
                             relative_path = file_path.relative_to(common_parent)

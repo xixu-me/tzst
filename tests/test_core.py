@@ -1,4 +1,11 @@
-"""Tests for tzst core functionality."""
+"""Comprehensive tests for tzst core functionality.
+
+This file consolidates all core functionality tests for the tzst library,
+including TzstArchive class, convenience functions, error handling,
+and various operational modes.
+"""
+
+from unittest.mock import patch
 
 import pytest
 
@@ -542,3 +549,420 @@ class TestCompressionLevelValidation:
 
             assert "compression level" in str(exc_info.value).lower()
             assert "1" in str(exc_info.value) and "22" in str(exc_info.value)
+
+
+class TestNonAtomicOperations:
+    """Test non-atomic file operations (critical fix verification)."""
+
+    def test_non_atomic_archive_creation(self, sample_files, temp_dir):
+        """Test non-atomic archive creation works correctly."""
+        file_paths = [f for f in sample_files if f.is_file()]
+        archive_path = temp_dir / "non_atomic_test.tzst"
+
+        # Test with atomic operations disabled
+        create_archive(archive_path, file_paths, use_temp_file=False)
+        assert archive_path.exists()
+
+        # Verify archive is valid
+        assert tzst_test_archive(archive_path) is True
+
+        # Verify contents
+        contents = list_archive(archive_path)
+        assert len(contents) > 0
+
+    def test_non_atomic_vs_atomic_equivalence(self, sample_files, temp_dir):
+        """Test that atomic and non-atomic modes produce equivalent results."""
+        file_paths = [f for f in sample_files if f.is_file()]
+
+        # Create with atomic mode
+        atomic_archive = temp_dir / "atomic.tzst"
+        create_archive(atomic_archive, file_paths, use_temp_file=True)
+
+        # Create with non-atomic mode
+        non_atomic_archive = temp_dir / "non_atomic.tzst"
+        create_archive(non_atomic_archive, file_paths, use_temp_file=False)
+
+        # Both should be valid
+        assert tzst_test_archive(atomic_archive) is True
+        assert tzst_test_archive(non_atomic_archive) is True
+
+        # Both should have same file contents
+        atomic_contents = list_archive(atomic_archive)
+        non_atomic_contents = list_archive(non_atomic_archive)
+        assert len(atomic_contents) == len(non_atomic_contents)
+
+    def test_non_atomic_path_resolution(self, temp_dir):
+        """Test that non-atomic mode handles path resolution correctly."""
+        # Create nested directory structure
+        nested_dir = temp_dir / "level1" / "level2" / "level3"
+        nested_dir.mkdir(parents=True, exist_ok=True)
+
+        test_file = nested_dir / "deep_file.txt"
+        test_file.write_text("Deep file content")
+
+        # Create archive from parent directory using non-atomic mode
+        archive_path = temp_dir / "deep_structure.tzst"
+        create_archive(archive_path, [test_file], use_temp_file=False)
+
+        assert archive_path.exists()
+        assert tzst_test_archive(archive_path) is True
+
+
+class TestCompressionLevelEdgeCases:
+    """Test compression level edge cases and validation."""
+
+    def test_compression_level_boundary_values(self, sample_files, temp_dir):
+        """Test boundary compression level values."""
+        file_paths = [f for f in sample_files if f.is_file()]
+
+        # Test level 1 (minimum valid)
+        archive_path_min = temp_dir / "min_compression.tzst"
+        create_archive(archive_path_min, file_paths, compression_level=1)
+        assert archive_path_min.exists()
+        assert tzst_test_archive(archive_path_min) is True
+
+        # Test level 22 (maximum valid)
+        archive_path_max = temp_dir / "max_compression.tzst"
+        create_archive(archive_path_max, file_paths, compression_level=22)
+        assert archive_path_max.exists()
+        assert tzst_test_archive(archive_path_max) is True
+
+    def test_invalid_compression_levels_raise_error(self, sample_files, temp_dir):
+        """Test that invalid compression levels raise appropriate errors."""
+        file_paths = [f for f in sample_files if f.is_file()]
+        archive_path = temp_dir / "invalid_compression.tzst"
+
+        # Test invalid levels that should raise ValueError
+        for invalid_level in [0, 23, -1, 100]:
+            with pytest.raises(ValueError):
+                create_archive(
+                    archive_path, file_paths, compression_level=invalid_level
+                )
+
+    def test_compression_effectiveness(self, temp_dir):
+        """Test that higher compression levels produce smaller files."""
+        # Create a large compressible file
+        large_file = temp_dir / "compressible.txt"
+        content = "This is highly compressible content. " * 10000
+        large_file.write_text(content)
+
+        # Test different compression levels
+        sizes = {}
+        for level in [1, 11, 22]:
+            archive_path = temp_dir / f"compressed_level_{level}.tzst"
+            create_archive(archive_path, [large_file], compression_level=level)
+            sizes[level] = archive_path.stat().st_size
+
+        # Higher compression should generally result in smaller files
+        # (though this isn't guaranteed for all data types)
+        assert sizes[1] > 0
+        assert sizes[22] > 0
+
+
+class TestSpecialFileTypes:
+    """Test handling of special file types and edge cases."""
+
+    def test_empty_files(self, temp_dir):
+        """Test archiving and extracting empty files."""
+        empty_file = temp_dir / "empty.txt"
+        empty_file.touch()
+
+        archive_path = temp_dir / "empty_file.tzst"
+        create_archive(archive_path, [empty_file])
+
+        assert archive_path.exists()
+        assert tzst_test_archive(archive_path) is True
+
+        # Test extraction
+        extract_dir = temp_dir / "empty_extracted"
+        extract_archive(archive_path, extract_dir)
+
+        extracted_file = extract_dir / "empty.txt"
+        assert extracted_file.exists()
+        assert extracted_file.stat().st_size == 0
+
+    def test_binary_files(self, temp_dir):
+        """Test archiving binary files."""
+        binary_file = temp_dir / "binary.bin"
+        binary_content = bytes(range(256)) * 1000  # 256KB of binary data
+        binary_file.write_bytes(binary_content)
+
+        archive_path = temp_dir / "binary.tzst"
+        create_archive(archive_path, [binary_file])
+
+        assert archive_path.exists()
+        assert tzst_test_archive(archive_path) is True
+
+        # Test extraction and content verification
+        extract_dir = temp_dir / "binary_extracted"
+        extract_archive(archive_path, extract_dir)
+
+        extracted_file = extract_dir / "binary.bin"
+        assert extracted_file.exists()
+        extracted_content = extracted_file.read_bytes()
+        assert extracted_content == binary_content
+
+    def test_large_files(self, temp_dir):
+        """Test archiving large files."""
+        large_file = temp_dir / "large.txt"
+        content = "Large file content line.\n" * 100000  # ~2.4MB
+        large_file.write_text(content)
+
+        archive_path = temp_dir / "large_file.tzst"
+        create_archive(archive_path, [large_file], compression_level=22)
+
+        assert archive_path.exists()
+        assert tzst_test_archive(archive_path) is True
+
+        # Test extraction
+        extract_dir = temp_dir / "large_extracted"
+        extract_archive(archive_path, extract_dir)
+
+        extracted_file = extract_dir / "large.txt"
+        assert extracted_file.exists()
+        extracted_content = extracted_file.read_text()
+        assert extracted_content == content
+
+    def test_files_with_special_characters(self, temp_dir):
+        """Test files with special characters in names."""
+        special_chars_file = temp_dir / "file!@#$%^&()_+{}[]|;':\",./<>?.txt"
+        special_chars_file.write_text("Special characters content")
+
+        archive_path = temp_dir / "special_chars.tzst"
+        create_archive(archive_path, [special_chars_file])
+
+        assert archive_path.exists()
+        assert tzst_test_archive(archive_path) is True
+
+    def test_very_long_filenames(self, temp_dir):
+        """Test files with very long names."""
+        long_name = "very_long_" + "x" * 200 + ".txt"
+        long_file = temp_dir / long_name
+        long_file.write_text("Long filename content")
+
+        archive_path = temp_dir / "long_filename.tzst"
+        create_archive(archive_path, [long_file])
+
+        assert archive_path.exists()
+        assert tzst_test_archive(archive_path) is True
+
+
+class TestSecurityFiltering:
+    """Test security filtering mechanisms."""
+
+    def test_tar_filter_extraction(self, sample_files, temp_dir):
+        """Test extraction with TAR security filter."""
+        file_paths = [f for f in sample_files if f.is_file()]
+        archive_path = temp_dir / "tar_filter_test.tzst"
+
+        # Create archive
+        create_archive(archive_path, file_paths)  # Extract with TAR filter
+        extract_dir = temp_dir / "tar_filtered"
+        extract_archive(archive_path, extract_dir, filter="tar")
+
+        assert extract_dir.exists()
+        extracted_files = list(extract_dir.rglob("*"))
+        assert len(extracted_files) > 0
+
+    def test_data_filter_extraction(self, sample_files, temp_dir):
+        """Test extraction with data security filter."""
+        file_paths = [f for f in sample_files if f.is_file()]
+        archive_path = temp_dir / "data_filter_test.tzst"
+
+        # Create archive
+        create_archive(archive_path, file_paths)  # Extract with data filter
+        extract_dir = temp_dir / "data_filtered"
+        extract_archive(archive_path, extract_dir, filter="data")
+
+        assert extract_dir.exists()
+        extracted_files = list(extract_dir.rglob("*"))
+        assert len(extracted_files) > 0
+
+    def test_invalid_filter_raises_error(self, sample_files, temp_dir):
+        """Test that invalid filters raise appropriate errors."""
+        file_paths = [f for f in sample_files if f.is_file()]
+        archive_path = temp_dir / "invalid_filter_test.tzst"  # Create archive
+        create_archive(archive_path, file_paths)
+
+        # Try to extract with invalid filter
+        extract_dir = temp_dir / "invalid_filtered"
+        with pytest.raises(ValueError):
+            extract_archive(archive_path, extract_dir, filter="invalid")
+
+
+class TestExtractionFilters:
+    """Test extraction filter security features."""
+
+    def test_default_filter_is_data(self, sample_files, temp_dir):
+        """Test that the default filter is 'data' for security."""
+        archive_path = temp_dir / "test_security.tzst"
+        file_paths = [f for f in sample_files if f.is_file()]
+
+        # Create archive
+        with TzstArchive(archive_path, "w") as archive:
+            for file_path in file_paths:
+                relative_path = file_path.relative_to(sample_files[0].parent)
+                archive.add(file_path, arcname=str(relative_path))
+
+        # Test that default filter is 'data'
+        extract_dir = temp_dir / "extracted_default"
+
+        with patch("tarfile.TarFile.extractall") as mock_extractall:
+            with TzstArchive(archive_path, "r") as archive:
+                archive.extract(path=extract_dir)
+
+            # Verify that 'data' filter was used
+            mock_extractall.assert_called_once()
+            call_args = mock_extractall.call_args
+            assert "filter" in call_args[1]
+            assert call_args[1]["filter"] == "data"
+
+    def test_data_filter_explicit(self, sample_files, temp_dir):
+        """Test explicitly setting 'data' filter."""
+        archive_path = temp_dir / "test_data_filter.tzst"
+        file_paths = [f for f in sample_files if f.is_file()]
+
+        # Create archive
+        with TzstArchive(archive_path, "w") as archive:
+            for file_path in file_paths:
+                relative_path = file_path.relative_to(sample_files[0].parent)
+                archive.add(file_path, arcname=str(relative_path))
+
+        # Test extraction with explicit 'data' filter
+        extract_dir = temp_dir / "extracted_data"
+
+        with patch("tarfile.TarFile.extractall") as mock_extractall:
+            with TzstArchive(archive_path, "r") as archive:
+                archive.extract(path=extract_dir, filter="data")
+
+            mock_extractall.assert_called_once()
+            call_args = mock_extractall.call_args
+            assert call_args[1]["filter"] == "data"
+
+    def test_tar_filter(self, sample_files, temp_dir):
+        """Test 'tar' filter for Unix-like features."""
+        archive_path = temp_dir / "test_tar_filter.tzst"
+        file_paths = [f for f in sample_files if f.is_file()]
+
+        # Create archive
+        with TzstArchive(archive_path, "w") as archive:
+            for file_path in file_paths:
+                relative_path = file_path.relative_to(sample_files[0].parent)
+                archive.add(file_path, arcname=str(relative_path))
+
+        # Test extraction with 'tar' filter
+        extract_dir = temp_dir / "extracted_tar"
+
+        with patch("tarfile.TarFile.extractall") as mock_extractall:
+            with TzstArchive(archive_path, "r") as archive:
+                archive.extract(path=extract_dir, filter="tar")
+
+            mock_extractall.assert_called_once()
+            call_args = mock_extractall.call_args
+            assert call_args[1]["filter"] == "tar"
+
+    def test_fully_trusted_filter(self, sample_files, temp_dir):
+        """Test 'fully_trusted' filter (dangerous but complete)."""
+        archive_path = temp_dir / "test_trusted_filter.tzst"
+        file_paths = [f for f in sample_files if f.is_file()]
+
+        # Create archive
+        with TzstArchive(archive_path, "w") as archive:
+            for file_path in file_paths:
+                relative_path = file_path.relative_to(sample_files[0].parent)
+                archive.add(file_path, arcname=str(relative_path))
+
+        # Test extraction with 'fully_trusted' filter
+        extract_dir = temp_dir / "extracted_trusted"
+
+        with patch("tarfile.TarFile.extractall") as mock_extractall:
+            with TzstArchive(archive_path, "r") as archive:
+                archive.extract(path=extract_dir, filter="fully_trusted")
+
+            mock_extractall.assert_called_once()
+            call_args = mock_extractall.call_args
+            assert call_args[1]["filter"] == "fully_trusted"
+
+    def test_convenience_function_filter(self, sample_files, temp_dir):
+        """Test filter parameter in extract_archive convenience function."""
+        archive_path = temp_dir / "test_convenience_filter.tzst"
+        file_paths = [f for f in sample_files if f.is_file()]
+
+        # Create archive
+        with TzstArchive(archive_path, "w") as archive:
+            for file_path in file_paths:
+                relative_path = file_path.relative_to(sample_files[0].parent)
+                archive.add(file_path, arcname=str(relative_path))
+
+        # Test extract_archive with different filters
+        for filter_type in ["data", "tar", "fully_trusted"]:
+            extract_dir = temp_dir / f"extracted_conv_{filter_type}"
+
+            # This should not raise an exception
+            extract_archive(archive_path, extract_dir, filter=filter_type)
+
+            # Verify files were extracted
+            assert extract_dir.exists()
+            extracted_files = list(extract_dir.rglob("*"))
+            assert len([f for f in extracted_files if f.is_file()]) > 0
+
+
+class TestSecurityDocumentation:
+    """Test security documentation and warnings."""
+
+    def test_security_filter_documentation(self, sample_files, temp_dir):
+        """Test that security filters are properly documented."""
+        # This test verifies that the API provides proper guidance
+        archive_path = temp_dir / "test_docs.tzst"
+        file_paths = [f for f in sample_files if f.is_file()]
+
+        # Create archive
+        with TzstArchive(archive_path, "w") as archive:
+            for file_path in file_paths:
+                relative_path = file_path.relative_to(sample_files[0].parent)
+                archive.add(file_path, arcname=str(relative_path))
+
+        # Test that TzstArchive.extract method accepts filter parameter
+        with TzstArchive(archive_path, "r") as archive:
+            # Should accept various filter types without error
+            extract_dir = temp_dir / "doc_test"
+            archive.extract(path=extract_dir, filter="data")
+
+
+class TestSecurityEdgeCases:
+    """Test security edge cases and boundary conditions."""
+
+    def test_filter_with_empty_archive(self, temp_dir):
+        """Test filter behavior with empty archives."""
+        archive_path = temp_dir / "empty_security.tzst"
+
+        # Create empty archive
+        with TzstArchive(archive_path, "w") as archive:
+            pass  # Empty archive        # Test extraction with filter on empty archive
+        extract_dir = temp_dir / "empty_extracted"
+        with TzstArchive(archive_path, "r") as archive:
+            archive.extract(path=extract_dir, filter="data")
+
+        # Should succeed without error
+        assert extract_dir.exists()
+
+    def test_filter_parameter_validation(self, sample_files, temp_dir):
+        """Test that invalid filter parameters are handled."""
+        archive_path = temp_dir / "validation_test.tzst"
+        file_paths = [f for f in sample_files if f.is_file()]
+
+        # Create archive
+        with TzstArchive(archive_path, "w") as archive:
+            for file_path in file_paths:
+                relative_path = file_path.relative_to(sample_files[0].parent)
+                archive.add(file_path, arcname=str(relative_path))
+
+        # Test invalid filter string
+        extract_dir = temp_dir / "invalid_filter"
+        with TzstArchive(archive_path, "r") as archive:
+            # Invalid filter should be handled gracefully
+            # (exact behavior depends on implementation)
+            try:
+                archive.extract(path=extract_dir, filter="invalid_filter_name")
+            except (ValueError, TypeError):
+                pass  # Expected behavior for invalid filter

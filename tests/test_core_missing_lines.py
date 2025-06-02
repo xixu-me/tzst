@@ -119,14 +119,12 @@ class TestCoreMissingLines:
             member = members[0]
 
             extract_dir = temp_dir / "extract"
-            extract_dir.mkdir()
-
-            # Should raise RuntimeError for specific member extraction in streaming mode
+            extract_dir.mkdir()  # Should raise RuntimeError for specific member extraction in streaming mode
             with pytest.raises(
                 RuntimeError,
                 match="Extracting specific members is not supported in streaming mode",
             ):
-                archive.extractall(path=extract_dir, members=[member])
+                archive.extract(member=member.name, path=extract_dir)
 
     def test_streaming_extraction_failure_handling(self, temp_dir):
         """Test streaming extraction failure handling (lines 263-272)."""
@@ -136,9 +134,9 @@ class TestCoreMissingLines:
 
         archive_path = temp_dir / "test.tzst"
         with TzstArchive(archive_path, mode="w") as archive:
-            archive.add(str(test_file), arcname="test.txt")
-
-        # Mock tarfile to raise StreamError
+            archive.add(
+                str(test_file), arcname="test.txt"
+            )  # Mock tarfile to raise StreamError
         with TzstArchive(archive_path, mode="r", streaming=True) as archive:
             extract_dir = temp_dir / "extract"
             extract_dir.mkdir()
@@ -152,7 +150,7 @@ class TestCoreMissingLines:
                 with pytest.raises(
                     RuntimeError, match="Extraction failed in streaming mode"
                 ):
-                    archive.extractall(path=extract_dir)
+                    archive.extract(path=extract_dir)
 
     def test_extractfile_not_open_error(self, temp_dir):
         """Test extractfile when archive is not open (line 307)."""

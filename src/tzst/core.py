@@ -78,7 +78,11 @@ class TzstArchive:
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         """Exit context manager."""
-        self.close()
+        try:
+            self.close()
+        except Exception:
+            # Suppress exceptions during cleanup to avoid masking original exceptions
+            pass
 
     def open(self):
         """Open the archive.
@@ -191,7 +195,10 @@ class TzstArchive:
         if not path.exists():
             raise FileNotFoundError(f"File not found: {name}")
 
-        self._tarfile.add(str(path), arcname=arcname, recursive=recursive)
+        try:
+            self._tarfile.add(str(path), arcname=arcname, recursive=recursive)
+        except PermissionError as e:
+            raise TzstArchiveError(f"Failed to add {name}: {e}") from e
 
     def extract(
         self,
@@ -287,6 +294,81 @@ class TzstArchive:
             raise RuntimeError("Archive not open for reading")
 
         return self._tarfile.extractfile(member)
+
+    def extractall(
+        self,
+        path: str | Path = ".",
+        members: list[tarfile.TarInfo] | None = None,
+        *,
+        numeric_owner: bool = False,
+        filter: str | Callable | None = "data",
+    ):
+        """
+        Extract all members from the archive.
+
+        Args:
+            path: Destination directory (default: current directory)
+            members: Specific members to extract (None for all)
+            numeric_owner: Whether to use numeric owner IDs
+            filter: Extraction filter for security. Can be:
+                   - 'data': Safe filter for cross-platform data archives
+                   - 'tar': Honor most tar features but block dangerous ones
+                   - 'fully_trusted': Honor all metadata (trusted archives only)
+                   - None: Use default behavior (may show deprecation warning)
+                   - callable: Custom filter function
+
+        Warning:
+            Never extract archives from untrusted sources without proper filtering.
+            The 'data' filter is recommended for most use cases as it prevents
+            dangerous security issues like path traversal attacks.
+
+        Note:
+            In streaming mode, extracting specific members is not supported.
+            Some extraction operations may be limited due to the sequential
+            nature of streaming mode.
+
+        See Also:
+            :meth:`extract`: Extract a single member from the archive
+            :func:`extract_archive`: Convenience function for extracting archives
+        """
+        if not self._tarfile:
+            raise RuntimeError("Archive not open")
+        if not self.mode.startswith("r"):
+            raise RuntimeError("Archive not open for reading")
+
+        if self.streaming and members is not None:
+            # Specific member extraction not supported in streaming mode
+            raise RuntimeError(
+                "Extracting specific members is not supported in streaming mode. "
+                "Please use non-streaming mode for selective extraction, "
+                "or extract all files."
+            )
+
+        extract_path = Path(path)
+        extract_path.mkdir(parents=True, exist_ok=True)
+
+        try:
+            # extractall() accepts numeric_owner, filter, and members parameters
+            extractall_kwargs = {
+                "numeric_owner": numeric_owner,
+                "filter": filter,
+            }
+            if members is not None:
+                extractall_kwargs["members"] = members
+
+            self._tarfile.extractall(path=extract_path, **extractall_kwargs)
+        except (tarfile.StreamError, OSError) as e:
+            if self.streaming and (
+                "seeking" in str(e).lower() or "stream" in str(e).lower()
+            ):
+                raise RuntimeError(
+                    "Extraction failed in streaming mode due to archive "
+                    "structure limitations. This archive may require "
+                    "non-streaming mode for extraction. "
+                    f"Original error: {e}"
+                ) from e
+            else:
+                raise
 
     def getmembers(self) -> list[tarfile.TarInfo]:
         """Get list of all members in the archive."""

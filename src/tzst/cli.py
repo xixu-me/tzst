@@ -3,6 +3,7 @@
 import argparse
 import sys
 from pathlib import Path
+from typing import Literal, cast
 
 from . import __version__
 from .core import create_archive, extract_archive, list_archive, test_archive
@@ -294,7 +295,9 @@ def cmd_extract_full(args) -> int:
         output_dir = Path(args.output) if args.output else Path.cwd()
         members = args.files if hasattr(args, "files") and args.files else None
         streaming = getattr(args, "streaming", False)
-        filter_type = getattr(args, "filter", "data")
+        filter_type = cast(
+            Literal["data", "tar", "fully_trusted"], getattr(args, "filter", "data")
+        )
 
         print(f"Extracting from: {archive_path}")
         print(f"Output directory: {output_dir}")
@@ -370,7 +373,9 @@ def cmd_extract_flat(args) -> int:
         output_dir = Path(args.output) if args.output else Path.cwd()
         members = args.files if hasattr(args, "files") and args.files else None
         streaming = getattr(args, "streaming", False)
-        filter_type = getattr(args, "filter", "data")
+        filter_type = cast(
+            Literal["data", "tar", "fully_trusted"], getattr(args, "filter", "data")
+        )
 
         print(f"Extracting from: {archive_path}")
         print(f"Output directory: {output_dir}")
@@ -601,31 +606,31 @@ def create_parser() -> argparse.ArgumentParser:
         :func:`main`: The main entry point that uses this parser
     """
     epilog = """
-Command Reference:
-  Archive:
+command reference:
+  archive:
     a, add, create    tzst a archive.tzst files...  [-l LEVEL] [--no-atomic]
 
-  Extract:
+  extract:
     x, extract        tzst x archive.tzst [files...] [-o DIR] [--streaming] [--filter FILTER]
     e, extract-flat   tzst e archive.tzst [files...] [-o DIR] [--streaming] [--filter FILTER]
 
-  Manage:
+  manage:
     l, list           tzst l archive.tzst [-v] [--streaming]
     t, test           tzst t archive.tzst [--streaming]
 
-Arguments:
-  -l, --level LEVEL   Compression level (1-22, default: 3)
-  -o, --output DIR    Output directory (default: current directory)
-  -v, --verbose       Show detailed information
-  --streaming         Use streaming mode for memory efficiency with large archives
-  --filter FILTER     Security filter for extraction: data (safest, default), tar, fully_trusted
-  --no-atomic         Disable atomic file operations (not recommended)
+arguments:
+  -l, --level LEVEL   compression level (1-22, default: 3)
+  -o, --output DIR    output directory (default: current directory)
+  -v, --verbose       show detailed information
+  --streaming         use streaming mode for memory efficiency with large archives
+  --filter FILTER     security filter for extraction: data (safest, default), tar, fully_trusted
+  --no-atomic         disable atomic file operations (not recommended)
 
-Security Note:
-  Always use --filter=data (default) when extracting archives from untrusted sources.
-  Never use --filter=fully_trusted unless you completely trust the archive source.
+security note:
+  always use --filter=data (default) when extracting archives from untrusted sources
+  never use --filter=fully_trusted unless you completely trust the archive source
 
-Documentation:
+documentation:
   https://github.com/xixu-me/tzst#readme
 """
     parser = argparse.ArgumentParser(
@@ -640,15 +645,15 @@ Documentation:
 
     # Add global arguments
     subparsers = parser.add_subparsers(
-        dest="command", title="Commands", help="Available commands", metavar="COMMAND"
+        dest="command", title="commands", metavar="COMMAND"
     )
 
     # Add/Create command
     parser_add = subparsers.add_parser(
-        "a", aliases=["add", "create"], help="Add files to archive"
+        "a", aliases=["add", "create"], help="add files to archive"
     )
-    parser_add.add_argument("archive", help="Archive file path")
-    parser_add.add_argument("files", nargs="+", help="Files/directories to add")
+    parser_add.add_argument("archive", help="archive file path")
+    parser_add.add_argument("files", nargs="+", help="files/directories to add")
     parser_add.add_argument(
         "-l",
         "--level",
@@ -656,7 +661,7 @@ Documentation:
         type=validate_compression_level,
         default=3,
         metavar="LEVEL",
-        help="Compression level (1-22, default: 3)",
+        help="compression level (1-22, default: 3)",
     )
     parser_add.add_argument(
         "--no-atomic",
@@ -672,15 +677,15 @@ Documentation:
     parser_extract = subparsers.add_parser(
         "x", aliases=["extract"], help="eXtract files with full paths"
     )
-    parser_extract.add_argument("archive", help="Archive file path")
-    parser_extract.add_argument("files", nargs="*", help="Specific files to extract")
+    parser_extract.add_argument("archive", help="archive file path")
+    parser_extract.add_argument("files", nargs="*", help="specific files to extract")
     parser_extract.add_argument(
-        "-o", "--output", help="Output directory (default: current directory)"
+        "-o", "--output", help="output directory (default: current directory)"
     )
     parser_extract.add_argument(
         "--streaming",
         action="store_true",
-        help="Use streaming mode for memory efficiency with large archives",
+        help="use streaming mode for memory efficiency with large archives",
     )
     parser_extract.add_argument(
         "--filter",
@@ -698,19 +703,19 @@ Documentation:
     parser_extract_flat = subparsers.add_parser(
         "e",
         aliases=["extract-flat"],
-        help="Extract files from archive (without using directory names)",
+        help="extract files from archive (without using directory names)",
     )
-    parser_extract_flat.add_argument("archive", help="Archive file path")
+    parser_extract_flat.add_argument("archive", help="archive file path")
     parser_extract_flat.add_argument(
-        "files", nargs="*", help="Specific files to extract"
+        "files", nargs="*", help="specific files to extract"
     )
     parser_extract_flat.add_argument(
-        "-o", "--output", help="Output directory (default: current directory)"
+        "-o", "--output", help="output directory (default: current directory)"
     )
     parser_extract_flat.add_argument(
         "--streaming",
         action="store_true",
-        help="Use streaming mode for memory efficiency with large archives",
+        help="use streaming mode for memory efficiency with large archives",
     )
     parser_extract_flat.add_argument(
         "--filter",
@@ -726,28 +731,28 @@ Documentation:
 
     # List command
     parser_list = subparsers.add_parser(
-        "l", aliases=["list"], help="List contents of archive"
+        "l", aliases=["list"], help="list contents of archive"
     )
-    parser_list.add_argument("archive", help="Archive file path")
+    parser_list.add_argument("archive", help="archive file path")
     parser_list.add_argument(
-        "-v", "--verbose", action="store_true", help="Show detailed information"
+        "-v", "--verbose", action="store_true", help="show detailed information"
     )
     parser_list.add_argument(
         "--streaming",
         action="store_true",
-        help="Use streaming mode for memory efficiency with large archives",
+        help="use streaming mode for memory efficiency with large archives",
     )
     parser_list.set_defaults(func=cmd_list)
 
     # Test command
     parser_test = subparsers.add_parser(
-        "t", aliases=["test"], help="Test integrity of archive"
+        "t", aliases=["test"], help="test integrity of archive"
     )
-    parser_test.add_argument("archive", help="Archive file path")
+    parser_test.add_argument("archive", help="archive file path")
     parser_test.add_argument(
         "--streaming",
         action="store_true",
-        help="Use streaming mode for memory efficiency with large archives",
+        help="use streaming mode for memory efficiency with large archives",
     )
     parser_test.set_defaults(func=cmd_test)
 

@@ -242,16 +242,23 @@ class TzstArchive:
             raise RuntimeError(
                 "Extracting specific members is not supported in streaming mode. "
                 "Please use non-streaming mode for selective extraction, or extract all files."
-            )
-
-        # Prepare extraction arguments - filters are always supported in Python 3.12+
-        extract_kwargs = {"filter": filter}
-
+            )  # Prepare extraction arguments - different parameters for extract vs extractall
         try:
             if member:
+                # extract() accepts set_attrs, numeric_owner, and filter
+                extract_kwargs = {
+                    "set_attrs": set_attrs,
+                    "numeric_owner": numeric_owner,
+                    "filter": filter,
+                }
                 self._tarfile.extract(member, path=extract_path, **extract_kwargs)
             else:
-                self._tarfile.extractall(path=extract_path, **extract_kwargs)
+                # extractall() only accepts numeric_owner and filter (no set_attrs)
+                extractall_kwargs = {
+                    "numeric_owner": numeric_owner,
+                    "filter": filter,
+                }
+                self._tarfile.extractall(path=extract_path, **extractall_kwargs)
         except (tarfile.StreamError, OSError) as e:
             if self.streaming and (
                 "seeking" in str(e).lower() or "stream" in str(e).lower()

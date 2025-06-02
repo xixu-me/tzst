@@ -69,7 +69,6 @@ make clean
 - `index.md` - Main documentation homepage
 - `quickstart.md` - Quick start guide for new users
 - `examples.md` - Practical examples and use cases
-- `changelog.md` - Project changelog
 - `api/` - API reference documentation
   - `index.md` - API overview
   - `core.md` - Core functionality documentation

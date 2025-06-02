@@ -294,7 +294,6 @@ def create_archive(
 - **Fill out the PR template** completely
 - **Link related issues** using keywords (fixes #123)
 - **Keep PRs focused** - one feature/fix per PR
-- **Update CHANGELOG.md** for user-facing changes
 - **Ensure all CI checks pass**
 - **Respond to review feedback** promptly
 
@@ -310,9 +309,8 @@ def create_archive(
 Releases are handled by maintainers:
 
 1. Update version in `src/tzst/__init__.py`
-2. Update `CHANGELOG.md`
-3. Create a release tag
-4. Automated CI/CD publishes to PyPI
+2. Create a release tag
+3. Automated CI/CD publishes to PyPI
 
 ## Getting Help
 

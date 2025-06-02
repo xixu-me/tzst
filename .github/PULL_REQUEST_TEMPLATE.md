@@ -88,7 +88,6 @@ assignees: ''
 <!-- Mark documentation changes -->
 
 - [ ] README.md updated (if needed)
-- [ ] CHANGELOG.md updated (for user-facing changes)
 - [ ] Code comments added for complex logic
 - [ ] Docstrings updated for modified functions/classes
 

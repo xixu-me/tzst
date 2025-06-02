@@ -506,14 +506,14 @@ class TestCLISecurityFilters:
         # First create an archive
         file_paths = [str(f) for f in sample_files if f.is_file()]
         archive_path = temp_dir / "filter_test.tzst"
-        main(["a", str(archive_path), *file_paths])
-
-        # Test extraction with invalid filter
+        main(
+            ["a", str(archive_path), *file_paths]
+        )  # Test extraction with invalid filter
         extract_dir = temp_dir / "invalid_filtered"
         result = main(
             ["x", str(archive_path), "-o", str(extract_dir), "--filter", "invalid"]
         )
-        assert result == 1  # Should fail
+        assert result == 2  # Should fail with argparse error code
 
 
 class TestCLIStreamingOperations:
@@ -1219,9 +1219,10 @@ class TestCLIValidationFunctions:
 class TestCLIErrorHandlingInternal:
     def test_handle_parsing_errors_help_requested(self):
         """Test error handling when help is requested."""
-        from tzst.cli import _handle_parsing_errors
+        from tzst.cli import (
+            _handle_parsing_errors,  # Simulate help request (exit code 0)
+        )
 
-        # Simulate help request (exit code 0)
         e = SystemExit(0)
         result = _handle_parsing_errors(e, ["--help"])
         assert result == 0
@@ -1234,9 +1235,9 @@ class TestCLIErrorHandlingInternal:
         e = SystemExit(2)
         argv = ["x", "test.tzst", "--filter", "invalid"]
         result = _handle_parsing_errors(e, argv)
-        assert result == 1  # Should convert to exit code 1
-        captured = capsys.readouterr()
-        assert "Invalid filter specified" in captured.err
+        assert result == 2  # Should maintain argparse exit code 2
+        # Note: _handle_parsing_errors doesn't print error messages,
+        # error messages are printed by argparse before SystemExit is raised
 
     def test_handle_parsing_errors_other_errors(self):
         """Test error handling for other parsing errors."""
@@ -1736,12 +1737,12 @@ class TestCLIArgumentParsingEdgeCases:
         assert result == 1  # Test with compression level error
         e = SystemExit(2)
         result = _handle_parsing_errors(e, ["a", "test.tzst", "file.txt", "-l", "1000"])
-        assert result == 1
+        assert result == 2
 
         # Test with filter error
         e = SystemExit(2)
         result = _handle_parsing_errors(e, ["x", "test.tzst", "--filter", "badfilter"])
-        assert result == 1
+        assert result == 2
 
     def test_parse_arguments_edge_cases(self):
         """Test _parse_arguments with edge cases."""

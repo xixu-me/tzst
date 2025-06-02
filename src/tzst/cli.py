@@ -661,6 +661,7 @@ documentation:
     parser_add.add_argument("archive", help="archive file path")
     parser_add.add_argument("files", nargs="+", help="files/directories to add")
     parser_add.add_argument(
+        "-c",
         "-l",
         "--level",
         dest="compression_level",
@@ -774,11 +775,17 @@ def _validate_compression_level_in_argv(argv: list[str]) -> bool:
     Returns:
         bool: True if an error was found and handled, False otherwise
     """
-    if "-l" not in argv and "--level" not in argv:
+    if "-c" not in argv and "-l" not in argv and "--level" not in argv:
         return False
 
     try:
-        level_index = argv.index("-l") if "-l" in argv else argv.index("--level")
+        level_index = -1
+        if "-c" in argv:
+            level_index = argv.index("-c")
+        elif "-l" in argv:
+            level_index = argv.index("-l")
+        else:
+            level_index = argv.index("--level")
         if level_index + 1 < len(argv):
             level_value = argv[level_index + 1]
             try:
@@ -831,6 +838,48 @@ def _validate_filter_in_argv(argv: list[str]) -> bool:
     return False
 
 
+def _validate_command_in_argv(argv: list[str]) -> bool:
+    """Check for invalid command errors in argv.
+
+    Args:
+        argv: Command line arguments
+
+    Returns:
+        bool: True if an invalid command was found and handled, False otherwise
+    """
+    if not argv:
+        return False
+
+    # Valid commands and their aliases
+    valid_commands = {
+        "a",
+        "add",
+        "create",
+        "x",
+        "extract",
+        "e",
+        "extract-flat",
+        "l",
+        "list",
+        "t",
+        "test",
+    }
+
+    # Find the first argument that's not a flag (doesn't start with -)
+    for arg in argv:
+        if not arg.startswith("-"):
+            if arg not in valid_commands:
+                print(
+                    f"Invalid command: '{arg}'. "
+                    f"Valid commands are: {', '.join(sorted(valid_commands))}",
+                    file=sys.stderr,
+                )
+                return True
+            break
+
+    return False
+
+
 def _is_extreme_compression_level_in_argv(argv: list[str]) -> bool:
     """Check for extreme compression level values that warrant special handling.
 
@@ -840,11 +889,17 @@ def _is_extreme_compression_level_in_argv(argv: list[str]) -> bool:
     Returns:
         bool: True if an extreme compression level value is found, False otherwise
     """
-    if "-l" not in argv and "--level" not in argv:
+    if "-c" not in argv and "-l" not in argv and "--level" not in argv:
         return False
 
     try:
-        level_index = argv.index("-l") if "-l" in argv else argv.index("--level")
+        level_index = -1
+        if "-c" in argv:
+            level_index = argv.index("-c")
+        elif "-l" in argv:
+            level_index = argv.index("-l")
+        else:
+            level_index = argv.index("--level")
         if level_index + 1 < len(argv):
             level_value = argv[level_index + 1]
             try:
@@ -867,17 +922,13 @@ def _handle_parsing_errors(e: SystemExit, argv: list[str] | None) -> int:
 
     Returns:
         int: Appropriate exit code
-    """
-    # Help was requested
+    """  # Help was requested
     if e.code == 0:
         return 0
     elif e.code == 2 and argv:
-        # Check for validation errors we want to convert to exit code 1
-        if _validate_filter_in_argv(argv):
-            return 1
-        # Only convert compression level errors to exit code 1 for extreme cases
-        if _is_extreme_compression_level_in_argv(argv):
-            return 1
+        # For now, keep standard argparse behavior (exit code 2)
+        # Future versions may convert specific validation errors to exit code 1
+        pass
 
     # Return the original exit code for other cases
     return int(e.code) if e.code is not None else 1

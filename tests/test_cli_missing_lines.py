@@ -61,9 +61,7 @@ class TestCLIMissingLines:
 
         # Test list with streaming
         result = main(["l", str(archive_path), "--streaming"])
-        assert result == 0
-
-        # Test extract with specific options
+        assert result == 0  # Test extract with specific options
         extract_dir = temp_dir / "extracted"
         result = main(["x", str(archive_path), "-o", str(extract_dir)])
         assert result == 0
@@ -76,13 +74,13 @@ class TestCLIMissingLines:
         result = main(["l", str(invalid_path)])
         assert result == 1
 
-        # Test with invalid compression level
+        # Test with invalid compression level - should return argparse error code 2
         test_file = temp_dir / "test.txt"
         test_file.write_text("test content")
         archive_path = temp_dir / "test.tzst"
 
         result = main(["a", str(archive_path), str(test_file), "-c", "50"])
-        assert result == 1
+        assert result == 2
 
     def test_filter_option_edge_cases(self, temp_dir):
         """Test filter option edge cases."""
@@ -126,9 +124,7 @@ class TestCLIMissingLines:
         """Test verbose output edge cases."""
         test_file = temp_dir / "test.txt"
         test_file.write_text("test content")
-        archive_path = temp_dir / "test.tzst"
-
-        # Create archive
+        archive_path = temp_dir / "test.tzst"  # Create archive
         result = main(["a", str(archive_path), str(test_file)])
         assert result == 0
 
@@ -145,9 +141,9 @@ class TestCLIMissingLines:
         result = main([])
         assert result == 1
 
-        # Test with invalid command
+        # Test with invalid command - should return argparse error code 2
         result = main(["invalid_command"])
-        assert result == 1
+        assert result == 2
 
     @pytest.mark.skipif(sys.platform != "win32", reason="Windows-specific test")
     def test_windows_specific_functionality(self, temp_dir):

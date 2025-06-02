@@ -506,6 +506,9 @@ def cmd_list(args) -> int:
     except TzstArchiveError as e:
         print(f"Error: Archive operation failed - {e}", file=sys.stderr)
         return 1
+    except KeyboardInterrupt:
+        print("\nOperation interrupted by user", file=sys.stderr)
+        return 130
     except Exception as e:
         print(f"Error: Failed to list archive - {e}", file=sys.stderr)
         return 1
@@ -565,6 +568,9 @@ def cmd_test(args) -> int:
     except TzstArchiveError as e:
         print(f"Error: Archive operation failed - {e}", file=sys.stderr)
         return 1
+    except KeyboardInterrupt:
+        print("\nOperation interrupted by user", file=sys.stderr)
+        return 130
     except Exception as e:
         print(f"Error: Failed to test archive - {e}", file=sys.stderr)
         return 1

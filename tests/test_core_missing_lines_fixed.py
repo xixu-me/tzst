@@ -276,12 +276,12 @@ class TestCoreMissingLines:
 
     def test_context_manager_exception_handling(self, temp_dir):
         """Test context manager exception handling."""
-        archive_path = temp_dir / "test.tzst"
-
-        # Test exception during context manager exit
+        archive_path = (
+            temp_dir / "test.tzst"
+        )  # Test exception during context manager exit
         with patch("tzst.core.TzstArchive.close", side_effect=Exception("Close error")):
             try:
-                with TzstArchive(archive_path, mode="w") as archive:
+                with TzstArchive(archive_path, mode="w"):
                     raise ValueError("Test exception")
             except ValueError:
                 pass  # Expected

@@ -5,7 +5,7 @@ from unittest.mock import patch
 
 import pytest
 
-from tzst.cli import main, validate_files
+from tzst.cli import _validate_files, main
 
 
 class TestCLIMissingLines:
@@ -15,13 +15,12 @@ class TestCLIMissingLines:
         """Test OSError handling in validate_files function."""
         # Create a test file
         test_file = temp_dir / "test.txt"
-        test_file.write_text("test content")
-
-        # Mock Path.exists to raise OSError
-        with patch("pathlib.Path.exists", side_effect=OSError("Permission denied")):
-            # Should handle OSError gracefully and continue
+        test_file.write_text("test content")  # Mock Path.exists to raise OSError
+        with patch(
+            "pathlib.Path.exists", side_effect=OSError("Permission denied")
+        ):  # Should handle OSError gracefully and continue
             try:
-                validate_files([str(test_file)])
+                _validate_files([test_file])
             except OSError:
                 pass  # Expected to be caught and handled
 
@@ -30,21 +29,19 @@ class TestCLIMissingLines:
         # Test with minimal arguments that might hit edge cases
         test_file = temp_dir / "test.txt"
         test_file.write_text("test content")
-        archive_path = temp_dir / "test.tzst"
-
-        # Create archive
+        archive_path = temp_dir / "test.tzst"  # Create archive
         result = main(["a", str(archive_path), str(test_file)])
         assert result == 0
 
         # Test version command through main
-        with patch("sys.exit") as mock_exit:
+        with patch("sys.exit"):
             try:
                 main(["--version"])
             except SystemExit:
                 pass
 
         # Test help command variations
-        with patch("sys.exit") as mock_exit:
+        with patch("sys.exit"):
             try:
                 main(["--help"])
             except SystemExit:
@@ -323,11 +320,9 @@ class TestPlatformSpecificMissingLines:
             file_path.write_text(content, encoding="utf-8")
             created_files.append(file_path)
 
-        archive_path = temp_dir / "unicode.tzst"
-
-        # Create archive
+        archive_path = temp_dir / "unicode.tzst"  # Create archive
         file_args = [str(f) for f in created_files]
-        result = main(["a", str(archive_path)] + file_args)
+        result = main(["a", str(archive_path), *file_args])
         assert result == 0
 
         # Test extraction
@@ -351,11 +346,9 @@ class TestPlatformSpecificMissingLines:
             file_path.write_text(f"Content of file {i}")
             files.append(file_path)
 
-        archive_path = temp_dir / "many_files.tzst"
-
-        # Create archive with many files
+        archive_path = temp_dir / "many_files.tzst"  # Create archive with many files
         file_args = [str(f) for f in files]
-        result = main(["a", str(archive_path)] + file_args)
+        result = main(["a", str(archive_path), *file_args])
         assert result == 0
 
         # Test listing (should handle many files efficiently)

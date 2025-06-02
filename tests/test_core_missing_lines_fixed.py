@@ -276,16 +276,49 @@ class TestCoreMissingLines:
 
     def test_context_manager_exception_handling(self, temp_dir):
         """Test context manager exception handling."""
-        archive_path = (
-            temp_dir / "test.tzst"
-        )  # Test exception during context manager exit
+        archive_path = temp_dir / "test.tzst"
+
+        # Store references for cleanup
+        fileobj = None
+        compressed_stream = None
+        tarfile_obj = None
+
+        # Test that close exceptions are suppressed during context manager exit
         with patch("tzst.core.TzstArchive.close", side_effect=Exception("Close error")):
             try:
-                with TzstArchive(archive_path, mode="w"):
+                with TzstArchive(archive_path, mode="w") as archive:
+                    # Store references to underlying objects for manual cleanup
+                    fileobj = archive._fileobj
+                    compressed_stream = archive._compressed_stream
+                    tarfile_obj = archive._tarfile
                     raise ValueError("Test exception")
             except ValueError:
-                pass  # Expected
-            # The close exception should be suppressed
+                pass  # Expected - the original exception should not be masked
+            finally:
+                # Manually clean up since mocked close() failed
+                try:
+                    if tarfile_obj:
+                        tarfile_obj.close()
+                except Exception:
+                    pass
+                try:
+                    if compressed_stream:
+                        compressed_stream.close()
+                except Exception:
+                    pass
+                try:
+                    if fileobj:
+                        fileobj.close()
+                except Exception:
+                    pass
+                # Ensure the file is removed to prevent permission errors
+                try:
+                    if archive_path.exists():
+                        archive_path.unlink()
+                except (PermissionError, OSError):
+                    pass
+
+            # The close exception should be suppressed by __exit__
 
     def test_list_verbose_mode_edge_cases(self, temp_dir):
         """Test list method verbose mode edge cases."""

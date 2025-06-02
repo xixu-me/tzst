@@ -10,8 +10,37 @@ import pytest
 @pytest.fixture
 def temp_dir():
     """Create a temporary directory for tests."""
-    with tempfile.TemporaryDirectory() as tmpdir:
+    tmpdir = tempfile.mkdtemp()
+    try:
         yield Path(tmpdir)
+    finally:
+        # Robust cleanup for Windows
+        def cleanup_dir(path):
+            import shutil
+            import stat
+
+            def handle_remove_readonly(func, path, exc):
+                """Error handler for Windows readonly files."""
+                try:
+                    os.chmod(path, stat.S_IWRITE)
+                    func(path)
+                except Exception:
+                    pass  # If we still can't delete it, ignore
+
+            try:
+                shutil.rmtree(path, onerror=handle_remove_readonly)
+            except (PermissionError, OSError):
+                # On Windows, sometimes files are still locked
+                # Try to clean up what we can
+                import time
+
+                time.sleep(0.1)  # Brief pause
+                try:
+                    shutil.rmtree(path, onerror=handle_remove_readonly)
+                except Exception:
+                    pass  # Final fallback - ignore cleanup errors
+
+        cleanup_dir(tmpdir)
 
 
 @pytest.fixture

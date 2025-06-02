@@ -5,11 +5,13 @@ This directory contains the Sphinx documentation for the tzst library.
 ## Setup
 
 1. Install documentation dependencies:
+
    ```bash
    pip install -r requirements.txt
    ```
 
 2. Install the tzst package in development mode (required for autodoc):
+
    ```bash
    pip install -e ..
    ```
@@ -44,7 +46,7 @@ make livehtml
 sphinx-autobuild . _build/html
 ```
 
-This will start a local server (usually at http://localhost:8000) that automatically rebuilds and refreshes when you save changes.
+This will start a local server (usually at <http://localhost:8000>) that automatically rebuilds and refreshes when you save changes.
 
 ### Other Build Targets
 
@@ -130,7 +132,7 @@ To test the deployment process locally:
 
 1. Build the documentation: `make html`
 2. Serve the built files: `python -m http.server 8000 -d _build/html`
-3. Visit http://localhost:8000
+3. Visit <http://localhost:8000>
 
 ## Troubleshooting
 

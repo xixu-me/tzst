@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.1.0] - 2025-06-02
 
 ### Added
+
 - Comprehensive Sphinx documentation with automated GitHub Pages deployment
 - API documentation with autodoc integration
 - Quickstart guide and examples
@@ -15,10 +16,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Security-focused extraction examples
 
 ### Changed
+
 - Enhanced documentation structure
 - Improved code examples and usage patterns
 
 ### Documentation
+
 - Added complete API reference
 - Added practical examples for common use cases
 - Added security best practices guide
@@ -27,6 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.0] - Previous Release
 
 ### Added
+
 - Initial release of tzst library
 - TzstArchive class for archive management
 - Convenience functions for common operations
@@ -37,6 +41,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Comprehensive test suite
 
 ### Features
+
 - Support for .tzst/.tar.zst archives
 - Zstandard compression with configurable levels
 - Memory-efficient streaming mode

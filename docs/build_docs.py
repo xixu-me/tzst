@@ -2,7 +2,6 @@
 """Development script for building and serving documentation locally."""
 
 import argparse
-import os
 import shutil
 import subprocess
 import sys

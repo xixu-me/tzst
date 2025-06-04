@@ -83,7 +83,7 @@ pip install -e .[dev]
 
 ### 💻 Command Line Usage
 
-> **Note**: Download the [standalone binary](#pre-built-binaries) for the best performance and no Python dependency. Alternatively, use `uvx tzst` for running without installation. See [uv documentation](https://docs.astral.sh/uv/) for details.
+> **Note**: Download the [standalone binary](#from-github-releases) for the best performance and no Python dependency. Alternatively, use `uvx tzst` for running without installation. See [uv documentation](https://docs.astral.sh/uv/) for details.
 
 ```bash
 # 📁 Create an archive

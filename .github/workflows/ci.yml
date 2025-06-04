@@ -138,13 +138,12 @@ jobs:
             os_name: windows
             arch: arm64
             python-version: "3.12"
-            cross_compile: true
-          # macOS architectures
-          - os: macos-13  # Intel-based runner
+            cross_compile: true # macOS architectures
+          - os: macos-13 # Intel-based runner
             os_name: macos
             arch: x86_64
             python-version: "3.12"
-          - os: macos-latest  # ARM-based runner (M1/M2)
+          - os: macos-14 # ARM-based runner (M1/M2)
             os_name: macos
             arch: arm64
             python-version: "3.12"
@@ -164,7 +163,9 @@ jobs:
         run: |
           VERSION=${GITHUB_REF#refs/tags/v}
           echo "version=$VERSION" >> $GITHUB_OUTPUT
-          echo "Version: $VERSION"      - name: Install dependencies
+          echo "Version: $VERSION"
+
+      - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -e .
@@ -174,12 +175,28 @@ jobs:
         run: |
           python -m PyInstaller --onefile --name tzst --console -m tzst
 
-      - name: Build binary for ARM64 on macOS (override previous build)
-        if: matrix.os == 'macos-latest' && matrix.arch == 'arm64'
+      - name: Verify binary (Linux/macOS)
+        if: matrix.os != 'windows-latest'
+        run: |
+          if [ ! -f "dist/tzst" ]; then
+            echo "Binary build failed!"
+            exit 1
+          fi
+
+      - name: Verify binary (Windows)
+        if: matrix.os == 'windows-latest'
+        run: |
+          if (-not (Test-Path "dist/tzst.exe")) {
+            Write-Host "Binary build failed!"
+            exit 1
+          }
+
+      - name: Build binary for ARM64 on macOS
+        if: matrix.os == 'macos-14' && matrix.arch == 'arm64'
         run: |
           python -m PyInstaller --onefile --name tzst --console --target-arch arm64 -m tzst
 
-      - name: Build binary for ARM64 on Windows (override previous build)
+      - name: Build binary for ARM64 on Windows
         if: matrix.os == 'windows-latest' && matrix.arch == 'arm64'
         run: |
           python -m PyInstaller --onefile --name tzst --console --target-arch arm64 -m tzst
@@ -188,9 +205,9 @@ jobs:
         if: matrix.os == 'ubuntu-latest' && matrix.arch == 'aarch64'
         run: |
           sudo apt-get update
-          sudo apt-get install -y gcc-aarch64-linux-gnu
+          sudo apt-get install -y gcc-aarch64-linux-gnu binutils-aarch64-linux-gnu
 
-      - name: Build binary for ARM64 on Linux (override previous build)
+      - name: Build binary for ARM64 on Linux
         if: matrix.os == 'ubuntu-latest' && matrix.arch == 'aarch64'
         env:
           CC: aarch64-linux-gnu-gcc
@@ -258,30 +275,41 @@ jobs:
           gh release create ${{ github.ref_name }} \
             --title "tzst v${{ steps.version.outputs.version }}" \
             --notes "## tzst v${{ steps.version.outputs.version }}
-          
+
           ### Installation
-          
+
           #### Python Package
           \`\`\`bash
           pip install tzst==${{ steps.version.outputs.version }}
           \`\`\`
-          
+
           #### Standalone Binaries
-          Download the appropriate binary for your platform from the assets below.
-          
-          ### Changes
+          Download the appropriate binary for your platform from the assets below.          ### Changes
           See the [commit history](https://github.com/xixu-me/tzst/commits/${{ github.ref_name }}) for detailed changes."
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload Release Assets
         run: |
+          echo "Available files:"
+          ls -la tzst-v${{ steps.version.outputs.version }}-*.zip 2>/dev/null || echo "No zip files found"
+
+          success=0
           for file in tzst-v${{ steps.version.outputs.version }}-*.zip; do
             if [ -f "$file" ]; then
               echo "Uploading $file"
-              gh release upload ${{ github.ref_name }} "$file" --clobber
+              if gh release upload ${{ github.ref_name }} "$file" --clobber; then
+                echo "Successfully uploaded $file"
+                success=$((success + 1))
+              else
+                echo "Failed to upload $file"
+              fi
             fi
-          done
+          done            if [ $success -eq 0 ]; then
+            echo "Warning: No files were successfully uploaded"
+          else
+            echo "Successfully uploaded $success file(s)"
+          fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -313,14 +341,20 @@ jobs:
               print(f'PyPI version: {version}')
           except Exception as e:
               print(f'Error fetching version: {e}')
-              version = 'unknown'
-          with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
+              version = 'unknown'          with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
               f.write(f'version={version}\n')
           "
 
       - name: Update README badge
         run: |
           echo "Updating PyPI badge with version: ${{ steps.pypi_version.outputs.version }}"
+          # Update PyPI version badge in README.md
+          if [ -f "README.md" ]; then
+            # Replace PyPI version badge
+            sed -i 's|https://img.shields.io/pypi/v/tzst[^)]*|https://img.shields.io/pypi/v/tzst?label=PyPI\&color=blue|g' README.md || true
+            # Update version in badge alt text if exists
+            sed -i 's|PyPI - Version[^]]*|PyPI - Version|g' README.md || true
+          fi
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
 

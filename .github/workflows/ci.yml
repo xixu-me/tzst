@@ -173,7 +173,7 @@ jobs:
 
       - name: Build binary
         run: |
-          python -m PyInstaller --onefile --name tzst --console -m tzst
+          python -m PyInstaller --onefile --name tzst --console src/main.py
 
       - name: Verify binary (Linux/macOS)
         if: matrix.os != 'windows-latest'

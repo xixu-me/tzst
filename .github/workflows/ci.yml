@@ -273,19 +273,7 @@ jobs:
       - name: Create GitHub Release
         run: |
           gh release create ${{ github.ref_name }} \
-            --title "tzst v${{ steps.version.outputs.version }}" \
-            --notes "## tzst v${{ steps.version.outputs.version }}
-
-          ### Installation
-
-          #### Python Package
-          \`\`\`bash
-          pip install tzst==${{ steps.version.outputs.version }}
-          \`\`\`
-
-          #### Standalone Binaries
-          Download the appropriate binary for your platform from the assets below.          ### Changes
-          See the [commit history](https://github.com/xixu-me/tzst/commits/${{ github.ref_name }}) for detailed changes."
+            --title "tzst ${{ steps.version.outputs.version }}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -305,7 +293,8 @@ jobs:
                 echo "Failed to upload $file"
               fi
             fi
-          done            if [ $success -eq 0 ]; then
+          done            
+          if [ $success -eq 0 ]; then
             echo "Warning: No files were successfully uploaded"
           else
             echo "Successfully uploaded $success file(s)"

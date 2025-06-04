@@ -8,6 +8,7 @@ from tzst import TzstArchive, create_archive, extract_archive
 from tzst import test_archive as tzst_test_archive
 
 
+@pytest.mark.unit
 class TestErrorHandling:
     """Test error handling."""
 
@@ -37,6 +38,7 @@ class TestErrorHandling:
             create_archive(archive_path, [fake_file])
 
 
+@pytest.mark.unit
 class TestSecurityFiltering:
     """Test security filtering mechanisms."""
 
@@ -50,11 +52,11 @@ class TestSecurityFiltering:
 
         # Extract with tar filter
         extract_dir = temp_dir / "tar_filtered"
-        with patch("tzst.core.TzstArchive.extract") as mock_extract:
+        with patch("tzst.core.TzstArchive.extractall") as mock_extractall:
             extract_archive(archive_path, extract_dir, filter="tar")
 
             # Verify filter was passed
-            call_args = mock_extract.call_args
+            call_args = mock_extractall.call_args
             assert call_args[1]["filter"] == "tar"
 
     def test_data_filter_extraction(self, sample_files, temp_dir):
@@ -67,11 +69,11 @@ class TestSecurityFiltering:
 
         # Extract with data filter (default for security)
         extract_dir = temp_dir / "data_filtered"
-        with patch("tzst.core.TzstArchive.extract") as mock_extract:
+        with patch("tzst.core.TzstArchive.extractall") as mock_extractall:
             extract_archive(archive_path, extract_dir, filter="data")
 
             # Verify filter was passed
-            call_args = mock_extract.call_args
+            call_args = mock_extractall.call_args
             assert call_args[1]["filter"] == "data"
 
     def test_invalid_filter_raises_error(self, sample_files, temp_dir):

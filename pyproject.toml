@@ -24,7 +24,14 @@ classifiers = [
 dependencies = ["zstandard>=0.19.0,<1.0.0"]
 
 [project.optional-dependencies]
-dev = ["pytest>=7.0.0", "pytest-cov>=4.0.0", "ruff>=0.1.0"]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "ruff>=0.1.0",
+    "pre-commit>=3.6.0",
+    "build>=1.0.0",
+    "twine>=4.0.0",
+]
 
 [project.urls]
 Homepage = "https://github.com/xixu-me/tzst"
@@ -42,13 +49,7 @@ path = "src/tzst/__init__.py"
 packages = ["src/tzst"]
 
 [tool.hatch.build.targets.sdist]
-include = [
-    "src",
-    "tests",
-    "README.md",
-    "LICENSE",
-    "CONTRIBUTING.md",
-]
+include = ["src", "tests", "README.md", "LICENSE", "CONTRIBUTING.md"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
@@ -76,8 +77,8 @@ select = [
     "RUF", # ruff specific rules
 ]
 ignore = [
-    "E501", # line too long
-
+    "E501", # line too long - handled by formatter
+    "C901", # function too complex - accepted for core functionality
 ]
 fixable = ["ALL"]
 

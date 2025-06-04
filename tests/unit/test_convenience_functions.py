@@ -6,6 +6,7 @@ from tzst import create_archive, extract_archive, list_archive
 from tzst import test_archive as tzst_test_archive
 
 
+@pytest.mark.unit
 class TestConvenienceFunctions:
     """Test the convenience functions."""
 
@@ -111,6 +112,7 @@ class TestConvenienceFunctions:
         assert extract_dir_streaming.exists()
 
 
+@pytest.mark.unit
 class TestAtomicOperations:
     """Test atomic file operations."""
 
@@ -154,6 +156,7 @@ class TestAtomicOperations:
         assert len(temp_files) == 0
 
 
+@pytest.mark.unit
 class TestCompressionLevels:
     """Test compression level validation and functionality."""
 
@@ -180,6 +183,7 @@ class TestCompressionLevels:
             assert "1" in str(exc_info.value) and "22" in str(exc_info.value)
 
 
+@pytest.mark.unit
 class TestEdgeCaseCoverage:
     """Test edge cases to improve coverage."""
 

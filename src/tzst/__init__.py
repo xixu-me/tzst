@@ -1,4 +1,8 @@
-"""tzst - The next-generation Python library engineered for modern archive management, leveraging cutting-edge Zstandard compression to deliver superior performance, security, and reliability."""
+"""tzst - The next-generation Python library engineered for modern archive management.
+
+Leveraging cutting-edge Zstandard compression to deliver superior performance,
+security, and reliability.
+"""
 
 __version__ = "1.1.1"
 

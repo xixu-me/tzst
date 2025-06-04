@@ -1,8 +1,11 @@
 """Tests for TzstArchive class core functionality."""
 
+import pytest
+
 from tzst import TzstArchive
 
 
+@pytest.mark.unit
 class TestBasicImportAndCreation:
     """Test basic import and creation functionality."""
 
@@ -17,6 +20,7 @@ class TestBasicImportAndCreation:
         assert archive.mode == "r"
 
 
+@pytest.mark.unit
 class TestTzstArchiveBasics:
     """Test basic TzstArchive class functionality."""
 
@@ -107,6 +111,7 @@ class TestTzstArchiveBasics:
             assert "gid" in item
 
 
+@pytest.mark.unit
 class TestTzstArchiveStreamingMode:
     """Test streaming mode functionality."""
 

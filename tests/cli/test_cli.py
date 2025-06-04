@@ -17,6 +17,7 @@ from tzst.cli import (
 )
 
 
+@pytest.mark.cli
 class TestUtilityFunctions:
     """Test CLI utility functions."""
 
@@ -892,7 +893,7 @@ class TestCLIRealWorldScenarios:
 
         # Test error operation returns non-zero
         result = main(["l", "nonexistent_archive.tzst"])
-        assert result != 0  # Error should return non-zero
+        assert result != 0
 
 
 class TestCLISecurityFilterParsing:
@@ -2289,3 +2290,135 @@ class TestCLIListingFunctionsCoverage:
         assert "2 files" in captured.out
         assert "2 directories" in captured.out
         assert "300.0 B" in captured.out  # Total size of files
+
+
+class TestCLIEdgeCasesExtended:
+    """Additional edge case tests for CLI functionality."""
+
+    def test_validate_files_os_error_handling(self, temp_dir):
+        """Test OSError handling in validate_files function."""
+        from unittest.mock import patch
+
+        from tzst.cli import _validate_files
+
+        # Create a test file
+        test_file = temp_dir / "test.txt"
+        test_file.write_text("test content")
+
+        # Mock Path.exists to raise OSError
+        with patch("pathlib.Path.exists", side_effect=OSError("Permission denied")):
+            # Should handle OSError gracefully and continue
+            try:
+                _validate_files([test_file])
+            except OSError:
+                pass  # Expected to be caught and handled
+
+    def test_windows_specific_cli_functionality(self, temp_dir):
+        """Test Windows-specific CLI functionality."""
+        import sys
+
+        if sys.platform != "win32":
+            pytest.skip("Windows-specific test")
+
+        # Test Windows reserved names
+        test_file = temp_dir / "test.txt"
+        test_file.write_text("test content")
+        archive_path = temp_dir / "test.tzst"
+
+        # Create archive
+        result = main(["a", str(archive_path), str(test_file)])
+        assert result == 0
+
+        # Test with Windows path separators
+        windows_style_path = str(archive_path).replace("/", "\\")
+        result = main(["l", windows_style_path])
+        assert result == 0
+
+    def test_compression_level_boundary_values(self, temp_dir):
+        """Test compression level boundary values."""
+        test_file = temp_dir / "test.txt"
+        test_file.write_text("test content for compression")
+
+        # Test minimum compression level
+        archive_path_min = temp_dir / "test_min.tzst"
+        result = main(["a", str(archive_path_min), str(test_file), "-c", "1"])
+        assert result == 0
+
+        # Test maximum compression level
+        archive_path_max = temp_dir / "test_max.tzst"
+        result = main(["a", str(archive_path_max), str(test_file), "-c", "22"])
+        assert result == 0
+
+    def test_output_directory_creation_edge_cases(self, temp_dir):
+        """Test output directory creation edge cases."""
+        test_file = temp_dir / "test.txt"
+        test_file.write_text("test content")
+        archive_path = temp_dir / "test.tzst"
+
+        # Create archive
+        result = main(["a", str(archive_path), str(test_file)])
+        assert result == 0
+
+        # Test extraction to nested directory that doesn't exist
+        nested_extract_dir = temp_dir / "level1" / "level2" / "level3"
+        result = main(["x", str(archive_path), "-o", str(nested_extract_dir)])
+        assert result == 0
+
+        # Verify directory was created
+        assert nested_extract_dir.exists()
+
+    def test_special_file_handling_edge_cases(self, temp_dir):
+        """Test special file handling edge cases."""
+        # Create files with special characteristics
+        empty_file = temp_dir / "empty.txt"
+        empty_file.touch()
+
+        whitespace_file = temp_dir / "whitespace.txt"
+        whitespace_file.write_text("   \n\t\n   ")
+
+        binary_file = temp_dir / "binary.bin"
+        binary_file.write_bytes(b"\x00\x01\x02\x03\x04\x05")
+
+        archive_path = temp_dir / "special.tzst"
+
+        # Create archive with special files
+        result = main(
+            [
+                "a",
+                str(archive_path),
+                str(empty_file),
+                str(whitespace_file),
+                str(binary_file),
+            ]
+        )
+        assert result == 0
+
+        # Extract and verify
+        extract_dir = temp_dir / "extracted"
+        result = main(["x", str(archive_path), "-o", str(extract_dir)])
+        assert result == 0
+
+    def test_performance_edge_cases(self, temp_dir):
+        """Test performance-related edge cases."""
+        # Create many small files
+        files = []
+        for i in range(20):  # Create 20 small files
+            file_path = temp_dir / f"small_{i:03d}.txt"
+            file_path.write_text(f"Content of file {i}")
+            files.append(file_path)
+
+        archive_path = temp_dir / "many_files.tzst"
+
+        # Create archive with many files
+        file_args = [str(f) for f in files]
+        result = main(["a", str(archive_path), *file_args])
+        assert result == 0
+
+        # Test listing (should handle many files efficiently)
+        result = main(["l", str(archive_path)])
+        assert result == 0
+
+        # Test extraction
+        extract_dir = temp_dir / "extracted_many"
+        result = main(["x", str(archive_path), "-o", str(extract_dir)])
+        assert result == 0

@@ -6,12 +6,132 @@ import tarfile
 import tempfile
 import time
 from collections.abc import Callable, Sequence
+from enum import Enum
 from pathlib import Path
 from typing import BinaryIO
 
 import zstandard as zstd
 
 from .exceptions import TzstArchiveError, TzstDecompressionError
+
+
+class ConflictResolution(Enum):
+    """Enum for conflict resolution strategies."""
+
+    REPLACE = "replace"
+    SKIP = "skip"
+    REPLACE_ALL = "replace_all"
+    SKIP_ALL = "skip_all"
+    AUTO_RENAME = "auto_rename"
+    AUTO_RENAME_ALL = "auto_rename_all"
+    EXIT = "exit"
+    ASK = "ask"
+
+
+class ConflictResolutionState:
+    """State management for conflict resolution during extraction."""
+
+    def __init__(self, initial_resolution: ConflictResolution | None = None):
+        self.continue_extraction = True
+        self.global_resolution = initial_resolution
+        # If initial resolution is EXIT, set continue_extraction to False
+        if initial_resolution == ConflictResolution.EXIT:
+            self.continue_extraction = False
+
+    @property
+    def current_resolution(self) -> ConflictResolution | None:
+        """Get the current resolution state."""
+        return self.global_resolution
+
+    def should_continue(self) -> bool:
+        """Check if extraction should continue."""
+        return self.continue_extraction
+
+    @property
+    def apply_to_all(self) -> bool:
+        """Check if the current resolution applies to all future conflicts."""
+        return self.global_resolution in (
+            ConflictResolution.REPLACE_ALL,
+            ConflictResolution.SKIP_ALL,
+            ConflictResolution.AUTO_RENAME_ALL,
+        )
+
+    def update_resolution(self, resolution: ConflictResolution) -> None:
+        """Update the global resolution state."""
+        if resolution == ConflictResolution.EXIT:
+            self.continue_extraction = False
+            self.global_resolution = resolution
+        elif resolution in (
+            ConflictResolution.REPLACE_ALL,
+            ConflictResolution.SKIP_ALL,
+            ConflictResolution.AUTO_RENAME_ALL,
+        ):
+            self.global_resolution = resolution
+
+
+def _get_unique_filename(file_path: Path) -> Path:
+    """Generate a unique filename by appending a number if the file exists."""
+    if not file_path.exists():
+        return file_path
+
+    parent = file_path.parent
+    stem = file_path.stem
+    suffix = file_path.suffix
+
+    counter = 1
+    while True:
+        new_name = f"{stem}_{counter}{suffix}"
+        new_path = parent / new_name
+        if not new_path.exists():
+            return new_path
+        counter += 1
+
+
+def _handle_file_conflict(
+    target_path: Path,
+    resolution: ConflictResolution | str,
+    interactive_callback: Callable[[Path], ConflictResolution] | None = None,
+) -> tuple[ConflictResolution, Path | None]:
+    """
+    Handle file conflicts during extraction.
+
+    Args:
+        target_path: The path where a conflict occurred
+        resolution: The conflict resolution strategy
+        interactive_callback: Optional callback for interactive resolution
+
+    Returns:
+        Tuple of (actual_resolution, final_path)"""
+    # Convert string resolution to enum if needed
+    if isinstance(resolution, str):
+        try:
+            resolution = ConflictResolution(resolution)
+        except ValueError:
+            # Invalid string, fallback to ASK for interactive handling
+            resolution = ConflictResolution.ASK
+
+    if resolution == ConflictResolution.ASK:
+        if interactive_callback:
+            resolution = interactive_callback(target_path)
+        else:
+            # No callback provided, default to REPLACE for consistency with tests
+            resolution = ConflictResolution.REPLACE
+
+    if resolution in (ConflictResolution.REPLACE, ConflictResolution.REPLACE_ALL):
+        return resolution, target_path
+    elif resolution in (ConflictResolution.SKIP, ConflictResolution.SKIP_ALL):
+        return resolution, None
+    elif resolution in (
+        ConflictResolution.AUTO_RENAME,
+        ConflictResolution.AUTO_RENAME_ALL,
+    ):
+        unique_path = _get_unique_filename(target_path)
+        return resolution, unique_path
+    elif resolution == ConflictResolution.EXIT:
+        return resolution, None
+    else:
+        # Unknown resolution, default to REPLACE for robustness
+        return ConflictResolution.REPLACE, target_path
 
 
 class TzstArchive:
@@ -620,6 +740,8 @@ def extract_archive(
     flatten: bool = False,
     streaming: bool = False,
     filter: str | Callable | None = "data",
+    conflict_resolution: ConflictResolution | str = ConflictResolution.REPLACE,
+    interactive_callback: Callable[[Path], ConflictResolution] | None = None,
 ) -> None:
     """
     Extract files from a .tzst archive.
@@ -631,21 +753,25 @@ def extract_archive(
         flatten: If True, extract without directory structure
         streaming: If True, use streaming mode (memory efficient for large archives)
         filter: Extraction filter for security. Can be:
-               - 'data': Safe filter for cross-platform data archives (default, recommended)
+               - 'data': Safe filter for cross-platform data archives (default)
                - 'tar': Honor most tar features but block dangerous ones
                - 'fully_trusted': Honor all metadata (use only for trusted archives)
-               - None: Use default behavior (may show deprecation warning in Python 3.12+)
+               - None: Use default behavior (may show deprecation warning)
                - callable: Custom filter function
+        conflict_resolution: How to handle file conflicts during extraction
+        interactive_callback: Function to call for interactive conflict resolution
 
     Warning:
         Never extract archives from untrusted sources without proper filtering.
         The 'data' filter is recommended for most use cases as it prevents
         dangerous security issues like path traversal attacks.
 
-    See Also:
+        See Also:
         :meth:`TzstArchive.extract`: Method for extracting from an open archive
     """
     with TzstArchive(archive_path, "r", streaming=streaming) as archive:
+        state = ConflictResolutionState()
+
         if flatten:
             # Extract files without directory structure
             extract_dir = Path(extract_path)
@@ -657,20 +783,143 @@ def extract_archive(
                 member_list = archive.getmembers()
 
             for member in member_list:
+                if not state.should_continue():
+                    break
+
                 if member.isfile():
                     # Extract to flat directory
                     filename = Path(member.name).name
+                    target_path = extract_dir / filename
+
+                    # Handle conflicts
+                    if target_path.exists():
+                        current_resolution = (
+                            state.global_resolution or conflict_resolution
+                        )
+                        actual_resolution, final_path = _handle_file_conflict(
+                            target_path, current_resolution, interactive_callback
+                        )
+                        state.update_resolution(actual_resolution)
+
+                        if actual_resolution in (
+                            ConflictResolution.SKIP,
+                            ConflictResolution.SKIP_ALL,
+                        ):
+                            continue
+                        elif actual_resolution == ConflictResolution.EXIT:
+                            break
+                        target_path = final_path
+
                     fileobj = archive.extractfile(member)
                     if fileobj:
-                        with open(extract_dir / filename, "wb") as f:
+                        with open(target_path, "wb") as f:
                             f.write(fileobj.read())
         else:
             # Extract with full directory structure
             if members:
                 for member in members:
-                    archive.extract(member, extract_path, filter=filter)
+                    if not state.should_continue():
+                        break
+
+                    target_path = Path(extract_path) / member
+
+                    # Handle conflicts
+                    if target_path.exists():
+                        current_resolution = (
+                            state.global_resolution or conflict_resolution
+                        )
+                        actual_resolution, final_path = _handle_file_conflict(
+                            target_path, current_resolution, interactive_callback
+                        )
+                        state.update_resolution(actual_resolution)
+
+                        if actual_resolution in (
+                            ConflictResolution.SKIP,
+                            ConflictResolution.SKIP_ALL,
+                        ):
+                            continue
+                        elif actual_resolution == ConflictResolution.EXIT:
+                            break
+
+                        # For AUTO_RENAME, we need to adjust the member path
+                        if actual_resolution in (
+                            ConflictResolution.AUTO_RENAME,
+                            ConflictResolution.AUTO_RENAME_ALL,
+                        ):
+                            # Create parent directories for renamed file
+                            final_path.parent.mkdir(parents=True, exist_ok=True)
+                            # Extract to temporary location, then move
+                            temp_extract_path = Path(tempfile.mkdtemp())
+                            try:
+                                archive.extract(
+                                    member, temp_extract_path, filter=filter
+                                )
+                                temp_file = temp_extract_path / member
+                                temp_file.rename(final_path)
+                            finally:
+                                # Clean up temp directory
+                                import shutil
+
+                                shutil.rmtree(temp_extract_path, ignore_errors=True)
+                        else:
+                            archive.extract(member, extract_path, filter=filter)
+                    else:
+                        archive.extract(member, extract_path, filter=filter)
             else:
-                archive.extract(path=extract_path, filter=filter)
+                # For extractall, we need a different approach
+                # We'll extract to a temp location and handle conflicts file by file
+                temp_extract_path = Path(tempfile.mkdtemp())
+                try:
+                    archive.extractall(temp_extract_path, filter=filter)
+
+                    # Move files with conflict resolution
+                    for temp_file in temp_extract_path.rglob("*"):
+                        if not state.should_continue():
+                            break
+
+                        if temp_file.is_file():
+                            rel_path = temp_file.relative_to(temp_extract_path)
+                            target_path = Path(extract_path) / rel_path
+
+                            # Create parent directories
+                            target_path.parent.mkdir(
+                                parents=True, exist_ok=True
+                            )  # Handle conflicts
+                            if target_path.exists():
+                                current_resolution = (
+                                    state.global_resolution or conflict_resolution
+                                )
+                                actual_resolution, final_path = _handle_file_conflict(
+                                    target_path,
+                                    current_resolution,
+                                    interactive_callback,
+                                )
+                                state.update_resolution(actual_resolution)
+
+                                if actual_resolution in (
+                                    ConflictResolution.SKIP,
+                                    ConflictResolution.SKIP_ALL,
+                                ):
+                                    continue
+                                elif actual_resolution == ConflictResolution.EXIT:
+                                    break
+                                target_path = final_path
+
+                                # Handle file replacement on Windows
+                                if target_path and target_path.exists():
+                                    if actual_resolution in (
+                                        ConflictResolution.REPLACE,
+                                        ConflictResolution.REPLACE_ALL,
+                                    ):
+                                        target_path.unlink()  # Remove existing file
+
+                            if target_path:
+                                temp_file.rename(target_path)
+                finally:
+                    # Clean up temp directory
+                    import shutil
+
+                    shutil.rmtree(temp_extract_path, ignore_errors=True)
 
 
 def list_archive(

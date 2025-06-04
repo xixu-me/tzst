@@ -6,8 +6,55 @@ from pathlib import Path
 from typing import Literal, cast
 
 from . import __version__
-from .core import create_archive, extract_archive, list_archive, test_archive
+from .core import (
+    ConflictResolution,
+    create_archive,
+    extract_archive,
+    list_archive,
+    test_archive,
+)
 from .exceptions import TzstArchiveError, TzstDecompressionError
+
+
+def _interactive_conflict_callback(target_path: Path) -> ConflictResolution:
+    """Interactive callback for handling file conflicts in CLI.
+
+    Args:
+        target_path: Path of the conflicting file
+
+    Returns:
+        ConflictResolution: User's choice for handling the conflict
+    """
+    print(f"\nFile already exists: {target_path}")
+    print("Choose an action:")
+    print("  [R] Replace")
+    print("  [N] Do not replace (skip)")
+    print("  [A] Replace all")
+    print("  [S] Skip all")
+    print("  [U] Auto-rename all")
+    print("  [X] Exit")
+
+    while True:
+        try:
+            choice = input("Enter choice [R/N/A/S/U/X]: ").strip().upper()
+
+            if choice == "R":
+                return ConflictResolution.REPLACE
+            elif choice == "N":
+                return ConflictResolution.SKIP
+            elif choice == "A":
+                return ConflictResolution.REPLACE_ALL
+            elif choice == "S":
+                return ConflictResolution.SKIP_ALL
+            elif choice == "U":
+                return ConflictResolution.AUTO_RENAME_ALL
+            elif choice == "X":
+                return ConflictResolution.EXIT
+            else:
+                print("Invalid choice. Please enter R, N, A, S, U, or X.")
+        except (EOFError, KeyboardInterrupt):
+            print("\nOperation cancelled by user")
+            return ConflictResolution.EXIT
 
 
 def print_banner() -> None:
@@ -299,12 +346,30 @@ def cmd_extract_full(args) -> int:
             Literal["data", "tar", "fully_trusted"], getattr(args, "filter", "data")
         )
 
+        # Handle conflict resolution parameters
+        conflict_resolution_str = getattr(args, "conflict_resolution", "ask")
+        interactive_flag = getattr(args, "interactive", False)
+
+        # If --interactive is specified, use "ask" regardless of --conflict-resolution
+        if interactive_flag:
+            conflict_resolution_str = "ask"
+
+        # Convert string to ConflictResolution enum
+        conflict_resolution = ConflictResolution(conflict_resolution_str)
+
+        # Set up interactive callback if needed
+        interactive_callback = None
+        if conflict_resolution == ConflictResolution.ASK:
+            interactive_callback = _interactive_conflict_callback
+
         print(f"Extracting from: {archive_path}")
         print(f"Output directory: {output_dir}")
         if streaming:
             print("Using streaming mode (memory efficient)")
         if filter_type != "data":
             print(f"Using security filter: {filter_type}")
+        if conflict_resolution != ConflictResolution.REPLACE:
+            print(f"Conflict resolution: {conflict_resolution.value}")
 
         extract_archive(
             archive_path,
@@ -313,6 +378,8 @@ def cmd_extract_full(args) -> int:
             flatten=False,
             streaming=streaming,
             filter=filter_type,
+            conflict_resolution=conflict_resolution,
+            interactive_callback=interactive_callback,
         )
         print("Extraction completed successfully")
         return 0
@@ -377,10 +444,28 @@ def cmd_extract_flat(args) -> int:
             Literal["data", "tar", "fully_trusted"], getattr(args, "filter", "data")
         )
 
+        # Handle conflict resolution parameters
+        conflict_resolution_str = getattr(args, "conflict_resolution", "ask")
+        interactive_flag = getattr(args, "interactive", False)
+
+        # If --interactive is specified, use "ask" regardless of --conflict-resolution
+        if interactive_flag:
+            conflict_resolution_str = "ask"
+
+        # Convert string to ConflictResolution enum
+        conflict_resolution = ConflictResolution(conflict_resolution_str)
+
+        # Set up interactive callback if needed
+        interactive_callback = None
+        if conflict_resolution == ConflictResolution.ASK:
+            interactive_callback = _interactive_conflict_callback
+
         print(f"Extracting from: {archive_path}")
         print(f"Output directory: {output_dir}")
         if filter_type != "data":
             print(f"Using security filter: {filter_type}")
+        if conflict_resolution != ConflictResolution.REPLACE:
+            print(f"Conflict resolution: {conflict_resolution.value}")
 
         extract_archive(
             archive_path,
@@ -389,6 +474,8 @@ def cmd_extract_flat(args) -> int:
             flatten=True,
             streaming=streaming,
             filter=filter_type,
+            conflict_resolution=conflict_resolution,
+            interactive_callback=interactive_callback,
         )
         print("Extraction completed successfully")
         return 0
@@ -704,6 +791,30 @@ documentation:
             "'fully_trusted' honors all metadata"
         ),
     )
+    parser_extract.add_argument(
+        "--conflict-resolution",
+        choices=[
+            "replace",
+            "skip",
+            "replace_all",
+            "skip_all",
+            "auto_rename",
+            "auto_rename_all",
+            "ask",
+        ],
+        default="ask",
+        help=(
+            "How to handle file conflicts during extraction (default: ask). "
+            "'ask' prompts for each conflict, 'replace' overwrites existing files, "
+            "'skip' skips existing files, 'auto_rename' creates new names. "
+            "Adding '_all' applies the action to all subsequent conflicts."
+        ),
+    )
+    parser_extract.add_argument(
+        "--interactive",
+        action="store_true",
+        help="Enable interactive conflict resolution prompts",
+    )
     parser_extract.set_defaults(func=cmd_extract_full)
 
     # Extract flat command
@@ -733,6 +844,30 @@ documentation:
             "for untrusted archives, 'tar' honors most tar features, "
             "'fully_trusted' honors all metadata"
         ),
+    )
+    parser_extract_flat.add_argument(
+        "--conflict-resolution",
+        choices=[
+            "replace",
+            "skip",
+            "replace_all",
+            "skip_all",
+            "auto_rename",
+            "auto_rename_all",
+            "ask",
+        ],
+        default="ask",
+        help=(
+            "How to handle file conflicts during extraction (default: ask). "
+            "'ask' prompts for each conflict, 'replace' overwrites existing files, "
+            "'skip' skips existing files, 'auto_rename' creates new names. "
+            "Adding '_all' applies the action to all subsequent conflicts."
+        ),
+    )
+    parser_extract_flat.add_argument(
+        "--interactive",
+        action="store_true",
+        help="Enable interactive conflict resolution prompts",
     )
     parser_extract_flat.set_defaults(func=cmd_extract_flat)
 

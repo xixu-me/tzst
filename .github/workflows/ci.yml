@@ -341,7 +341,8 @@ jobs:
               print(f'PyPI version: {version}')
           except Exception as e:
               print(f'Error fetching version: {e}')
-              version = 'unknown'          with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
+              version = 'unknown'
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
               f.write(f'version={version}\n')
           "
 

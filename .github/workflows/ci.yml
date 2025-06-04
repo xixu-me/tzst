@@ -3,6 +3,8 @@ name: CI/CD
 on:
   push:
     branches: [main, develop]
+    tags:
+      - "v*.*.*"
     paths-ignore:
       - "*.md"
       - "LICENSE"
@@ -93,7 +95,7 @@ jobs:
   publish:
     needs: build
     runs-on: ubuntu-latest
-    if: github.event_name == 'release' && github.event.action == 'published'
+    if: startsWith(github.ref, 'refs/tags/v')
     environment:
       name: pypi
       url: https://pypi.org/p/tzst
@@ -109,10 +111,183 @@ jobs:
 
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
+  build-binaries:
+    needs: test
+    if: startsWith(github.ref, 'refs/tags/v')
+    permissions:
+      contents: read
+    strategy:
+      matrix:
+        include:
+          # Linux architectures
+          - os: ubuntu-latest
+            os_name: linux
+            arch: x86_64
+            python-version: "3.12"
+          - os: ubuntu-latest
+            os_name: linux
+            arch: aarch64
+            python-version: "3.12"
+            cross_compile: true
+          # Windows architectures
+          - os: windows-latest
+            os_name: windows
+            arch: amd64
+            python-version: "3.12"
+          - os: windows-latest
+            os_name: windows
+            arch: arm64
+            python-version: "3.12"
+            cross_compile: true
+          # macOS architectures
+          - os: macos-13  # Intel-based runner
+            os_name: macos
+            arch: x86_64
+            python-version: "3.12"
+          - os: macos-latest  # ARM-based runner (M1/M2)
+            os_name: macos
+            arch: arm64
+            python-version: "3.12"
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Extract version from tag
+        id: version
+        shell: bash
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/v}
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Version: $VERSION"      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e .
+          pip install pyinstaller
+
+      - name: Build binary
+        run: |
+          python -m PyInstaller --onefile --name tzst --console -m tzst
+
+      - name: Build binary for ARM64 on macOS (override previous build)
+        if: matrix.os == 'macos-latest' && matrix.arch == 'arm64'
+        run: |
+          python -m PyInstaller --onefile --name tzst --console --target-arch arm64 -m tzst
+
+      - name: Build binary for ARM64 on Windows (override previous build)
+        if: matrix.os == 'windows-latest' && matrix.arch == 'arm64'
+        run: |
+          python -m PyInstaller --onefile --name tzst --console --target-arch arm64 -m tzst
+
+      - name: Setup cross-compilation for Linux ARM64
+        if: matrix.os == 'ubuntu-latest' && matrix.arch == 'aarch64'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-aarch64-linux-gnu
+
+      - name: Build binary for ARM64 on Linux (override previous build)
+        if: matrix.os == 'ubuntu-latest' && matrix.arch == 'aarch64'
+        env:
+          CC: aarch64-linux-gnu-gcc
+        run: |
+          python -m PyInstaller --onefile --name tzst --console --target-arch aarch64 -m tzst
+
+      - name: Prepare archive contents (Linux/macOS)
+        if: matrix.os != 'windows-latest'
+        run: |
+          mkdir -p archive
+          cp dist/tzst archive/
+          cp README.md archive/
+          cp LICENSE archive/
+
+      - name: Prepare archive contents (Windows)
+        if: matrix.os == 'windows-latest'
+        run: |
+          New-Item -ItemType Directory -Path archive -Force
+          Copy-Item dist/tzst.exe archive/
+          Copy-Item README.md archive/
+          Copy-Item LICENSE archive/
+
+      - name: Create zip archive (Linux/macOS)
+        if: matrix.os != 'windows-latest'
+        run: |
+          cd archive
+          zip -r ../tzst-v${{ steps.version.outputs.version }}-${{ matrix.os_name }}-${{ matrix.arch }}.zip .
+
+      - name: Create zip archive (Windows)
+        if: matrix.os == 'windows-latest'
+        run: |
+          cd archive
+          Compress-Archive -Path * -DestinationPath ../tzst-v${{ steps.version.outputs.version }}-${{ matrix.os_name }}-${{ matrix.arch }}.zip
+
+      - name: Upload binary artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: binary-${{ matrix.os_name }}-${{ matrix.arch }}
+          path: tzst-v${{ steps.version.outputs.version }}-${{ matrix.os_name }}-${{ matrix.arch }}.zip
+
+  create-release:
+    needs: [publish, build-binaries]
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Extract version from tag
+        id: version
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/v}
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Download all binary artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: binary-*
+          merge-multiple: true
+
+      - name: Create GitHub Release
+        run: |
+          gh release create ${{ github.ref_name }} \
+            --title "tzst v${{ steps.version.outputs.version }}" \
+            --notes "## tzst v${{ steps.version.outputs.version }}
+          
+          ### Installation
+          
+          #### Python Package
+          \`\`\`bash
+          pip install tzst==${{ steps.version.outputs.version }}
+          \`\`\`
+          
+          #### Standalone Binaries
+          Download the appropriate binary for your platform from the assets below.
+          
+          ### Changes
+          See the [commit history](https://github.com/xixu-me/tzst/commits/${{ github.ref_name }}) for detailed changes."
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Release Assets
+        run: |
+          for file in tzst-v${{ steps.version.outputs.version }}-*.zip; do
+            if [ -f "$file" ]; then
+              echo "Uploading $file"
+              gh release upload ${{ github.ref_name }} "$file" --clobber
+            fi
+          done
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   update_badges:
     needs: [build, publish]
-    if: always() && needs.build.result == 'success'
+    if: always() && needs.build.result == 'success' && startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -120,11 +295,6 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          ref: ${{ github.event_name == 'pull_request' && github.head_ref || github.ref }}
-
-      - name: Wait if this is after a publish
-        if: github.event_name == 'release' && github.event.action == 'published'
-        run: sleep 30
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -159,4 +329,4 @@ jobs:
         with:
           commit_message: "Update badges [skip ci]"
           file_pattern: README.md
-          branch: ${{ github.event_name == 'pull_request' && github.head_ref || github.ref_name }}
+          branch: main

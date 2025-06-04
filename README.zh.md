@@ -83,7 +83,7 @@ pip install -e .[dev]
 
 ### 💻 命令行使用
 
-> **注意**：下载[独立二进制文件](#从-github-releases-安装)可获得最佳性能且无需Python环境。也可使用 `uvx tzst` 免安装运行，详见[uv文档](https://docs.astral.sh/uv/)。
+> **注意**：下载[独立二进制文件](#从-github-releases-安装)可获得最佳性能且无需Python环境。也可使用 `uvx tzst` 免安装运行，详见 [uv 文档](https://docs.astral.sh/uv/)。
 
 ```bash
 # 📁 创建归档

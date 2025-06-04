@@ -9,30 +9,30 @@
 [![GitHub License](https://img.shields.io/github/license/xixu-me/tzst)](LICENSE)
 [![Sponsor](https://img.shields.io/badge/Sponsor-violet)](https://xi-xu.me/#sponsorships)
 
-**tzst** は、最新のアーカイブ管理のために設計された次世代の Python ライブラリであり、最先端の Zstandard 圧縮を利用して、優れたパフォーマンス、セキュリティ、信頼性を提供します。Python 3.12 以降専用に構築されたこのエンタープライズグレードのソリューションは、アトミック操作、ストリーミング効率、および綿密に作成された API を組み合わせることで、開発者が本番環境で `.tzst` / `.tar.zst` アーカイブを処理する方法を再定義します。🚀
+**tzst** は、最新の Zstandard 圧縮技術を活用した次世代 Python ライブラリで、優れたパフォーマンス、セキュリティ、信頼性を提供するモダンなアーカイブ管理を実現します。 Python 3.12+ 専用に構築されたこのエンタープライズグレードのソリューションは、アトミック操作、ストリーミング効率、厳密に設計された API を組み合わせ、本番環境における `.tzst` / `.tar.zst` アーカイブの扱い方を再定義します。 🚀
 
 ## ✨ 特徴
 
-- **🗜️ 高圧縮**: 優れた圧縮率と速度を実現する Zstandard 圧縮
-- **📁 Tar 互換性**: Zstandard で圧縮された標準の tar アーカイブを作成
-- **💻 コマンドラインインターフェース**: ストリーミングサポートと包括的なオプションを備えた直感的な CLI
-- **🐍 Python API**: プログラムで使用するためのクリーンな Pythonic API
-- **🌍 クロスプラットフォーム**: Windows、macOS、Linux で動作
-- **📂 複数の拡張子**: `.tzst` と `.tar.zst` の両方の拡張子をサポート
-- **💾 メモリ効率**: 最小限のメモリ使用量で大規模なアーカイブを処理するためのストリーミングモード
-- **⚡ アトミック操作**: 中断時の自動クリーンアップによる安全なファイル操作
-- **🔒 デフォルトで安全**: 抽出中に最大限のセキュリティを確保するために「data」フィルターを使用
-- **🚨 強化されたエラー処理**: 役立つ代替案を備えた明確なエラーメッセージ
+- **🗜️ 高圧縮率**: Zstandard 圧縮による優れた圧縮率と速度
+- **📁 Tar 互換性**: Zstandard で圧縮された標準 tar アーカイブを作成
+- **💻 コマンドラインインターフェース**: ストリーミング対応の直感的な CLI と包括的なオプション
+- **🐍 Python API**: プログラム利用のためのクリーンで Pythonic な API
+- **🌍 クロスプラットフォーム**: Windows 、 macOS 、 Linux で動作
+- **📂 複数拡張子対応**: `.tzst` と `.tar.zst` の両方の拡張子をサポート
+- **💾 メモリ効率**: 大容量アーカイブを最小メモリ使用量で処理するストリーミングモード
+- **⚡ アトミック操作**: 中断時にも安全な自動クリーンアップ付きファイル操作
+- **🔒 デフォルトで安全**: 展開時の最大セキュリティのために「data」フィルタを使用
+- **🚨 強化されたエラーハンドリング**: 代替案を示す明確なエラーメッセージ
 
 ## 📥 インストール
 
 ### GitHub リリースから
 
-Python のインストールを必要としないスタンドアロンの実行可能ファイルをダウンロードします。
+Python インストール不要のスタンドアロン実行ファイルをダウンロード:
 
-#### サポートされているプラットフォーム
+#### サポート対象プラットフォーム
 
-| プラットフォーム | アーキテクチャ | ファイル                               |
+| プラットフォーム | アーキテクチャ | ファイル |
 |----------|-------------|------|
 | **🐧 Linux** | x86_64 | `tzst-v{version}-linux-x86_64.zip` |
 | **🐧 Linux** | ARM64 | `tzst-v{version}-linux-aarch64.zip` |
@@ -43,39 +43,39 @@ Python のインストールを必要としないスタンドアロンの実行�
 
 #### 🛠️ インストール手順
 
-1. **📥 ダウンロード**: [最新のリリース ページ](https://github.com/xixu-me/tzst/releases/latest) から、お使いのプラットフォームに適したアーカイブをダウンロードします。
-2. **📦 抽出**: アーカイブを**抽出**して、`tzst` 実行可能ファイル (Windows の場合は `tzst.exe`) を取得します。
-3. **📂 移動**: 実行可能ファイルを PATH 内のディレクトリに**移動**します。
+1. **📥 ダウンロード**: [最新リリースページ](https://github.com/xixu-me/tzst/releases/latest)からお使いのプラットフォームに合ったアーカイブをダウンロード
+2. **📦 展開**: アーカイブを展開し、 `tzst` 実行ファイル（Windows の場合は `tzst.exe` ）を取得
+3. **📂 移動**: 実行ファイルを PATH が通ったディレクトリに移動:
    - **🐧 Linux/macOS**: `sudo mv tzst /usr/local/bin/`
-   - **🪟 Windows**: `tzst.exe` を含むディレクトリを PATH 環境変数に追加します。
-4. **✅ 検証**: インストールを**検証**します: `tzst --help`
+   - **🪟 Windows**: `tzst.exe` を含むディレクトリを PATH 環境変数に追加
+4. **✅ 確認**: インストールを検証: `tzst --help`
 
 #### 🎯 バイナリインストールの利点
 
-- ✅ **Python は不要** - スタンドアロンの実行可能ファイル
-- ✅ **起動が高速** - Python インタープリターのオーバーヘッドがない
+- ✅ **Python 不要** - スタンドアロン実行ファイル
+- ✅ **高速起動** - Python インタプリタのオーバーヘッドなし
 - ✅ **簡単なデプロイ** - 単一ファイル配布
-- ✅ **一貫した動作** - バンドルされた依存関係
+- ✅ **一貫した動作** - 依存関係をバンドル
 
 ### 📦 PyPI から
 
-```
+```bash
 pip install tzst
 ```
 
 ### 🔧 ソースから
 
-```
+```bash
 git clone https://github.com/xixu-me/tzst.git
 cd tzst
 pip install .
 ```
 
-### 🚀 開発インストール
+### 🚀 開発用インストール
 
-このプロジェクトでは、最新の Python パッケージング標準を使用しています。
+このプロジェクトはモダンな Python パッケージング標準を使用します:
 
-```
+```bash
 git clone https://github.com/xixu-me/tzst.git
 cd tzst
 pip install -e .[dev]
@@ -83,36 +83,36 @@ pip install -e .[dev]
 
 ## 🚀 クイックスタート
 
-### 💻 コマンドラインの使用
+### 💻 コマンドラインの使い方
 
-> **注**: 最高のパフォーマンスと Python への依存関係がないように、[スタンドアロンバイナリ](#github-リリースから)をダウンロードしてください。あるいは、インストールせずに実行するには `uvx tzst` を使用してください。詳細については、[uv ドキュメント](https://docs.astral.sh/uv/) を参照してください。
+> **注**: 最高のパフォーマンスと Python 依存なしを実現するには[スタンドアロンバイナリ](#github-リリースから)をダウンロードしてください。または、インストールなしで実行するには `uvx tzst` を使用します。詳細は [uv ドキュメント](https://docs.astral.sh/uv/)を参照。
 
-```
-# 📁 アーカイブを作成
+```bash
+# 📁 アーカイブ作成
 tzst a archive.tzst file1.txt file2.txt directory/
 
-# 📤 アーカイブを抽出
+# 📤 アーカイブ展開
 tzst x archive.tzst
 
-# 📋 アーカイブの内容をリスト
+# 📋 アーカイブ内容一覧
 tzst l archive.tzst
 
-# 🧪 アーカイブの整合性をテスト
+# 🧪 アーカイブ整合性テスト
 tzst t archive.tzst
 ```
 
-### 🐍 Python API の使用
+### 🐍 Python API の使い方
 
-```
+```python
 from tzst import create_archive, extract_archive, list_archive
 
-# アーカイブを作成
+# アーカイブ作成
 create_archive("archive.tzst", ["file1.txt", "file2.txt", "directory/"])
 
-# アーカイブを抽出
+# アーカイブ展開
 extract_archive("archive.tzst", "output_directory/")
 
-# アーカイブの内容をリスト
+# アーカイブ内容一覧
 contents = list_archive("archive.tzst", verbose=True)
 for item in contents:
     print(f"{item['name']}: {item['size']} bytes")
@@ -122,13 +122,13 @@ for item in contents:
 
 ### 📁 アーカイブ操作
 
-#### ➕ アーカイブを作成
+#### ➕ アーカイブ作成
 
-```
-# 基本的な使用法
+```bash
+# 基本使用法
 tzst a archive.tzst file1.txt file2.txt
 
-# 圧縮レベルを指定 (1-22, デフォルト: 3)
+# 圧縮レベル指定 (1-22, デフォルト: 3)
 tzst a archive.tzst files/ -l 15
 
 # 代替コマンド
@@ -136,42 +136,42 @@ tzst add archive.tzst files/
 tzst create archive.tzst files/
 ```
 
-#### 📤 アーカイブを抽出
+#### 📤 アーカイブ展開
 
-```
-# ディレクトリ構造全体を抽出
+```bash
+# 完全なディレクトリ構造で展開
 tzst x archive.tzst
 
-# 特定のディレクトリに抽出
+# 特定ディレクトリに展開
 tzst x archive.tzst -o output/
 
-# 特定のファイルを抽出
+# 特定ファイルのみ展開
 tzst x archive.tzst file1.txt dir/file2.txt
 
-# ディレクトリ構造なしで抽出 (フラット)
+# ディレクトリ構造なしで展開 (フラット)
 tzst e archive.tzst -o output/
 
-# 大規模アーカイブにストリーミングモードを使用
+# 大容量アーカイブ用ストリーミングモード
 tzst x archive.tzst --streaming -o output/
 ```
 
-#### 📋 内容をリスト
+#### 📋 内容一覧
 
-```
-# 簡単なリスト
+```bash
+# シンプルな一覧表示
 tzst l archive.tzst
 
-# 詳細を含む詳細リスト
+# 詳細情報付き一覧表示
 tzst l archive.tzst -v
 
-# 大規模アーカイブにストリーミングモードを使用
+# 大容量アーカイブ用ストリーミングモード
 tzst l archive.tzst --streaming -v
 ```
 
-#### 🧪 整合性をテスト
+#### 🧪 整合性テスト
 
-```
-# アーカイブの整合性をテスト
+```bash
+# アーカイブ整合性テスト
 tzst t archive.tzst
 
 # ストリーミングモードでテスト
@@ -182,77 +182,77 @@ tzst t archive.tzst --streaming
 
 | コマンド | エイリアス | 説明 | ストリーミングサポート |
 |---------|---------|-------------|-------------------|
-| `a` | `add`, `create` | アーカイブを作成または追加 | N/A |
-| `x` | `extract` | フルパスで抽出 | ✓ `--streaming` |
-| `e` | `extract-flat` | ディレクトリ構造なしで抽出 | ✓ `--streaming` |
-| `l` | `list` | アーカイブの内容をリスト | ✓ `--streaming` |
-| `t` | `test` | アーカイブの整合性をテスト | ✓ `--streaming` |
+| `a` | `add`, `create` | アーカイブ作成または追加 | N/A |
+| `x` | `extract` | 完全パスで展開 | ✓ `--streaming` |
+| `e` | `extract-flat` | ディレクトリ構造なしで展開 | ✓ `--streaming` |
+| `l` | `list` | アーカイブ内容一覧 | ✓ `--streaming` |
+| `t` | `test` | アーカイブ整合性テスト | ✓ `--streaming` |
 
 ### ⚙️ CLI オプション
 
-- `-v, --verbose`: 詳細出力を有効にする
-- `-o, --output DIR`: 出力ディレクトリを指定 (抽出コマンド)
-- `-l, --level LEVEL`: 圧縮レベルを 1-22 に設定 (作成コマンド)
-- `--streaming`: メモリ効率の高い処理のためにストリーミングモードを有効にする
-- `--filter FILTER`: 抽出のセキュリティフィルター (data/tar/fully_trusted)
-- `--no-atomic`: アトミックファイル操作を無効にする (推奨されません)
+- `-v, --verbose`: 詳細出力を有効化
+- `-o, --output DIR`: 出力ディレクトリ指定 (展開コマンド)
+- `-l, --level LEVEL`: 圧縮レベル設定 1-22 (作成コマンド)
+- `--streaming`: メモリ効率処理のためのストリーミングモードを有効化
+- `--filter FILTER`: 展開用セキュリティフィルタ (data/tar/fully_trusted)
+- `--no-atomic`: アトミックファイル操作を無効化 (非推奨)
 
-### 🔒 セキュリティフィルター
+### 🔒 セキュリティフィルタ
 
-```
-# 最大セキュリティで抽出 (デフォルト)
+```bash
+# 最大セキュリティで展開 (デフォルト)
 tzst x archive.tzst --filter data
 
-# 標準の tar 互換性で抽出
+# 標準 tar 互換で展開
 tzst x archive.tzst --filter tar
 
-# 完全な信頼で抽出 (危険 - 信頼できるアーカイブのみ)
+# 完全信頼で展開 (危険 - 信頼済みアーカイブ専用)
 tzst x archive.tzst --filter fully_trusted
 ```
 
-**🔐 セキュリティフィルターオプション:**
+**🔐 セキュリティフィルタオプション:**
 
-- `data` (デフォルト): 最も安全。危険なファイル、絶対パス、および抽出ディレクトリ外のパスをブロックします
-- `tar`: 標準の tar 互換性。絶対パスとディレクトリトラバーサルをブロックします
-- `fully_trusted`: セキュリティ制限なし。完全に信頼できるアーカイブでのみ使用してください
+- `data` (デフォルト): 最強のセキュリティ。危険なファイル、絶対パス、展開ディレクトリ外のパスをブロック
+- `tar`: 標準 tar 互換。絶対パスとディレクトリトラバーサルをブロック
+- `fully_trusted`: セキュリティ制限なし。完全に信頼できるアーカイブ専用
 
 ## 🐍 Python API
 
 ### 📦 TzstArchive クラス
 
-```
+```python
 from tzst import TzstArchive
 
-# 新しいアーカイブを作成
+# 新規アーカイブ作成
 with TzstArchive("archive.tzst", "w", compression_level=5) as archive:
     archive.add("file.txt")
     archive.add("directory/", recursive=True)
 
-# 既存のアーカイブを読み取り
+# 既存アーカイブ読み込み
 with TzstArchive("archive.tzst", "r") as archive:
-    # 内容をリスト
+    # 内容一覧
     contents = archive.list(verbose=True)
     
-    # セキュリティフィルターで抽出
+    # セキュリティフィルタ付き展開
     archive.extract("file.txt", "output/", filter="data")
     
-    # 整合性をテスト
+    # 整合性テスト
     is_valid = archive.test()
 
-# 大規模アーカイブの場合は、ストリーミングモードを使用
+# 大容量アーカイブ用ストリーミングモード
 with TzstArchive("large_archive.tzst", "r", streaming=True) as archive:
     archive.extract(path="output/")
 ```
 
 **⚠️ 重要な制限事項:**
 
-- **❌ 追加モードはサポートされていません**: 複数のアーカイブを作成するか、代わりにアーカイブ全体を再作成してください
+- **❌ 追加モード非対応**: 複数アーカイブを作成するか、アーカイブ全体を再作成してください
 
-### 🎯 便利な関数
+### 🎯 便利関数
 
 #### 📁 create_archive()
 
-```
+```python
 from tzst import create_archive
 
 # アトミック操作で作成 (デフォルト)
@@ -265,40 +265,40 @@ create_archive(
 
 #### 📤 extract_archive()
 
-```
+```python
 from tzst import extract_archive
 
-# セキュリティで抽出 (デフォルト: 'data' フィルター)
+# セキュリティ付き展開 (デフォルト: 'data' フィルタ)
 extract_archive("backup.tzst", "restore/")
 
-# 特定のファイルを抽出
+# 特定ファイルのみ展開
 extract_archive("backup.tzst", "restore/", members=["config.txt"])
 
 # ディレクトリ構造をフラット化
 extract_archive("backup.tzst", "restore/", flatten=True)
 
-# 大規模アーカイブにストリーミングを使用
+# 大容量アーカイブ用ストリーミングモード
 extract_archive("large_backup.tzst", "restore/", streaming=True)
 ```
 
 #### 📋 list_archive()
 
-```
+```python
 from tzst import list_archive
 
-# 簡単なリスト
+# シンプルな一覧
 files = list_archive("backup.tzst")
 
-# 詳細なリスト
+# 詳細一覧
 files = list_archive("backup.tzst", verbose=True)
 
-# 大規模アーカイブのストリーミング
+# 大容量アーカイブ用ストリーミングモード
 files = list_archive("large_backup.tzst", streaming=True)
 ```
 
 #### 🧪 test_archive()
 
-```
+```python
 from tzst import test_archive
 
 # 基本的な整合性テスト
@@ -307,22 +307,22 @@ if test_archive("backup.tzst"):
 
 # ストリーミングでテスト
 if test_archive("large_backup.tzst", streaming=True):
-    print("大規模アーカイブは有効です")
+    print("大容量アーカイブは有効です")
 ```
 
 ## 🔧 高度な機能
 
 ### 📂 ファイル拡張子
 
-ライブラリは、インテリジェントな正規化によりファイル拡張子を自動的に処理します。
+ライブラリはインテリジェントな正規化でファイル拡張子を自動処理:
 
-- `.tzst` - tar+zstandard アーカイブのプライマリ拡張子
-- `.tar.zst` - 代替の標準拡張子
-- 既存のアーカイブを開くときの自動検出
-- アーカイブを作成するときの自動拡張子追加
+- `.tzst` - tar + zstandard アーカイブの主要拡張子
+- `.tar.zst` - 代替標準拡張子
+- 既存アーカイブを開く際の自動検出
+- アーカイブ作成時の自動拡張子追加
 
-```
-# これらはすべて有効なアーカイブを作成します
+```python
+# すべて有効なアーカイブを作成
 create_archive("backup.tzst", files)      # backup.tzst を作成
 create_archive("backup.tar.zst", files)  # backup.tar.zst を作成  
 create_archive("backup", files)          # backup.tzst を作成
@@ -331,36 +331,36 @@ create_archive("backup.txt", files)      # backup.tzst を作成 (正規化)
 
 ### 🗜️ 圧縮レベル
 
-Zstandard 圧縮レベルの範囲は、1 (最速) から 22 (最高の圧縮) です。
+Zstandard 圧縮レベルは 1 (最速) から 22 (最高圧縮) の範囲:
 
-- **レベル 1-3**: 高速圧縮、より大きなファイル
-- **レベル 3** (デフォルト): 速度と圧縮の良好なバランス
-- **レベル 10-15**: より良い圧縮、より遅い
-- **レベル 20-22**: 最大圧縮、はるかに遅い
+- **レベル 1-3**: 高速圧縮、ファイルサイズ大
+- **レベル 3** (デフォルト): 速度と圧縮率の良いバランス
+- **レベル 10-15**: 高圧縮、低速
+- **レベル 20-22**: 最高圧縮、大幅に低速
 
 ### 🌊 ストリーミングモード
 
-大規模アーカイブのメモリ効率の高い処理には、ストリーミングモードを使用します。
+大容量アーカイブのメモリ効率処理にストリーミングモードを使用:
 
 **✅ 利点:**
 
-- メモリ使用量を大幅に削減
-- メモリに収まらないアーカイブのパフォーマンスを向上
+- メモリ使用量の大幅削減
+- メモリに収まらないアーカイブのパフォーマンス向上
 - リソースの自動クリーンアップ
 
-**🎯 使用するタイミング:**
+**🎯 使用推奨ケース:**
 
-- 100MB を超えるアーカイブ
-- 制限されたメモリ環境
-- 多数の大きなファイルを含むアーカイブの処理
+- 100 MB を超えるアーカイブ
+- メモリ制限環境
+- 多数の大容量ファイルを含むアーカイブ処理
 
-```
-# 例: 大規模バックアップアーカイブの処理
+```python
+# 例: 大容量バックアップアーカイブ処理
 from tzst import extract_archive, list_archive, test_archive
 
 large_archive = "backup_500gb.tzst"
 
-# メモリ効率の高い操作
+# メモリ効率の良い操作
 is_valid = test_archive(large_archive, streaming=True)
 contents = list_archive(large_archive, streaming=True, verbose=True)
 extract_archive(large_archive, "restore/", streaming=True)
@@ -368,24 +368,24 @@ extract_archive(large_archive, "restore/", streaming=True)
 
 ### ⚡ アトミック操作
 
-すべてのファイル作成操作は、デフォルトでアトミックファイル操作を使用します。
+すべてのファイル作成操作はデフォルトでアトミックファイル操作を使用:
 
-- アーカイブは最初に一時ファイルに作成され、その後アトミックに移動されます
-- プロセスが中断された場合の自動クリーンアップ
-- 破損したアーカイブまたは不完全なアーカイブのリスクはありません
+- 一時ファイルでアーカイブ作成後、アトミック移動
+- プロセス中断時の自動クリーンアップ
+- 破損/不完全なアーカイブのリスクなし
 - クロスプラットフォーム互換性
 
-```
-# アトミック操作はデフォルトで有効になっています
+```python
+# デフォルトでアトミック操作有効
 create_archive("important.tzst", files)  # 中断から安全
 
-# 必要に応じて無効にすることができます (推奨されません)
+# 必要時に無効化可能 (非推奨)
 create_archive("test.tzst", files, use_temp_file=False)
 ```
 
-### 🚨 エラー処理
+### 🚨 エラーハンドリング
 
-```
+```python
 from tzst import TzstArchive
 from tzst.exceptions import (
     TzstError,
@@ -403,88 +403,88 @@ except TzstDecompressionError:
 except TzstFileNotFoundError:
     print("アーカイブファイルが見つかりません")
 except KeyboardInterrupt:
-    print("ユーザーによって操作が中断されました")
-    # クリーンアップは自動的に処理されます
+    print("ユーザーにより操作中断")
+    # クリーンアップは自動処理
 ```
 
 ## 🚀 パフォーマンスと比較
 
 ### 💡 パフォーマンスのヒント
 
-1. **🗜️ 圧縮レベル**: レベル 3 はほとんどのユースケースに最適です
-2. **🌊 ストリーミング**: 100MB を超えるアーカイブに使用します
-3. **📦 バッチ操作**: 単一セッションで複数のファイルを追加します
-4. **📄 ファイルタイプ**: 既に圧縮されているファイルはそれ以上圧縮されません
+1. **🗜️ 圧縮レベル**: ほとんどのユースケースでレベル 3 が最適
+2. **🌊 ストリーミング**: 100 MB を超えるアーカイブで使用
+3. **📦 バッチ操作**: 単一セッションで複数ファイル追加
+4. **📄 ファイルタイプ**: 既に圧縮されたファイルはそれ以上圧縮されない
 
 ### 🆚 他のツールとの比較
 
 **vs tar + gzip:**
 
-- ✅ より良い圧縮率
-- ⚡ より高速な解凍
-- 🔄 最新のアルゴリズム
+- ✅ より高い圧縮率
+- ⚡ 高速な解凍
+- 🔄 モダンなアルゴリズム
 
 **vs tar + xz:**
 
-- 🚀 非常に高速な圧縮
-- 📊 同様の圧縮率
-- ⚖️ より良い速度/圧縮のトレードオフ
+- 🚀 大幅に高速な圧縮
+- 📊 同等の圧縮率
+- ⚖️ 速度/圧縮率のトレードオフが優れる
 
 **vs zip:**
 
-- 🗜️ より良い圧縮
-- 🔐 Unix の権限とメタデータを保持します
-- 🌊 より良いストリーミングサポート
+- 🗜️ より高い圧縮率
+- 🔐 Unix 権限とメタデータを保持
+- 🌊 優れたストリーミングサポート
 
 ## 📋 要件
 
-- 🐍 Python 3.12 以降
+- 🐍 Python 3.12 以上
 - 📦 zstandard >= 0.19.0
 
 ## 🛠️ 開発
 
-### 🚀 開発環境のセットアップ
+### 🚀 開発環境セットアップ
 
-このプロジェクトでは、最新の Python パッケージング標準を使用しています。
+このプロジェクトはモダンな Python パッケージング標準を使用:
 
-```
+```bash
 git clone https://github.com/xixu-me/tzst.git
 cd tzst
 pip install -e .[dev]
 ```
 
-### 🧪 テストの実行
+### 🧪 テスト実行
 
-```
-# カバレッジ付きでテストを実行
+```bash
+# カバレッジ付きテスト実行
 pytest --cov=tzst --cov-report=html
 
-# または、より簡単なコマンドを使用します (カバレッジ設定は pyproject.toml にあります)
+# またはシンプルなコマンド (カバレッジ設定は pyproject.toml 内)
 pytest
 ```
 
 ### ✨ コード品質
 
-```
-# コード品質を確認
+```bash
+# コード品質チェック
 ruff check src tests
 
-# コードをフォーマット
+# コードフォーマット
 ruff format src tests
 ```
 
 ## 🤝 貢献
 
-貢献を歓迎します！以下について、[貢献ガイド](CONTRIBUTING.md)をお読みください。
+貢献を歓迎します！以下の内容については[貢献ガイド](CONTRIBUTING.md)をお読みください:
 
-- 開発のセットアップとプロジェクト構造
-- コーディングスタイルのガイドラインとベストプラクティス
-- テスト要件とテストの作成
+- 開発セットアップとプロジェクト構造
+- コードスタイルガイドラインとベストプラクティス  
+- テスト要件とテスト作成
 - プルリクエストプロセスとレビューワークフロー
 
-### 🚀 コントリビューター向けのクイックスタート
+### 🚀 貢献者向けクイックスタート
 
-```
+```bash
 git clone https://github.com/xixu-me/tzst.git
 cd tzst
 pip install -e .[dev]
@@ -493,21 +493,21 @@ python -m pytest tests/
 
 ### 🎯 歓迎する貢献の種類
 
-- 🐛 **バグ修正** - 既存の機能の問題を修正します
-- ✨ **機能** - ライブラリに新しい機能を追加します
-- 📚 **ドキュメント** - ドキュメントを改善または追加します
-- 🧪 **テスト** - テストカバレッジを追加または改善します
-- ⚡ **パフォーマンス** - 既存のコードを最適化します
-- 🔒 **セキュリティ** - セキュリティ脆弱性に対処します
+- 🐛 **バグ修正** - 既存機能の問題修正
+- ✨ **機能** - ライブラリへの新機能追加
+- 📚 **ドキュメント** - ドキュメントの改善・追加
+- 🧪 **テスト** - テストカバレッジの追加・改善
+- ⚡ **パフォーマンス** - 既存コードの最適化
+- 🔒 **セキュリティ** - セキュリティ脆弱性への対応
 
 ## 🙏 謝辞
 
-- 優れた圧縮アルゴリズムを提供する[Meta Zstandard](https://github.com/facebook/zstd)
-- Python バインディングを提供する[python-zstandard](https://github.com/indygreg/python-zstandard)
-- インスピレーションとフィードバックを提供する Python コミュニティ
+- [Meta Zstandard](https://github.com/facebook/zstd) - 優れた圧縮アルゴリズム
+- [python-zstandard](https://github.com/indygreg/python-zstandard) - Python バインディング
+- インスピレーションとフィードバックを提供した Python コミュニティ
 
 ## 📄 ライセンス
 
-Copyright &copy; 2025 [Xi Xu](https://xi-xu.me). All rights reserved.
+著作権 &copy; 2025 [Xi Xu](https://xi-xu.me)。全著作権を保留します。
 
-[BSD 3-Clause](LICENSE)ライセンスの下でライセンスされています。
+[BSD 3-Clause](LICENSE) ライセンスのもとで公開されています。

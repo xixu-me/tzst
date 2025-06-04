@@ -341,7 +341,7 @@ jobs:
           # Update PyPI version badge in README.md
           if [ -f "README.md" ]; then
             # Replace PyPI version badge
-            sed -i 's|https://img.shields.io/pypi/v/tzst[^)]*|https://img.shields.io/pypi/v/tzst?label=PyPI\&color=blue|g' README.md || true
+            sed -i 's|https://img.shields.io/pypi/v/tzst[^)]*|https://img.shields.io/pypi/v/tzst|g' README.md || true
             # Update version in badge alt text if exists
             sed -i 's|PyPI - Version[^]]*|PyPI - Version|g' README.md || true
           fi

@@ -11,11 +11,6 @@ coverage:
         threshold: 1%
         informational: true
 
-  # Report coverage for all files, even if not touched in PR
-  report:
-    exclude_labels:
-      - "skip-coverage"
-
 comment:
   layout: "reach,diff,flags,tree"
   behavior: default

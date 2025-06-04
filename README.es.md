@@ -510,4 +510,4 @@ python -m pytest tests/
 
 Copyright &copy; 2025 [Xi Xu](https://xi-xu.me). Todos los derechos reservados.
 
-Licenciado bajo la licencia [BSD de 3 Cláusulas](LICENSE).
+Licenciado bajo la licencia [BSD 3-Clause](LICENSE).

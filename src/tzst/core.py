@@ -762,15 +762,21 @@ def extract_archive(
         interactive_callback: Function to call for interactive conflict resolution
 
     Warning:
-        Never extract archives from untrusted sources without proper filtering.
-        The 'data' filter is recommended for most use cases as it prevents
+        Never extract archives from untrusted sources without proper filtering.        The 'data' filter is recommended for most use cases as it prevents
         dangerous security issues like path traversal attacks.
 
         See Also:
         :meth:`TzstArchive.extract`: Method for extracting from an open archive
     """
     with TzstArchive(archive_path, "r", streaming=streaming) as archive:
-        state = ConflictResolutionState()
+        # Convert string resolution to enum if needed
+        if isinstance(conflict_resolution, str):
+            try:
+                conflict_resolution = ConflictResolution(conflict_resolution)
+            except ValueError:
+                conflict_resolution = ConflictResolution.REPLACE
+
+        state = ConflictResolutionState(conflict_resolution)
 
         if flatten:
             # Extract files without directory structure

@@ -85,7 +85,7 @@ pip install -e .[dev]
 
 ### 💻 명령줄 사용법
 
-> **참고**: 최상의 성능과 Python 의존성 없이 사용하려면 [독립형 바이너리](#from-github-releases)를 다운로드하세요. 또는 설치 없이 실행하려면 `uvx tzst`를 사용하세요. 자세한 내용은 [uv 문서](https://docs.astral.sh/uv/) 참조.
+> **참고**: 최상의 성능과 Python 의존성 없이 사용하려면 [독립형 바이너리](#github-릴리스에서)를 다운로드하세요. 또는 설치 없이 실행하려면 `uvx tzst`를 사용하세요. 자세한 내용은 [uv 문서](https://docs.astral.sh/uv/) 참조.
 
 ```bash
 # 📁 아카이브 생성

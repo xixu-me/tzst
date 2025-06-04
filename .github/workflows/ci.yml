@@ -194,12 +194,12 @@ jobs:
       - name: Build binary for ARM64 on macOS
         if: matrix.os == 'macos-14' && matrix.arch == 'arm64'
         run: |
-          python -m PyInstaller --onefile --name tzst --console --target-arch arm64 -m tzst
+          python -m PyInstaller --onefile --name tzst --console --target-arch arm64 src/main.py
 
       - name: Build binary for ARM64 on Windows
         if: matrix.os == 'windows-latest' && matrix.arch == 'arm64'
         run: |
-          python -m PyInstaller --onefile --name tzst --console --target-arch arm64 -m tzst
+          python -m PyInstaller --onefile --name tzst --console --target-arch arm64 src/main.py
 
       - name: Setup cross-compilation for Linux ARM64
         if: matrix.os == 'ubuntu-latest' && matrix.arch == 'aarch64'
@@ -212,7 +212,7 @@ jobs:
         env:
           CC: aarch64-linux-gnu-gcc
         run: |
-          python -m PyInstaller --onefile --name tzst --console --target-arch aarch64 -m tzst
+          python -m PyInstaller --onefile --name tzst --console --target-arch aarch64 src/main.py
 
       - name: Prepare archive contents (Linux/macOS)
         if: matrix.os != 'windows-latest'

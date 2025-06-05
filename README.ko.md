@@ -34,12 +34,12 @@ Python 설치가 필요 없는 독립형 실행 파일 다운로드:
 
 | 플랫폼 | 아키텍처 | 파일 |
 |----------|-------------|------|
-| **🐧 Linux** | x86_64 | `tzst-v{version}-linux-x86_64.zip` |
-| **🐧 Linux** | ARM64 | `tzst-v{version}-linux-aarch64.zip` |
-| **🪟 Windows** | x64 | `tzst-v{version}-windows-amd64.zip` |
-| **🪟 Windows** | ARM64 | `tzst-v{version}-windows-arm64.zip` |
-| **🍎 macOS** | Intel | `tzst-v{version}-macos-x86_64.zip` |
-| **🍎 macOS** | Apple Silicon | `tzst-v{version}-macos-arm64.zip` |
+| **🐧 Linux** | x86_64 | `tzst-v{버전}-linux-x86_64.zip` |
+| **🐧 Linux** | ARM64 | `tzst-v{버전}-linux-aarch64.zip` |
+| **🪟 Windows** | x64 | `tzst-v{버전}-windows-amd64.zip` |
+| **🪟 Windows** | ARM64 | `tzst-v{버전}-windows-arm64.zip` |
+| **🍎 macOS** | Intel | `tzst-v{버전}-macos-x86_64.zip` |
+| **🍎 macOS** | Apple Silicon | `tzst-v{버전}-macos-arm64.zip` |
 
 #### 🛠️ 설치 단계
 
@@ -508,6 +508,6 @@ python -m pytest tests/
 
 ## 📄 라이선스
 
-저작권 &copy; 2025 [Xi Xu](https://xi-xu.me). 모든 권리 보유.
+저작권 &copy; 2025 [시 쉬](https://xi-xu.me). 모든 권리 보유.
 
 [BSD 3-Clause](LICENSE) 라이선스로 사용이 허가되었습니다.

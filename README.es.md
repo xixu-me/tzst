@@ -34,21 +34,21 @@ Descarga ejecutables independientes que no requieren instalación de Python:
 
 | Plataforma   | Arquitectura | Archivo                               |
 |--------------|---------------|---------------------------------------|
-| **🐧 Linux** | x86_64        | `tzst-v{version}-linux-x86_64.zip`    |
-| **🐧 Linux** | ARM64         | `tzst-v{version}-linux-aarch64.zip`   |
-| **🪟 Windows**| x64           | `tzst-v{version}-windows-amd64.zip`   |
-| **🪟 Windows**| ARM64         | `tzst-v{version}-windows-arm64.zip`   |
-| **🍎 macOS** | Intel         | `tzst-v{version}-macos-x86_64.zip`    |
-| **🍎 macOS** | Apple Silicon | `tzst-v{version}-macos-arm64.zip`     |
+| **🐧 Linux** | x86_64        | `tzst-v{versión}-linux-x86_64.zip`    |
+| **🐧 Linux** | ARM64         | `tzst-v{versión}-linux-aarch64.zip`   |
+| **🪟 Windows**| x64           | `tzst-v{versión}-windows-amd64.zip`   |
+| **🪟 Windows**| ARM64         | `tzst-v{versión}-windows-arm64.zip`   |
+| **🍎 macOS** | Intel         | `tzst-v{versión}-macos-x86_64.zip`    |
+| **🍎 macOS** | Apple Silicon | `tzst-v{versión}-macos-arm64.zip`     |
 
 #### 🛠️ Pasos de Instalación
 
-1.  **📥 Descarga** el archivo apropiado para tu plataforma desde la [página de lanzamientos más recientes](https://github.com/xixu-me/tzst/releases/latest).
-2.  **📦 Extrae** el archivo para obtener el ejecutable `tzst` (o `tzst.exe` en Windows).
-3.  **📂 Mueve** el ejecutable a un directorio en tu PATH:
-    *   **🐧 Linux/macOS**: `sudo mv tzst /usr/local/bin/`
-    *   **🪟 Windows**: Añade el directorio que contiene `tzst.exe` a tu variable de entorno PATH.
-4.  **✅ Verifica** la instalación: `tzst --help`
+1. **📥 Descarga** el archivo apropiado para tu plataforma desde la [página de lanzamientos más recientes](https://github.com/xixu-me/tzst/releases/latest).
+2. **📦 Extrae** el archivo para obtener el ejecutable `tzst` (o `tzst.exe` en Windows).
+3. **📂 Mueve** el ejecutable a un directorio en tu PATH:
+    - **🐧 Linux/macOS**: `sudo mv tzst /usr/local/bin/`
+    - **🪟 Windows**: Añade el directorio que contiene `tzst.exe` a tu variable de entorno PATH.
+4. **✅ Verifica** la instalación: `tzst --help`
 
 #### 🎯 Beneficios de la Instalación Binaria
 
@@ -411,10 +411,10 @@ except KeyboardInterrupt:
 
 ### 💡 Consejos de Rendimiento
 
-1.  **🗜️ Niveles de compresión**: El nivel 3 es óptimo para la mayoría de los casos de uso.
-2.  **🌊 Transmisión**: Usar para archivos mayores de 100MB.
-3.  **📦 Operaciones por lotes**: Añadir múltiples archivos en una sola sesión.
-4.  **📄 Tipos de archivo**: Los archivos ya comprimidos no se comprimirán mucho más.
+1. **🗜️ Niveles de compresión**: El nivel 3 es óptimo para la mayoría de los casos de uso.
+2. **🌊 Transmisión**: Usar para archivos mayores de 100MB.
+3. **📦 Operaciones por lotes**: Añadir múltiples archivos en una sola sesión.
+4. **📄 Tipos de archivo**: Los archivos ya comprimidos no se comprimirán mucho más.
 
 ### 🆚 vs Otras Herramientas
 

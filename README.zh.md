@@ -83,7 +83,7 @@ pip install -e .[dev]
 
 ### 💻 命令行使用
 
-> **注意**：下载[独立二进制文件](#从-github-releases-安装)可获得最佳性能且无需Python环境。也可使用 `uvx tzst` 免安装运行，详见 [uv 文档](https://docs.astral.sh/uv/)。
+> **注意**：下载[独立二进制文件](#从-github-releases-安装)可获得最佳性能且无需 Python 环境。也可使用 `uvx tzst` 免安装运行，详见 [uv 文档](https://docs.astral.sh/uv/)。
 
 ```bash
 # 📁 创建归档
@@ -190,7 +190,7 @@ tzst t archive.tzst --streaming
 
 - `-v, --verbose`：启用详细输出
 - `-o, --output DIR`：指定输出目录（提取命令）
-- `-l, --level LEVEL`：设置压缩级别1-22（创建命令）
+- `-l, --level LEVEL`：设置压缩级别 1-22（创建命令）
 - `--streaming`：启用流模式实现内存高效处理
 - `--filter FILTER`：提取安全过滤器（data/tar/fully_trusted）
 - `--no-atomic`：禁用原子文件操作（不推荐）
@@ -211,7 +211,7 @@ tzst x archive.tzst --filter fully_trusted
 **🔐 安全过滤器选项：**
 
 - `data` (默认)：最安全。阻止危险文件、绝对路径和提取目录外路径
-- `tar`：标准tar兼容性。阻止绝对路径和目录遍历
+- `tar`：标准 tar 兼容性。阻止绝对路径和目录遍历
 - `fully_trusted`：无安全限制。仅适用于完全可信的归档
 
 ## 🐍 Python API
@@ -314,7 +314,7 @@ if test_archive("large_backup.tzst", streaming=True):
 
 库自动处理文件扩展名并智能标准化：
 
-- `.tzst` - tar+zstandard 归档主扩展名
+- `.tzst` - tar + zstandard 归档主扩展名
 - `.tar.zst` - 替代标准扩展名
 - 打开现有归档时自动检测
 - 创建归档时自动添加扩展名
@@ -329,7 +329,7 @@ create_archive("backup.txt", files)      # 创建 backup.tzst (标准化)
 
 ### 🗜️ 压缩级别
 
-Zstandard 压缩级别范围从1（最快）到22（最佳压缩）：
+Zstandard 压缩级别范围从 1（最快）到 22（最佳压缩）：
 
 - **级别 1-3**：快速压缩，文件较大
 - **级别 3**（默认）：速度与压缩率的良好平衡
@@ -348,7 +348,7 @@ Zstandard 压缩级别范围从1（最快）到22（最佳压缩）：
 
 **🎯 适用场景：**
 
-- 大于100MB的归档文件
+- 大于 100MB 的归档文件
 - 内存有限的环境
 - 处理包含多个大文件的归档
 
@@ -409,8 +409,8 @@ except KeyboardInterrupt:
 
 ### 💡 性能优化建议
 
-1. **🗜️ 压缩级别**：级别3适用于大多数场景
-2. **🌊 流模式**：归档大于100MB时使用
+1. **🗜️ 压缩级别**：级别 3 适用于大多数场景
+2. **🌊 流模式**：归档大于 100MB 时使用
 3. **📦 批量操作**：单次会话添加多个文件
 4. **📄 文件类型**：已压缩文件不会进一步压缩
 
@@ -431,7 +431,7 @@ except KeyboardInterrupt:
 **对比 zip：**
 
 - 🗜️ 更好的压缩率
-- 🔐 保留Unix权限和元数据
+- 🔐 保留 Unix 权限和元数据
 - 🌊 更好的流处理支持
 
 ## 📋 系统要求

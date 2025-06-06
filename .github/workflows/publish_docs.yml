@@ -64,6 +64,7 @@ jobs:
           user_name: "github-actions[bot]"
           user_email: "github-actions[bot]@users.noreply.github.com"
           commit_message: "Deploy documentation from ${{ github.sha }}"
+          cname: tzst.xi-xu.me
 
   docs-quality-check:
     runs-on: ubuntu-latest

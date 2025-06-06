@@ -55,7 +55,7 @@ create_archive("high-compression.tzst", files_to_archive, compression_level=9)
 tzst a my-archive.tzst document.pdf photos/ config.json
 
 # With high compression
-tzst a high-compression.tzst document.pdf photos/ config.json --compression-level 9
+tzst a high-compression.tzst document.pdf photos/ config.json -l 9
 ```
 
 ### Basic Extraction

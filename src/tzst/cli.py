@@ -810,11 +810,6 @@ documentation:
             "Adding '_all' applies the action to all subsequent conflicts."
         ),
     )
-    parser_extract.add_argument(
-        "--interactive",
-        action="store_true",
-        help="Enable interactive conflict resolution prompts",
-    )
     parser_extract.set_defaults(func=cmd_extract_full)
 
     # Extract flat command
@@ -863,11 +858,6 @@ documentation:
             "'skip' skips existing files, 'auto_rename' creates new names. "
             "Adding '_all' applies the action to all subsequent conflicts."
         ),
-    )
-    parser_extract_flat.add_argument(
-        "--interactive",
-        action="store_true",
-        help="Enable interactive conflict resolution prompts",
     )
     parser_extract_flat.set_defaults(func=cmd_extract_flat)
 

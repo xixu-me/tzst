@@ -123,21 +123,12 @@ Complete API documentation is available in the {doc}`api/index` section, coverin
 
 ## Indices and tables
 
-- :ref:`genindex`
-- :ref:`modindex`
-- :ref:`search`
-
 1. **{doc}`quickstart`** - Get up and running quickly with basic examples
 2. **{doc}`examples`** - Comprehensive usage examples and patterns
 3. **{doc}`api/index`** - Complete API reference documentation
+4. **{doc}`genindex`** - Index of all documented items
 
 ## Requirements
 
 - Python 3.12 or higher
 - zstandard >= 0.19.0
-
-## Reference Links
-
-- {ref}`genindex`
-- {ref}`modindex`
-- {ref}`search`

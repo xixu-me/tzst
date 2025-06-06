@@ -418,5 +418,5 @@ def verify_archive(archive_path):
 ## Further Learning
 
 - Explore {doc}`examples` for more advanced usage patterns
-- Check the {doc}`api/index` for complete API documentation
-- Read the full {doc}`README` for additional features and background
+- Check {doc}`performance` for detailed performance guidance
+- Refer to the {doc}`api/index` for complete API documentation

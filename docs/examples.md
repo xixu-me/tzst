@@ -4,14 +4,16 @@ This section provides comprehensive examples of using tzst for various scenarios
 
 ## Table of Contents
 
-- [Basic Operations](#basic-operations)
-- [Advanced Archive Creation](#advanced-archive-creation)
-- [Flexible Extraction](#flexible-extraction)
-- [Security and Filtering](#security-and-filtering)
-- [Performance Optimization](#performance-optimization)
-- [Error Handling](#error-handling)
-- [Real-World Scenarios](#real-world-scenarios)
-- [Integration Examples](#integration-examples)
+- {ref}`basic-operations`
+- {ref}`advanced-archive-creation`
+- {ref}`flexible-extraction`
+- {ref}`security-and-filtering`
+- {ref}`performance-optimization`
+- {ref}`error-handling`
+- {ref}`real-world-scenarios`
+- {ref}`integration-examples`
+
+(basic-operations)=
 
 ## Basic Operations
 
@@ -125,6 +127,8 @@ tzst t backup.tzst
 tzst l huge-archive.tzst --streaming
 ```
 
+(advanced-archive-creation)=
+
 ## Advanced Archive Creation
 
 ### Working with the TzstArchive Class
@@ -197,6 +201,8 @@ create_archive("important-data.tzst", ["critical/"], use_temp_file=True)
 # Direct creation (faster but not atomic)
 create_archive("temp-data.tzst", ["temp/"], use_temp_file=False)
 ```
+
+(flexible-extraction)=
 
 ## Flexible Extraction
 
@@ -271,6 +277,8 @@ def extract_large_files_only(archive_path, output_dir, min_size_mb=10):
 
 extract_large_files_only("mixed-content.tzst", "large-files/", min_size_mb=5)
 ```
+
+(security-and-filtering)=
 
 ## Security and Filtering
 
@@ -364,6 +372,8 @@ extract_archive("archive.tzst", "output/",
                 conflict_resolution=ConflictResolution.ASK,
                 interactive_callback=custom_conflict_handler)
 ```
+
+(performance-optimization)=
 
 ## Performance Optimization
 
@@ -464,6 +474,8 @@ file_groups = {
 
 create_archive_batch(file_groups)
 ```
+
+(error-handling)=
 
 ## Error Handling
 
@@ -570,6 +582,8 @@ def validate_and_repair_archive(archive_path):
 # Example usage
 validate_and_repair_archive("potentially-corrupted.tzst")
 ```
+
+(real-world-scenarios)=
 
 ## Real-World Scenarios
 
@@ -881,6 +895,8 @@ if __name__ == "__main__":
         "/home/user/restored-data"
     )
 ```
+
+(integration-examples)=
 
 ## Integration Examples
 

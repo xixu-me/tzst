@@ -7,6 +7,7 @@ The command-line interface module provides comprehensive functionality for the t
    :members:
    :undoc-members:
    :show-inheritance:
+   :no-index:
 ```
 
 ## Overview

@@ -7,6 +7,7 @@ The core module provides the main functionality for working with tzst archives, 
    :members:
    :undoc-members:
    :show-inheritance:
+   :no-index:
 ```
 
 ## TzstArchive Class

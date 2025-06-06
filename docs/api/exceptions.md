@@ -7,6 +7,7 @@ Custom exception classes used by tzst for comprehensive error handling and debug
    :members:
    :undoc-members:
    :show-inheritance:
+   :no-index:
 ```
 
 ## Overview

@@ -126,7 +126,7 @@ Complete API documentation is available in the {doc}`api/index` section, coverin
 1. **{doc}`quickstart`** - Get up and running quickly with basic examples
 2. **{doc}`examples`** - Comprehensive usage examples and patterns
 3. **{doc}`api/index`** - Complete API reference documentation
-4. **{doc}`genindex`** - Index of all documented items
+4. **{ref}`genindex`** - Index of all documented items
 
 ## Requirements
 

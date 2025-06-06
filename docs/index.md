@@ -15,7 +15,9 @@ myst:
 [![CodeQL](https://github.com/xixu-me/tzst/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/xixu-me/tzst/actions/workflows/github-code-scanning/codeql)
 [![CI/CD](https://github.com/xixu-me/tzst/actions/workflows/ci.yml/badge.svg)](https://github.com/xixu-me/tzst/actions/workflows/ci.yml)
 [![PyPI - Version](https://img.shields.io/pypi/v/tzst)](https://pypi.org/project/tzst/)
-[![GitHub License](https://img.shields.io/github/license/xixu-me/tzst)](LICENSE)
+[![GitHub License](https://img.shields.io/github/license/xixu-me/tzst)](https://github.com/xixu-me/tzst/blob/main/LICENSE)
+[![PyPI - Downloads](https://img.shields.io/pypi/dm/tzst)](https://pypi.org/project/tzst/)
+[![GitHub Stars](https://img.shields.io/github/stars/xixu-me/tzst?style=social)](
 [![Sponsor](https://img.shields.io/badge/Sponsor-violet)](https://xi-xu.me/#sponsorships)
 
 Welcome to **tzst**, the next-generation Python library engineered for modern archive management, leveraging cutting-edge Zstandard compression to deliver superior performance, security, and reliability.

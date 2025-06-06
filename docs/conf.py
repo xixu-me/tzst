@@ -39,7 +39,6 @@ html_short_title = "tzst"
 html_theme_options = {
     "canonical_url": "https://xixu-me.github.io/tzst/",
     "logo_only": False,
-    "display_version": True,
     "prev_next_buttons_location": "bottom",
     "style_external_links": False,
     "style_nav_header_background": "#2980B9",

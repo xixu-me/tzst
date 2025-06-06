@@ -9,6 +9,7 @@ Welcome to **tzst**, the next-generation Python library engineered for modern ar
 quickstart
 api/index
 examples
+README
 ```
 
 ## What is tzst?

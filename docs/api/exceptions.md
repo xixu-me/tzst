@@ -4,9 +4,7 @@ Custom exception classes used by tzst.
 
 ```{eval-rst}
 .. automodule:: tzst.exceptions
-   :members:
-   :undoc-members:
-   :show-inheritance:
+   :no-index:
 ```
 
 ## Exception Hierarchy

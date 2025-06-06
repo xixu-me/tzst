@@ -724,7 +724,7 @@ security note:
   never use --filter=fully_trusted unless you completely trust the archive source
 
 documentation:
-  https://github.com/xixu-me/tzst#readme
+  https://tzst.xi-xu.me
 """
     parser = argparse.ArgumentParser(
         prog="tzst",

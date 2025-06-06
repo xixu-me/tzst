@@ -182,7 +182,7 @@ tzst/
 └── CONTRIBUTING.md     # Contribution guidelines
 ```
 
-## 🤝 Contributing Workflow
+## Contributing Workflow
 
 ### 1. Making Changes
 

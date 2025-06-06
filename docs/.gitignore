@@ -1,7 +1,6 @@
 # Sphinx build outputs
 _build/
 _build_*/
-_static/
 
 # Sphinx auto-generated files
 _autosummary/

@@ -25,17 +25,17 @@ The command-line interface module provides comprehensive functionality for the t
 
 The tzst CLI provides a powerful command-line interface for archive operations with intuitive commands and comprehensive options. The interface is designed for both interactive use and scripting, with robust error handling and user-friendly output.
 
-### 🔧 Core Commands
+### Core Commands
 
 | Command | Aliases | Description | Streaming Support |
 |---------|---------|-------------|-------------------|
 | `a` | `add`, `create` | Create or add to archive | N/A |
-| `x` | `extract` | Extract with full paths | ✓ `--streaming` |
-| `e` | `extract-flat` | Extract without directory structure | ✓ `--streaming` |
-| `l` | `list` | List archive contents | ✓ `--streaming` |
-| `t` | `test` | Test archive integrity | ✓ `--streaming` |
+| `x` | `extract` | Extract with full paths | `--streaming` |
+| `e` | `extract-flat` | Extract without directory structure | `--streaming` |
+| `l` | `list` | List archive contents | `--streaming` |
+| `t` | `test` | Test archive integrity | `--streaming` |
 
-### 🎯 Key Features
+### Key Features
 
 - **Intuitive Commands**: Simple, memorable command aliases (a, x, e, l, t)
 - **Streaming Support**: Memory-efficient processing for large archives

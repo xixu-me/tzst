@@ -89,14 +89,19 @@ for item in contents:
 
 ## Command Line Usage
 
+> **Note**: Download the [standalone binary](https://github.com/xixu-me/tzst/releases) for the best performance and no Python dependency. Alternatively, use `uvx tzst` for running without installation. See [uv documentation](https://docs.astral.sh/uv/) for details.
+
 ### Archive Creation Commands
 
 ```bash
 # Basic archive creation
 tzst a backup.tzst documents/ photos/
+# Or with uvx (no installation needed)
+uvx tzst a backup.tzst documents/ photos/
 
 # Create with specific compression level
 tzst a backup.tzst documents/ photos/ -l 6
+uvx tzst a backup.tzst documents/ photos/ -l 6
 
 # Create from multiple sources
 tzst a complete-backup.tzst /home/user/documents /home/user/photos /etc/config
@@ -110,6 +115,8 @@ tzst a backup.tzst documents/ photos/ -v
 ```bash
 # Extract to current directory
 tzst x backup.tzst
+# Or with uvx
+uvx tzst x backup.tzst
 
 # Extract to specific directory
 tzst x backup.tzst --output /restore/
@@ -129,6 +136,8 @@ tzst e backup.tzst --output flat-restore/
 ```bash
 # List archive contents
 tzst l backup.tzst
+# Or with uvx
+uvx tzst l backup.tzst
 
 # List with detailed information
 tzst l backup.tzst --verbose
@@ -551,23 +560,23 @@ def validate_and_repair_archive(archive_path):
     # Test basic integrity
     try:
         if test_archive(archive_path):
-            print("✅ Archive integrity test passed")
+            print("Archive integrity test passed")
             return True
     except Exception as e:
-        print(f"❌ Integrity test failed: {e}")
+        print(f"Integrity test failed: {e}")
     
     # Try to list contents
     try:
         contents = list_archive(archive_path)
-        print(f"📁 Archive contains {len(contents)} items")
+        print(f"Archive contains {len(contents)} items")
         
         # Try streaming mode if regular mode fails
         contents_streaming = list_archive(archive_path, streaming=True)
         if len(contents_streaming) != len(contents):
-            print("⚠️ Different results between modes - possible corruption")
+            print("Different results between modes - possible corruption")
         
     except Exception as e:
-        print(f"❌ Cannot list contents: {e}")
+        print(f"Cannot list contents: {e}")
         return False
     
     # Try partial extraction
@@ -583,13 +592,13 @@ def validate_and_repair_archive(archive_path):
                         archive.extract(member.name, backup_dir)
                         extracted_count += 1
                 except Exception as e:
-                    print(f"⚠️ Failed to extract {member.name}: {e}")
+                    print(f"Failed to extract {member.name}: {e}")
             
-        print(f"✅ Recovered {extracted_count} files to {backup_dir}")
+        print(f"Recovered {extracted_count} files to {backup_dir}")
         return True
         
     except Exception as e:
-        print(f"❌ Recovery failed: {e}")
+        print(f"Recovery failed: {e}")
         return False
 
 # Example usage
@@ -648,15 +657,15 @@ class BackupManager:
             # Validate the backup
             if test_archive(backup_path):
                 file_size = backup_path.stat().st_size / (1024 * 1024)
-                print(f"✅ Backup created and validated: {file_size:.1f} MB")
+                print(f"Backup created and validated: {file_size:.1f} MB")
                 return backup_path
             else:
-                print("❌ Backup validation failed!")
+                print("Backup validation failed!")
                 backup_path.unlink()  # Remove invalid backup
                 return None
                 
         except Exception as e:
-            print(f"❌ Backup failed: {e}")
+            print(f"Backup failed: {e}")
             return None
     
     def cleanup_old_backups(self):
@@ -792,13 +801,13 @@ def archive_logs_by_date(log_dir, archive_dir, days_old=7):
                     archived_files.append(log_file)
                 
                 file_size = archive_path.stat().st_size / 1024
-                print(f"✅ Created {archive_name} ({file_size:.1f} KB)")
+                print(f"Created {archive_name} ({file_size:.1f} KB)")
             else:
-                print(f"❌ Archive validation failed for {archive_name}")
+                print(f"Archive validation failed for {archive_name}")
                 archive_path.unlink()
         
         except Exception as e:
-            print(f"❌ Failed to archive logs for {date_key}: {e}")
+            print(f"Failed to archive logs for {date_key}: {e}")
     
     print(f"Archived {len(archived_files)} log files")
 
@@ -856,9 +865,8 @@ class DataMigrator:
         with open(checksum_file, "w") as f:
             f.write(f"{checksum}  {package_path.name}\n")
         
-        package_size = package_path.stat().st_size / (1024 * 1024)
-        print(f"✅ Package created: {package_size:.1f} MB")
-        print(f"📋 Checksum: {checksum}")
+        package_size = package_path.stat().st_size / (1024 * 1024)        print(f"Package created: {package_size:.1f} MB")
+        print(f"Checksum: {checksum}")
         
         return package_path, checksum_file
     
@@ -877,13 +885,13 @@ class DataMigrator:
         if expected_checksum != actual_checksum:
             raise RuntimeError(f"Checksum mismatch! Expected: {expected_checksum}, Got: {actual_checksum}")
         
-        print("✅ Checksum verification passed")
+        print("Checksum verification passed")
         
         # Test archive integrity
         if not test_archive(package_path):
             raise RuntimeError("Archive integrity check failed")
         
-        print("✅ Archive integrity verified")
+        print("Archive integrity verified")
         
         # Extract with conflict resolution
         destination.mkdir(parents=True, exist_ok=True)
@@ -893,7 +901,7 @@ class DataMigrator:
             conflict_resolution="replace_all"  # Overwrite for migration
         )
         
-        print(f"✅ Package extracted to: {destination}")
+        print(f"Package extracted to: {destination}")
 
 # Example usage
 if __name__ == "__main__":

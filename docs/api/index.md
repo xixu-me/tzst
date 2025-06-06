@@ -104,26 +104,26 @@ Exception hierarchy for comprehensive error handling and debugging support.
 
 ## Key Features
 
-### 🛡️ Security First
+### Security First
 
 - Built-in path traversal protection
 - Multiple security filter options
 - Safe extraction by default
 
-### ⚡ High Performance  
+### High Performance  
 
 - Zstandard compression with configurable levels
 - Streaming support for large archives
 - Memory-efficient operations
 
-### 🔧 Developer Friendly
+### Developer Friendly
 
 - Clean, Pythonic API
 - Comprehensive error handling
 - Context manager support
 - Extensive documentation and examples
 
-### 🌐 Cross-Platform
+### Cross-Platform
 
 - Works on Windows, macOS, and Linux
 - Consistent behavior across platforms

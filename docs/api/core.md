@@ -1,11 +1,12 @@
 ---
-html_meta:
-  description: "tzst Core API - TzstArchive class and convenience functions for tar.zst archive operations"
-  keywords: "tzst core API, TzstArchive, Python archive class, tar.zst functions"
-  og:title: "tzst Core API Reference"
-  og:description: "Core API documentation for tzst - TzstArchive class and convenience functions"
-  twitter:title: "tzst Core API Reference"
-  twitter:description: "Core API documentation for tzst - TzstArchive class and convenience functions"
+myst:
+  html_meta:
+    description: "tzst Core API - TzstArchive class and convenience functions for tar.zst archive operations"
+    keywords: "tzst core API, TzstArchive, Python archive class, tar.zst functions"
+    og:title: "tzst Core API Reference"
+    og:description: "Core API documentation for tzst - TzstArchive class and convenience functions"
+    twitter:title: "tzst Core API Reference"
+    twitter:description: "Core API documentation for tzst - TzstArchive class and convenience functions"
 ---
 
 # Core API

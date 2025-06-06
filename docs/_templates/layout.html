@@ -1,13 +1,10 @@
-{% extends "!layout.html" %}
+{% extends "!layout.html" %} {% block extrahead %} {{ super() }}
+<!-- Additional SEO and social meta tags -->
+<meta name="application-name" content="tzst" />
+<meta name="generator" content="Sphinx {{ sphinx_version }}" />
 
-{% block extrahead %}
-  {{ super() }}
-  <!-- Additional SEO and social meta tags -->
-  <meta name="application-name" content="tzst">
-  <meta name="generator" content="Sphinx {{ sphinx_version }}">
-  
-  <!-- Schema.org markup for search engines -->
-  <script type="application/ld+json">
+<!-- Schema.org markup for search engines -->
+<script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
@@ -30,16 +27,19 @@
       "priceCurrency": "USD"
     }
   }
-  </script>
+</script>
 
-  <!-- Canonical URL for better SEO -->
-  {% if pagename != 'index' %}
-  <link rel="canonical" href="https://xixu-me.github.io/tzst/{{ pagename }}.html">
-  {% else %}
-  <link rel="canonical" href="https://xixu-me.github.io/tzst/">
-  {% endif %}
-  
-  <!-- Preconnect to external domains for performance -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+<!-- Canonical URL for better SEO -->
+{% if pagename != 'index' %}
+<link
+  rel="canonical"
+  href="https://xixu-me.github.io/tzst/{{ pagename }}.html"
+/>
+{% else %}
+<link rel="canonical" href="https://xixu-me.github.io/tzst/" />
+{% endif %}
+
+<!-- Preconnect to external domains for performance -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" />
 {% endblock %}

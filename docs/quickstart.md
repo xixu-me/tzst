@@ -1,11 +1,12 @@
 ---
-html_meta:
-  description: "Quick start guide for tzst - Learn how to install and use the Python tar.zst archive library in minutes"
-  keywords: "tzst tutorial, Python archive tutorial, tar.zst guide, Zstandard compression guide"
-  og:title: "tzst Quick Start Guide"
-  og:description: "Learn how to install and use tzst for Python tar.zst archive management in minutes"
-  twitter:title: "tzst Quick Start Guide"
-  twitter:description: "Learn how to install and use tzst for Python tar.zst archive management in minutes"
+myst:
+  html_meta:
+    description: "Quick start guide for tzst - Learn how to install and use the Python tar.zst archive library in minutes"
+    keywords: "tzst tutorial, Python archive tutorial, tar.zst guide, Zstandard compression guide"
+    og:title: "tzst Quick Start Guide"
+    og:description: "Learn how to install and use tzst for Python tar.zst archive management in minutes"
+    twitter:title: "tzst Quick Start Guide"
+    twitter:description: "Learn how to install and use tzst for Python tar.zst archive management in minutes"
 ---
 
 # Quick Start Guide

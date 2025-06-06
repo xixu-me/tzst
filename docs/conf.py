@@ -51,7 +51,7 @@ html_meta = {
     "og:url": "https://xixu-me.github.io/tzst/",
     "og:image": "https://xixu-me.github.io/tzst/_static/tzst-logo.png",
     "twitter:card": "summary_large_image",
-    "twitter:title": "tzst Documentation", 
+    "twitter:title": "tzst Documentation",
     "twitter:description": "tzst - A Python library for creating and extracting tar.zst archives with high performance and comprehensive features",
     "twitter:image": "https://xixu-me.github.io/tzst/_static/tzst-logo.png",
 }
@@ -66,7 +66,8 @@ html_theme_options = {
     "collapse_navigation": True,
     "sticky_navigation": True,
     "navigation_depth": 4,
-    "includehidden": True,    "titles_only": False,
+    "includehidden": True,
+    "titles_only": False,
 }
 
 # Additional HTML options

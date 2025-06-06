@@ -28,6 +28,8 @@ This section provides comprehensive examples of using tzst for various scenarios
 
 ## Basic Operations
 
+(basic-archive-operations)=
+
 ### Creating Your First Archive
 
 ```python

@@ -13,6 +13,8 @@ myst:
 
 This guide will get you up and running with tzst in just a few minutes.
 
+(installation)=
+
 ## Installation
 
 Choose your preferred installation method:
@@ -45,6 +47,8 @@ git clone https://github.com/xixu-me/tzst.git
 cd tzst
 pip install .
 ```
+
+(basic-usage)=
 
 ## Basic Usage
 
@@ -185,11 +189,11 @@ extract_archive("trusted.tzst", "output/", filter="tar")
 from tzst import extract_archive, ConflictResolution
 
 # Skip existing files
-extract_archive("archive.tzst", "output/", 
+extract_archive("archive.tzst", "output/",
                 conflict_resolution=ConflictResolution.SKIP_ALL)
 
 # Auto-rename conflicting files
-extract_archive("archive.tzst", "output/", 
+extract_archive("archive.tzst", "output/",
                 conflict_resolution=ConflictResolution.AUTO_RENAME_ALL)
 ```
 

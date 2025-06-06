@@ -21,6 +21,7 @@ quickstart
 api/index
 examples
 README
+404
 ```
 
 ## What is tzst?

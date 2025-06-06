@@ -14,47 +14,112 @@ README
 
 ## What is tzst?
 
-**tzst** is a Python library built exclusively for Python 3.12+ that provides enterprise-grade solutions for handling `.tzst`/`.tar.zst` archives. It combines atomic operations, streaming efficiency, and a meticulously crafted API to redefine how developers handle compressed archives in production environments.
+**tzst** is a modern Python library built exclusively for Python 3.12+ that provides comprehensive support for creating, extracting, and managing `.tzst` and `.tar.zst` archives. It combines the proven reliability of the tar format with the superior compression efficiency of Zstandard (zstd) to deliver:
+
+- **Superior Performance**: Fast compression and decompression with excellent compression ratios
+- **Enterprise-Grade Security**: Safe extraction with built-in protections against path traversal attacks
+- **Memory Efficiency**: Streaming mode for handling large archives with minimal memory usage
+- **Cross-Platform Compatibility**: Works seamlessly on Windows, macOS, and Linux
+- **Developer-Friendly**: Clean, Pythonic API with comprehensive error handling
 
 ## Key Features
 
-- **🚀 High Performance**: Leverages Zstandard compression for superior speed and compression ratios
-- **🔒 Security First**: Built-in extraction filters protect against malicious archives
-- **⚡ Streaming Support**: Memory-efficient handling of large archives
-- **🛡️ Atomic Operations**: Ensures data integrity with fail-safe file operations
-- **🎯 Modern API**: Clean, intuitive interface designed for Python 3.12+
-- **📦 CLI Tools**: Comprehensive command-line interface for everyday tasks
+### 🗜️ Advanced Compression
+
+- **Zstandard Compression**: Best-in-class compression algorithm with configurable levels (1-22)
+- **Multiple Extensions**: Support for both `.tzst` and `.tar.zst` file extensions
+- **Streaming Support**: Memory-efficient processing for large archives
+
+### 🔒 Security First
+
+- **Safe by Default**: Uses 'data' filter for secure extraction without dangerous path traversal
+- **Multiple Filter Options**: Choose from 'data', 'tar', or 'fully_trusted' filters based on your security needs
+- **Atomic Operations**: All file operations use temporary files with atomic moves to prevent corruption
+
+### 💻 Dual Interfaces
+
+- **Command Line**: Intuitive CLI with comprehensive options for batch operations
+- **Python API**: Clean, object-oriented interface for programmatic use
+- **Convenience Functions**: High-level functions for common operations
+
+### ⚡ High Performance
+
+- **Optimized I/O**: Efficient buffering and streaming for large files
+- **Conflict Resolution**: Intelligent handling of file conflicts during extraction
+- **Cross-Platform**: Native performance on all major operating systems
 
 ## Quick Example
 
 ```python
-from tzst import TzstArchive
+from tzst import TzstArchive, create_archive, extract_archive
 
-# Create a new archive
-with TzstArchive("backup.tzst", "w", compression_level=5) as archive:
-    archive.add("documents/")
-    archive.add("photos/", recursive=True)
+# Create an archive
+create_archive("backup.tzst", ["documents/", "photos/"], compression_level=5)
 
-# Extract with security
-with TzstArchive("backup.tzst", "r") as archive:
-    archive.extract("documents/", filter="data")
+# Extract an archive
+extract_archive("backup.tzst", "restore/")
+
+# Work with archives programmatically
+with TzstArchive("data.tzst", "r") as archive:
+    contents = archive.list(verbose=True)
+    archive.extract("important.txt", "output/")
+    is_valid = archive.test()
 ```
 
 ## Installation
 
-Install tzst from PyPI:
+### From PyPI
 
 ```bash
 pip install tzst
 ```
 
+### From Source
+
+```bash
+git clone https://github.com/xixu-me/tzst.git
+cd tzst
+pip install .
+```
+
+### Standalone Binaries
+
+Download platform-specific standalone executables from [GitHub Releases](https://github.com/xixu-me/tzst/releases) - no Python installation required!
+
 ## Getting Started
 
-For a quick introduction to using tzst, see the {doc}`quickstart` guide.
+For a quick introduction, see the {doc}`quickstart` guide. For comprehensive usage examples, explore the {doc}`examples` section.
 
-For detailed API documentation, browse the {doc}`api/index` section.
+### Installation Options
+
+1. **PyPI Installation** (Recommended): `pip install tzst`
+2. **Standalone Binaries**: Download from [GitHub Releases](https://github.com/xixu-me/tzst/releases)
+3. **From Source**: Clone and install from repository
+
+### API Documentation
+
+Complete API documentation is available in the {doc}`api/index` section, covering:
+
+- {doc}`api/core`: Main classes and functions
+- {doc}`api/cli`: Command-line interface
+- {doc}`api/exceptions`: Error handling
 
 ## Indices and tables
+
+- :ref:`genindex`
+- :ref:`modindex`
+- :ref:`search`
+
+1. **{doc}`quickstart`** - Get up and running quickly with basic examples
+2. **{doc}`examples`** - Comprehensive usage examples and patterns
+3. **{doc}`api/index`** - Complete API reference documentation
+
+## Requirements
+
+- Python 3.12 or higher
+- zstandard >= 0.19.0
+
+## Reference Links
 
 - {ref}`genindex`
 - {ref}`modindex`

@@ -177,7 +177,7 @@ tzst/
 ├── docs/               # Documentation source
 ├── .github/            # GitHub workflows and templates
 ├── pyproject.toml      # Project configuration
-├── README.md           # Project documentation
+├── README.md           # Project Readme
 ├── LICENSE             # BSD 3-Clause License
 └── CONTRIBUTING.md     # Contribution guidelines
 ```

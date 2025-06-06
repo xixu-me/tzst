@@ -22,6 +22,13 @@ api/index
 examples
 ```
 
+```{toctree}
+:hidden:
+
+404
+README
+```
+
 ## What is tzst?
 
 **tzst** is a modern Python library built exclusively for Python 3.12+ that provides comprehensive support for creating, extracting, and managing `.tzst` and `.tar.zst` archives. It combines the proven reliability of the tar format with the superior compression efficiency of Zstandard (zstd) to deliver:

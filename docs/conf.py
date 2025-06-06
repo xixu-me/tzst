@@ -23,6 +23,7 @@ extensions = [
     "sphinx.ext.viewcode",
     "sphinx.ext.intersphinx",
     "sphinx.ext.autosummary",
+    "sphinx.ext.coverage",
     "myst_parser",
 ]
 

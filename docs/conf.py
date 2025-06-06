@@ -49,17 +49,17 @@ html_meta = {
     "og:title": "tzst Documentation",
     "og:description": "tzst - A Python library for creating and extracting tar.zst archives with high performance and comprehensive features",
     "og:type": "website",
-    "og:url": "https://xixu-me.github.io/tzst/",
-    "og:image": "https://xixu-me.github.io/tzst/_static/tzst-logo.png",
+    "og:url": "https://tzst.xi-xu.me/",
+    "og:image": "https://tzst.xi-xu.me/_static/tzst-logo.png",
     "twitter:card": "summary_large_image",
     "twitter:title": "tzst Documentation",
     "twitter:description": "tzst - A Python library for creating and extracting tar.zst archives with high performance and comprehensive features",
-    "twitter:image": "https://xixu-me.github.io/tzst/_static/tzst-logo.png",
+    "twitter:image": "https://tzst.xi-xu.me/_static/tzst-logo.png",
 }
 
 # Theme options
 html_theme_options = {
-    "canonical_url": "https://xixu-me.github.io/tzst/",
+    "canonical_url": "https://tzst.xi-xu.me/",
     "logo_only": False,
     "prev_next_buttons_location": "bottom",
     "style_external_links": False,
@@ -74,7 +74,7 @@ html_theme_options = {
 # Additional HTML options
 html_favicon = "_static/favicon.ico"  # Will show warning until favicon is created
 html_logo = "_static/tzst-logo.png"  # Will show warning until logo is created
-html_use_opensearch = "https://xixu-me.github.io/tzst/"
+html_use_opensearch = "https://tzst.xi-xu.me/"
 
 # HTML context for custom template variables
 html_context = {

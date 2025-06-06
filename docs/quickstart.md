@@ -7,6 +7,11 @@ myst:
     og:description: "Learn how to install and use tzst for Python tar.zst archive management in minutes"
     twitter:title: "tzst Quick Start Guide"
     twitter:description: "Learn how to install and use tzst for Python tar.zst archive management in minutes"
+    og:type: "website"
+    og:image: "https://tzst.xi-xu.me/_static/tzst-square-logo.png"
+    og:url: "https://tzst.xi-xu.me/"
+    twitter:card: "summary_large_image"
+    twitter:image: "https://tzst.xi-xu.me/_static/tzst-square-logo.png"
 ---
 
 # Quick Start Guide

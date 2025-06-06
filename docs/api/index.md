@@ -7,6 +7,11 @@ myst:
     og:description: "Complete API reference for tzst - Core functions, CLI tools, and exception handling"
     twitter:title: "tzst API Reference"
     twitter:description: "Complete API reference for tzst - Core functions, CLI tools, and exception handling"
+    og:type: "website"
+    og:image: "https://tzst.xi-xu.me/_static/tzst-square-logo.png"
+    og:url: "https://tzst.xi-xu.me/"
+    twitter:card: "summary_large_image"
+    twitter:image: "https://tzst.xi-xu.me/_static/tzst-square-logo.png"
 ---
 
 # API Reference

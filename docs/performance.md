@@ -7,6 +7,11 @@ myst:
     og:description: "Performance optimization tips and comparison with other archive tools for tzst"
     twitter:title: "tzst Performance Guide"
     twitter:description: "Performance optimization tips and comparison with other archive tools for tzst"
+    og:type: "website"
+    og:image: "https://tzst.xi-xu.me/_static/tzst-square-logo.png"
+    og:url: "https://tzst.xi-xu.me/"
+    twitter:card: "summary_large_image"
+    twitter:image: "https://tzst.xi-xu.me/_static/tzst-square-logo.png"
 ---
 
 # Performance Guide

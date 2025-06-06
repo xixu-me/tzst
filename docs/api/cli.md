@@ -7,6 +7,11 @@ myst:
     og:description: "CLI API documentation for tzst - Command-line interface functions and utilities"
     twitter:title: "tzst CLI API Reference"
     twitter:description: "CLI API documentation for tzst - Command-line interface functions and utilities"
+    og:type: "website"
+    og:image: "https://tzst.xi-xu.me/_static/tzst-square-logo.png"
+    og:url: "https://tzst.xi-xu.me/"
+    twitter:card: "summary_large_image"
+    twitter:image: "https://tzst.xi-xu.me/_static/tzst-square-logo.png"
 ---
 
 # CLI API

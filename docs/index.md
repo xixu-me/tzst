@@ -7,6 +7,11 @@ myst:
     og:description: "Fast, secure, and reliable Python library for tar.zst archives with Zstandard compression"
     twitter:title: "tzst - Next-Generation Archive Management"
     twitter:description: "Fast, secure, and reliable Python library for tar.zst archives with Zstandard compression"
+    og:type: "website"
+    og:image: "https://tzst.xi-xu.me/_static/tzst-square-logo.png"
+    og:url: "https://tzst.xi-xu.me/"
+    twitter:card: "summary_large_image"
+    twitter:image: "https://tzst.xi-xu.me/_static/tzst-square-logo.png"
 ---
 
 # tzst Documentation

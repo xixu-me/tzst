@@ -7,6 +7,11 @@ myst:
     og:description: "Core API documentation for tzst - TzstArchive class and convenience functions"
     twitter:title: "tzst Core API Reference"
     twitter:description: "Core API documentation for tzst - TzstArchive class and convenience functions"
+    og:type: "website"
+    og:image: "https://tzst.xi-xu.me/_static/tzst-square-logo.png"
+    og:url: "https://tzst.xi-xu.me/"
+    twitter:card: "summary_large_image"
+    twitter:image: "https://tzst.xi-xu.me/_static/tzst-square-logo.png"
 ---
 
 # Core API

@@ -3,13 +3,16 @@ myst:
   html_meta:
     description: "Complete reference for tzst exception classes and error handling. Learn about TzstError, TzstArchiveError, and other custom exceptions for robust archive operations."
     keywords: "tzst exceptions, Python exceptions, error handling, TzstError, TzstArchiveError, archive errors, compression errors"
-    "og:title": "tzst Exceptions API Reference"
-    "og:description": "Complete reference for tzst exception classes and error handling. Learn about TzstError, TzstArchiveError, and other custom exceptions for robust archive operations."
-    "og:type": "article"
-    "twitter:title": "tzst Exceptions API Reference"
-    "twitter:description": "Complete reference for tzst exception classes and error handling. Learn about TzstError, TzstArchiveError, and other custom exceptions for robust archive operations."
-    "article:section": "API Reference"
-    "article:tag": "exceptions, error handling, API"
+    og:title: "tzst Exceptions API Reference"
+    og:description: "Complete reference for tzst exception classes and error handling. Learn about TzstError, TzstArchiveError, and other custom exceptions for robust archive operations."
+    og:type: "article"
+    twitter:title: "tzst Exceptions API Reference"
+    twitter:description: "Complete reference for tzst exception classes and error handling. Learn about TzstError, TzstArchiveError, and other custom exceptions for robust archive operations."
+    og:type: "website"
+    og:image: "https://tzst.xi-xu.me/_static/tzst-square-logo.png"
+    og:url: "https://tzst.xi-xu.me/"
+    twitter:card: "summary_large_image"
+    twitter:image: "https://tzst.xi-xu.me/_static/tzst-square-logo.png"
 ---
 
 # Exceptions API

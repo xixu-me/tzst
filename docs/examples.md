@@ -7,6 +7,11 @@ myst:
     og:description: "Comprehensive examples for tzst - archive creation, extraction, security, and performance optimization"
     twitter:title: "tzst Examples and Tutorials"
     twitter:description: "Comprehensive examples for tzst - archive creation, extraction, security, and performance optimization"
+    og:type: "website"
+    og:image: "https://tzst.xi-xu.me/_static/tzst-square-logo.png"
+    og:url: "https://tzst.xi-xu.me/"
+    twitter:card: "summary_large_image"
+    twitter:image: "https://tzst.xi-xu.me/_static/tzst-square-logo.png"
 ---
 
 # Examples

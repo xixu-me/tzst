@@ -1,3 +1,13 @@
+---
+html_meta:
+  description: "Comprehensive tzst examples - Learn advanced archive creation, extraction, security, and performance optimization"
+  keywords: "tzst examples, Python archive examples, tar.zst tutorials, Zstandard compression examples"
+  og:title: "tzst Examples and Tutorials"
+  og:description: "Comprehensive examples for tzst - archive creation, extraction, security, and performance optimization"
+  twitter:title: "tzst Examples and Tutorials"
+  twitter:description: "Comprehensive examples for tzst - archive creation, extraction, security, and performance optimization"
+---
+
 # Examples
 
 This section provides comprehensive examples of using tzst for various scenarios and use cases.

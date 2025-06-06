@@ -1,0 +1,45 @@
+{% extends "!layout.html" %}
+
+{% block extrahead %}
+  {{ super() }}
+  <!-- Additional SEO and social meta tags -->
+  <meta name="application-name" content="tzst">
+  <meta name="generator" content="Sphinx {{ sphinx_version }}">
+  
+  <!-- Schema.org markup for search engines -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "tzst",
+    "description": "A Python library for creating and extracting tar.zst archives with high performance and comprehensive features",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Cross-platform",
+    "programmingLanguage": "Python",
+    "license": "https://opensource.org/licenses/MIT",
+    "url": "https://xixu-me.github.io/tzst/",
+    "downloadUrl": "https://pypi.org/project/tzst/",
+    "softwareVersion": "{{ version }}",
+    "author": {
+      "@type": "Person",
+      "name": "Xi Xu"
+    },
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    }
+  }
+  </script>
+
+  <!-- Canonical URL for better SEO -->
+  {% if pagename != 'index' %}
+  <link rel="canonical" href="https://xixu-me.github.io/tzst/{{ pagename }}.html">
+  {% else %}
+  <link rel="canonical" href="https://xixu-me.github.io/tzst/">
+  {% endif %}
+  
+  <!-- Preconnect to external domains for performance -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+{% endblock %}

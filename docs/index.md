@@ -1,3 +1,13 @@
+---
+html_meta:
+  description: "tzst - Next-generation Python library for tar.zst archives with Zstandard compression. Fast, secure, and reliable archive management."
+  keywords: "tzst, Python, tar.zst, Zstandard, compression, archive, backup, file management"
+  og:title: "tzst - Next-Generation Archive Management"
+  og:description: "Fast, secure, and reliable Python library for tar.zst archives with Zstandard compression"
+  twitter:title: "tzst - Next-Generation Archive Management"
+  twitter:description: "Fast, secure, and reliable Python library for tar.zst archives with Zstandard compression"
+---
+
 # tzst Documentation
 
 Welcome to **tzst**, the next-generation Python library engineered for modern archive management, leveraging cutting-edge Zstandard compression to deliver superior performance, security, and reliability.

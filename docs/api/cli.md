@@ -1,3 +1,13 @@
+---
+html_meta:
+  description: "tzst CLI API - Command-line interface functions and utilities for tar.zst archive operations"
+  keywords: "tzst CLI API, command line interface, Python CLI, tar.zst commands"
+  og:title: "tzst CLI API Reference"
+  og:description: "CLI API documentation for tzst - Command-line interface functions and utilities"
+  twitter:title: "tzst CLI API Reference"
+  twitter:description: "CLI API documentation for tzst - Command-line interface functions and utilities"
+---
+
 # CLI API
 
 The command-line interface module provides comprehensive functionality for the tzst CLI tool, including argument parsing, command execution, and interactive features.

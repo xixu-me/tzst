@@ -35,6 +35,27 @@ html_static_path = ["_static"]
 html_title = f"tzst {version} Documentation"
 html_short_title = "tzst"
 
+# HTML meta tags
+html_meta = {
+    "description": "tzst - A Python library for creating and extracting tar.zst archives with high performance and comprehensive features",
+    "keywords": "tzst, tar, zstandard, compression, archive, python, extraction, backup",
+    "author": "Xi Xu",
+    "robots": "index, follow",
+    "language": "en",
+    "viewport": "width=device-width, initial-scale=1.0",
+    "theme-color": "#2980B9",
+    "msapplication-TileColor": "#2980B9",
+    "og:title": "tzst Documentation",
+    "og:description": "tzst - A Python library for creating and extracting tar.zst archives with high performance and comprehensive features",
+    "og:type": "website",
+    "og:url": "https://xixu-me.github.io/tzst/",
+    "og:image": "https://xixu-me.github.io/tzst/_static/tzst-logo.png",
+    "twitter:card": "summary_large_image",
+    "twitter:title": "tzst Documentation", 
+    "twitter:description": "tzst - A Python library for creating and extracting tar.zst archives with high performance and comprehensive features",
+    "twitter:image": "https://xixu-me.github.io/tzst/_static/tzst-logo.png",
+}
+
 # Theme options
 html_theme_options = {
     "canonical_url": "https://xixu-me.github.io/tzst/",
@@ -45,8 +66,21 @@ html_theme_options = {
     "collapse_navigation": True,
     "sticky_navigation": True,
     "navigation_depth": 4,
-    "includehidden": True,
-    "titles_only": False,
+    "includehidden": True,    "titles_only": False,
+}
+
+# Additional HTML options
+html_favicon = "_static/favicon.ico"  # Will show warning until favicon is created
+html_logo = "_static/tzst-logo.png"  # Will show warning until logo is created
+html_use_opensearch = "https://xixu-me.github.io/tzst/"
+
+# HTML context for custom template variables
+html_context = {
+    "display_github": True,
+    "github_user": "xixu-me",
+    "github_repo": "tzst",
+    "github_version": "main",
+    "conf_py_path": "/docs/",
 }
 
 # -- Extension configuration -------------------------------------------------

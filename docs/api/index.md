@@ -1,3 +1,13 @@
+---
+html_meta:
+  description: "Complete tzst API reference - Core functions, CLI tools, and exception handling for tar.zst archives"
+  keywords: "tzst API, Python API documentation, tar.zst API reference, archive API"
+  og:title: "tzst API Reference"
+  og:description: "Complete API reference for tzst - Core functions, CLI tools, and exception handling"
+  twitter:title: "tzst API Reference"
+  twitter:description: "Complete API reference for tzst - Core functions, CLI tools, and exception handling"
+---
+
 # API Reference
 
 This section contains the complete API documentation for tzst, providing detailed information about classes, functions, and exceptions.

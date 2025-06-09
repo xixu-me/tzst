@@ -4,7 +4,7 @@ Leveraging cutting-edge Zstandard compression to deliver superior performance,
 security, and reliability.
 """
 
-__version__ = "1.2.3"
+__version__ = "1.2.4"
 
 from .core import (
     TzstArchive,

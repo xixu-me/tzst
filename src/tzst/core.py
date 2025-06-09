@@ -175,10 +175,17 @@ class TzstArchive:
             )
 
         # Validate compression level
-        if not 1 <= compression_level <= zstd.ZstdCompressor.max_level():
+        try:
+            # Try to get max_level from a constant in the zstandard module
+            max_level = zstd.MAX_COMPRESSION_LEVEL
+        except AttributeError:
+            # Fallback to a hardcoded default if the constant is not found
+            max_level = 22  # Common max level for zstd
+
+        if not 1 <= compression_level <= max_level:
             raise ValueError(
                 f"Invalid compression level '{compression_level}'. "
-                f"Must be between 1 and {zstd.ZstdCompressor.max_level()}."
+                f"Must be between 1 and {max_level}."
             )
 
         # Check for unsupported modes immediately
@@ -806,8 +813,10 @@ def extract_archive(
 
                     fileobj = archive.extractfile(member)
                     if fileobj:
-                        with open(target_path, "wb") as f:
-                            f.write(fileobj.read())
+                        # Ensure target_path is not None before opening
+                        if target_path:
+                            with open(target_path, "wb") as f:
+                                f.write(fileobj.read())
         else:
             # Extract with full directory structure
             if members:
@@ -836,10 +845,14 @@ def extract_archive(
                             break
 
                         # For AUTO_RENAME, we need to adjust the member path
-                        if actual_resolution in (
-                            ConflictResolution.AUTO_RENAME,
-                            ConflictResolution.AUTO_RENAME_ALL,
-                        ):
+                        if (
+                            actual_resolution
+                            in (
+                                ConflictResolution.AUTO_RENAME,
+                                ConflictResolution.AUTO_RENAME_ALL,
+                            )
+                            and final_path
+                        ):  # Ensure final_path is not None
                             # Create parent directories for renamed file
                             final_path.parent.mkdir(parents=True, exist_ok=True)
                             # Extract to temporary location, then move
@@ -907,7 +920,7 @@ def extract_archive(
                                     ):
                                         target_path.unlink()  # Remove existing file
 
-                            if target_path:
+                            if target_path:  # Ensure target_path is not None
                                 temp_file.rename(target_path)
                 finally:
                     # Clean up temp directory

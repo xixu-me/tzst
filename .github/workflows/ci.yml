@@ -111,6 +111,7 @@ jobs:
 
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
+
   build-binaries:
     needs: test
     if: startsWith(github.ref, 'refs/tags/v')
@@ -138,7 +139,8 @@ jobs:
             os_name: windows
             arch: arm64
             python-version: "3.12"
-            cross_compile: true # macOS architectures
+            cross_compile: true
+          # macOS architectures
           - os: macos-13 # Intel-based runner
             os_name: macos
             arch: x86_64
@@ -173,7 +175,7 @@ jobs:
 
       - name: Build binary
         run: |
-          python -m PyInstaller --onefile --name tzst --console src/main.py
+          python -m PyInstaller --onefile --name tzst --console --icon docs/_static/favicon.ico src/main.py
 
       - name: Verify binary (Linux/macOS)
         if: matrix.os != 'windows-latest'
@@ -194,12 +196,12 @@ jobs:
       - name: Build binary for ARM64 on macOS
         if: matrix.os == 'macos-14' && matrix.arch == 'arm64'
         run: |
-          python -m PyInstaller --onefile --name tzst --console --target-arch arm64 src/main.py
+          python -m PyInstaller --onefile --name tzst --console --target-arch arm64 --icon docs/_static/favicon.ico src/main.py
 
       - name: Build binary for ARM64 on Windows
         if: matrix.os == 'windows-latest' && matrix.arch == 'arm64'
         run: |
-          python -m PyInstaller --onefile --name tzst --console --target-arch arm64 src/main.py
+          python -m PyInstaller --onefile --name tzst --console --target-arch arm64 --icon docs/_static/favicon.ico src/main.py
 
       - name: Setup cross-compilation for Linux ARM64
         if: matrix.os == 'ubuntu-latest' && matrix.arch == 'aarch64'
@@ -212,7 +214,7 @@ jobs:
         env:
           CC: aarch64-linux-gnu-gcc
         run: |
-          python -m PyInstaller --onefile --name tzst --console --target-arch aarch64 src/main.py
+          python -m PyInstaller --onefile --name tzst --console --target-arch aarch64 --icon docs/_static/favicon.ico src/main.py
 
       - name: Prepare archive contents (Linux/macOS)
         if: matrix.os != 'windows-latest'

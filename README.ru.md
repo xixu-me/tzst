@@ -1,5 +1,5 @@
 <h1 align="center">
-<img src="docs/_static/tzst-logo.png" width="300">
+<img src="https://raw.githubusercontent.com/xixu-me/tzst/refs/heads/main/docs/_static/tzst-logo.png" width="300">
 </h1><br>
 
 [![codecov](https://codecov.io/gh/xixu-me/tzst/graph/badge.svg?token=2AIN1559WU)](https://codecov.io/gh/xixu-me/tzst)

@@ -1,6 +1,6 @@
-[🇺🇸 English](./README.md) | [🇨🇳 汉语](./README.zh.md) | **🇪🇸 español** | [🇯🇵 日本語](./README.ja.md) | [🇦🇪 العربية](./README.ar.md) | [🇷🇺 русский](./README.ru.md) | [🇩🇪 Deutsch](./README.de.md) | [🇫🇷 français](./README.fr.md) | [🇰🇷 한국어](./README.ko.md) | [🇧🇷 português](./README.pt.md)
-
-# tzst
+<h1 align="center">
+<img src="docs/_static/tzst-logo.png" width="300">
+</h1><br>
 
 [![codecov](https://codecov.io/gh/xixu-me/tzst/graph/badge.svg?token=2AIN1559WU)](https://codecov.io/gh/xixu-me/tzst)
 [![CodeQL](https://github.com/xixu-me/tzst/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/xixu-me/tzst/actions/workflows/github-code-scanning/codeql)
@@ -9,6 +9,9 @@
 [![PyPI - Downloads](https://img.shields.io/pypi/dm/tzst)](https://pypi.org/project/tzst/)
 [![GitHub License](https://img.shields.io/github/license/xixu-me/tzst)](LICENSE)
 [![Sponsor](https://img.shields.io/badge/Sponsor-violet)](https://xi-xu.me/#sponsorships)
+[![Documentation](https://img.shields.io/badge/Documentation-blue)](https://tzst.xi-xu.me)
+
+[🇺🇸 English](./README.md) | [🇨🇳 汉语](./README.zh.md) | **🇪🇸 español** | [🇯🇵 日本語](./README.ja.md) | [🇦🇪 العربية](./README.ar.md) | [🇷🇺 русский](./README.ru.md) | [🇩🇪 Deutsch](./README.de.md) | [🇫🇷 français](./README.fr.md) | [🇰🇷 한국어](./README.ko.md) | [🇧🇷 português](./README.pt.md)
 
 **tzst** es una biblioteca de Python de próxima generación diseñada para la gestión moderna de archivos, aprovechando la compresión Zstandard de vanguardia para ofrecer un rendimiento, seguridad y fiabilidad superiores. Construida exclusivamente para Python 3.12+, esta solución de nivel empresarial combina operaciones atómicas, eficiencia de transmisión (streaming) y una API meticulosamente elaborada para redefinir cómo los desarrolladores manejan los archivos `.tzst`/`.tar.zst` en entornos de producción. 🚀
 

@@ -105,7 +105,7 @@ def _handle_file_conflict(
     # Convert string resolution to enum if needed
     if isinstance(resolution, str):
         try:
-            resolution = ConflictResolution(resolution)
+            resolution = ConflictResolution(resolution.lower())
         except ValueError:
             # Invalid string, fallback to ASK for interactive handling
             resolution = ConflictResolution.ASK
@@ -130,7 +130,6 @@ def _handle_file_conflict(
     elif resolution == ConflictResolution.EXIT:
         return resolution, None
     else:
-        # Unknown resolution, default to REPLACE for robustness
         return ConflictResolution.REPLACE, target_path
 
 
@@ -176,19 +175,20 @@ class TzstArchive:
             )
 
         # Validate compression level
-        if not 1 <= compression_level <= 22:
+        if not 1 <= compression_level <= zstd.ZstdCompressor.max_level():
             raise ValueError(
-                f"Invalid compression level '{compression_level}'. Must be between 1 and 22."
+                f"Invalid compression level '{compression_level}'. "
+                f"Must be between 1 and {zstd.ZstdCompressor.max_level()}."
             )
 
-        # Check for unsupported modes immediately - provide clear documentation
+        # Check for unsupported modes immediately
         if mode.startswith("a"):
             raise NotImplementedError(
                 "Append mode is not currently supported for .tzst/.tar.zst archives. "
-                "This would require decompressing the entire archive, adding new files, "
-                "and recompressing, which is complex and potentially slow for large archives. "
-                "Alternatives: 1) Create multiple archives, 2) Recreate the archive with all files, "
-                "3) Use standard tar format for append operations, then compress separately."
+                "This involves complex operations (decompress, add, recompress) "
+                "and is slow for large archives. Consider alternatives like creating "
+                "multiple archives, recreating the archive, or using standard tar "
+                "for appends and compressing separately."
             )
 
     def __enter__(self):
@@ -212,24 +212,28 @@ class TzstArchive:
         """
         try:
             if self.mode.startswith("r"):
-                # Read mode
                 self._fileobj = open(self.filename, "rb")
                 dctx = zstd.ZstdDecompressor()
 
                 if self.streaming:
-                    # Streaming mode - use stream reader directly (memory efficient)
-                    # Note: This may limit some tarfile operations that require seeking
                     self._compressed_stream = dctx.stream_reader(self._fileobj)
+                    if not isinstance(self._compressed_stream, io.IOBase):
+                        raise TzstArchiveError(
+                            "Failed to create a valid compressed stream for reading."
+                        )
                     self._tarfile = tarfile.open(
-                        fileobj=self._compressed_stream, mode="r|"
+                        fileobj=self._compressed_stream,
+                        mode="r|",  # type: ignore[arg-type]
                     )
                 else:
-                    # Buffer mode - decompress to memory buffer for random access
-                    # Better compatibility but higher memory usage for large archives
+                    if self._fileobj is None:
+                        raise TzstArchiveError(
+                            "File object not initialized for reading."
+                        )
                     decompressed_chunks = []
                     with dctx.stream_reader(self._fileobj) as reader:
                         while True:
-                            chunk = reader.read(8192)
+                            chunk = reader.read(io.DEFAULT_BUFFER_SIZE)
                             if not chunk:
                                 break
                             decompressed_chunks.append(chunk)
@@ -240,25 +244,20 @@ class TzstArchive:
                     )
 
             elif self.mode.startswith("w"):
-                # Write mode - use streaming compression
                 self._fileobj = open(self.filename, "wb")
                 cctx = zstd.ZstdCompressor(
                     level=self.compression_level, write_content_size=True
                 )
+                if self._fileobj is None:
+                    raise TzstArchiveError("File object not initialized for writing.")
                 self._compressed_stream = cctx.stream_writer(self._fileobj)
-                self._tarfile = tarfile.open(fileobj=self._compressed_stream, mode="w|")
-            elif self.mode.startswith("a"):
-                # Append mode - for tar.zst, this is complex as we need to decompress,
-                # add files, and recompress. For simplicity, we'll raise an error for now.
-                raise NotImplementedError(
-                    "Append mode is not currently supported for .tzst/.tar.zst archives. "
-                    "This would require decompressing the entire archive, adding new files, "
-                    "and recompressing, which is complex and potentially slow for large archives. "
-                    "Alternatives: 1) Create multiple archives, 2) Recreate the archive with all files, "
-                    "3) Use standard tar format for append operations, then compress separately."
-                )
-            else:
-                raise ValueError(f"Invalid mode: {self.mode}")
+                if not isinstance(self._compressed_stream, io.IOBase):
+                    raise TzstArchiveError(
+                        "Failed to create a valid compressed stream for writing."
+                    )
+                self._tarfile = tarfile.open(fileobj=self._compressed_stream, mode="w|")  # type: ignore[arg-type]
+            # 'a' mode already handled by raising NotImplementedError earlier
+            # else case for invalid mode also handled earlier
         except Exception as e:
             self.close()
             if "zstd" in str(e).lower():
@@ -340,7 +339,7 @@ class TzstArchive:
                    - 'data': Safe filter for cross-platform data archives (default, recommended)
                    - 'tar': Honor most tar features but block dangerous ones
                    - 'fully_trusted': Honor all metadata (use only for trusted archives)
-                   - None: Use default behavior (may show deprecation warning in Python 3.12+)
+                   - None: Use default behavior (Python 3.12+ may warn about this)
                    - callable: Custom filter function
 
         Warning:
@@ -368,24 +367,34 @@ class TzstArchive:
             # Specific member extraction not supported in streaming mode
             raise RuntimeError(
                 "Extracting specific members is not supported in streaming mode. "
-                "Please use non-streaming mode for selective extraction, or extract all files."
-            )  # Prepare extraction arguments - different parameters for extract vs extractall
+                "Use non-streaming mode or extract all files."
+            )
         try:
             if member:
-                # extract() accepts set_attrs, numeric_owner, and filter
-                extract_kwargs = {
-                    "set_attrs": set_attrs,
-                    "numeric_owner": numeric_owner,
-                    "filter": filter,
-                }
-                self._tarfile.extract(member, path=extract_path, **extract_kwargs)
+                # Ensure correct types for extract_kwargs
+                _filter_arg: (
+                    str
+                    | Callable[[tarfile.TarInfo, str], tarfile.TarInfo | None]
+                    | None
+                ) = filter
+                self._tarfile.extract(  # type: ignore[call-arg]
+                    member,
+                    path=extract_path,
+                    set_attrs=set_attrs,  # type: ignore[call-arg]
+                    numeric_owner=numeric_owner,  # type: ignore[call-arg]
+                    filter=_filter_arg,  # type: ignore[call-arg]
+                )
             else:
-                # extractall() only accepts numeric_owner and filter (no set_attrs)
-                extractall_kwargs = {
-                    "numeric_owner": numeric_owner,
-                    "filter": filter,
-                }
-                self._tarfile.extractall(path=extract_path, **extractall_kwargs)
+                _filter_arg_all: (
+                    str
+                    | Callable[[tarfile.TarInfo, str], tarfile.TarInfo | None]
+                    | None
+                ) = filter
+                self._tarfile.extractall(  # type: ignore[call-arg]
+                    path=extract_path,
+                    numeric_owner=numeric_owner,  # type: ignore[call-arg]
+                    filter=_filter_arg_all,  # type: ignore[call-arg]
+                )
         except (tarfile.StreamError, OSError) as e:
             if self.streaming and (
                 "seeking" in str(e).lower() or "stream" in str(e).lower()
@@ -421,7 +430,9 @@ class TzstArchive:
         members: list[tarfile.TarInfo] | None = None,
         *,
         numeric_owner: bool = False,
-        filter: str | Callable | None = "data",
+        filter: str
+        | Callable[[tarfile.TarInfo, str], tarfile.TarInfo | None]
+        | None = "data",
     ):
         """
         Extract all members from the archive.
@@ -468,15 +479,17 @@ class TzstArchive:
         extract_path.mkdir(parents=True, exist_ok=True)
 
         try:
-            # extractall() accepts numeric_owner, filter, and members parameters
-            extractall_kwargs = {
-                "numeric_owner": numeric_owner,
-                "filter": filter,
-            }
-            if members is not None:
-                extractall_kwargs["members"] = members
+            _filter_arg: (
+                str | Callable[[tarfile.TarInfo, str], tarfile.TarInfo | None] | None
+            ) = filter
+            _members_arg: list[tarfile.TarInfo] | None = members
 
-            self._tarfile.extractall(path=extract_path, **extractall_kwargs)
+            self._tarfile.extractall(
+                path=extract_path,
+                members=_members_arg,
+                numeric_owner=numeric_owner,
+                filter=_filter_arg,  # type: ignore[call-arg]
+            )
         except (tarfile.StreamError, OSError) as e:
             if self.streaming and (
                 "seeking" in str(e).lower() or "stream" in str(e).lower()
@@ -585,7 +598,7 @@ class TzstArchive:
                     if fileobj:
                         # Read the entire file to verify decompression
                         while True:
-                            chunk = fileobj.read(8192)
+                            chunk = fileobj.read(io.DEFAULT_BUFFER_SIZE)
                             if not chunk:
                                 break
             return True
@@ -603,62 +616,37 @@ def create_archive(
     use_temp_file: bool = True,
 ) -> None:
     """
-    Create a new .tzst archive with atomic file operations.
+    Create a .tzst/.tar.zst archive.
 
     Args:
-        archive_path: Path for the new archive
-        files: List of files/directories to add
+        archive_path: Path to the archive file to be created
+        files: List of files or directories to add to the archive
         compression_level: Zstandard compression level (1-22)
-        use_temp_file: If True, create archive in temporary file first, then move
-                      to final location for atomic operation
-
-    See Also:
-        :meth:`TzstArchive.add`: Method for adding files to an open archive
+        use_temp_file: If True, create archive in a temporary file first,
+                       then move for atomicity (recommended).
     """
-    # Validate compression level
-    if not 1 <= compression_level <= 22:
-        raise ValueError(
-            f"Invalid compression level '{compression_level}'. Must be between 1 and 22."
-        )
+    archive_path_obj = Path(archive_path)
 
-    archive_path = Path(archive_path)
-
-    # Ensure archive has correct extension
-    if archive_path.suffix.lower() not in [".tzst", ".zst"]:
-        if archive_path.suffix.lower() == ".tar":
-            archive_path = archive_path.with_suffix(".tar.zst")
-        else:
-            archive_path = archive_path.with_suffix(archive_path.suffix + ".tzst")
-
-    # Use temporary file for atomic operation if requested
     if use_temp_file:
-        temp_fd = None
-        temp_path = None
+        temp_dir = archive_path_obj.parent
+        temp_dir.mkdir(parents=True, exist_ok=True)
+
+        fd, temp_archive_name = tempfile.mkstemp(
+            suffix=".tzst.tmp", prefix=archive_path_obj.name + "_", dir=str(temp_dir)
+        )
+        os.close(fd)
+        temp_archive_path = Path(temp_archive_name)
+
         try:
-            # Create temporary file in same directory as target for atomic move
-            temp_fd, temp_path_str = tempfile.mkstemp(
-                suffix=".tmp", prefix=f".{archive_path.name}.", dir=archive_path.parent
-            )
-            os.close(temp_fd)  # Close file descriptor, we'll open with TzstArchive
-            temp_path = Path(temp_path_str)
-
-            # Create archive in temporary location
-            _create_archive_impl(temp_path, files, compression_level)
-
-            # Atomic move to final location
-            temp_path.replace(archive_path)
-
+            _create_archive_impl(temp_archive_path, files, compression_level)
+            archive_path_obj.parent.mkdir(parents=True, exist_ok=True)
+            temp_archive_path.rename(archive_path_obj)
         except Exception:
-            # Clean up temporary file on error
-            if temp_path and temp_path.exists():
-                try:
-                    temp_path.unlink()
-                except Exception:
-                    pass
+            if temp_archive_path.exists():
+                temp_archive_path.unlink(missing_ok=True)
             raise
     else:
-        # Direct creation (non-atomic)
-        _create_archive_impl(archive_path, files, compression_level)
+        _create_archive_impl(archive_path_obj, files, compression_level)
 
 
 def _create_archive_impl(
@@ -981,7 +969,7 @@ def test_archive(archive_path: str | Path, streaming: bool = False) -> bool:
                         if fileobj:
                             # Read the entire file to verify decompression
                             while True:
-                                chunk = fileobj.read(8192)
+                                chunk = fileobj.read(io.DEFAULT_BUFFER_SIZE)
                                 if not chunk:
                                     break
             return True

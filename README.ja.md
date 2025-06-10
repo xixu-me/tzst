@@ -38,12 +38,12 @@ Python インストール不要のスタンドアロン実行ファイルをダ�
 
 | プラットフォーム | アーキテクチャ | ファイル |
 |----------|-------------|------|
-| **🐧 Linux** | x86_64 | `tzst-v{バージョン}-linux-x86_64.zip` |
-| **🐧 Linux** | ARM64 | `tzst-v{バージョン}-linux-aarch64.zip` |
-| **🪟 Windows** | x64 | `tzst-v{バージョン}-windows-amd64.zip` |
-| **🪟 Windows** | ARM64 | `tzst-v{バージョン}-windows-arm64.zip` |
-| **🍎 macOS** | Intel | `tzst-v{バージョン}-macos-x86_64.zip` |
-| **🍎 macOS** | Apple Silicon | `tzst-v{バージョン}-macos-arm64.zip` |
+| **🐧 Linux** | x86_64 | `tzst-{バージョン}-linux-amd64.zip` |
+| **🐧 Linux** | ARM64 | `tzst-{バージョン}-linux-arm64.zip` |
+| **🪟 Windows** | x64 | `tzst-{バージョン}-windows-amd64.zip` |
+| **🪟 Windows** | ARM64 | `tzst-{バージョン}-windows-arm64.zip` |
+| **🍎 macOS** | Intel | `tzst-{バージョン}-darwin-amd64.zip` |
+| **🍎 macOS** | Apple Silicon | `tzst-{バージョン}-darwin-arm64.zip` |
 
 #### 🛠️ インストール手順
 

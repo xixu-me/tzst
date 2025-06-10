@@ -38,12 +38,12 @@
 
 | 平台 | 架构 | 文件 |
 |------|------|------|
-| **🐧 Linux** | x86_64 | `tzst-v{版本}-linux-x86_64.zip` |
-| **🐧 Linux** | ARM64 | `tzst-v{版本}-linux-aarch64.zip` |
-| **🪟 Windows** | x64 | `tzst-v{版本}-windows-amd64.zip` |
-| **🪟 Windows** | ARM64 | `tzst-v{版本}-windows-arm64.zip` |
-| **🍎 macOS** | Intel | `tzst-v{版本}-macos-x86_64.zip` |
-| **🍎 macOS** | Apple Silicon | `tzst-v{版本}-macos-arm64.zip` |
+| **🐧 Linux** | x86_64 | `tzst-{版本}-linux-amd64.zip` |
+| **🐧 Linux** | ARM64 | `tzst-{版本}-linux-arm64.zip` |
+| **🪟 Windows** | x64 | `tzst-{版本}-windows-amd64.zip` |
+| **🪟 Windows** | ARM64 | `tzst-{版本}-windows-arm64.zip` |
+| **🍎 macOS** | Intel | `tzst-{版本}-darwin-amd64.zip` |
+| **🍎 macOS** | Apple Silicon | `tzst-{版本}-darwin-arm64.zip` |
 
 #### 🛠️ 安装步骤
 

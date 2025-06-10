@@ -40,12 +40,12 @@
 
 | المنصة | المعمارية | الملف |
 |----------|-------------|------|
-| **🐧 Linux** | x86_64 | `tzst-v{version}-linux-x86_64.zip` |
-| **🐧 Linux** | ARM64 | `tzst-v{version}-linux-aarch64.zip` |
-| **🪟 Windows** | x64 | `tzst-v{version}-windows-amd64.zip` |
-| **🪟 Windows** | ARM64 | `tzst-v{version}-windows-arm64.zip` |
-| **🍎 macOS** | Intel | `tzst-v{version}-macos-x86_64.zip` |
-| **🍎 macOS** | Apple Silicon | `tzst-v{version}-macos-arm64.zip` |
+| **🐧 Linux** | x86_64 | `tzst-{version}-linux-amd64.zip` |
+| **🐧 Linux** | ARM64 | `tzst-{version}-linux-arm64.zip` |
+| **🪟 Windows** | x64 | `tzst-{version}-windows-amd64.zip` |
+| **🪟 Windows** | ARM64 | `tzst-{version}-windows-arm64.zip` |
+| **🍎 macOS** | Intel | `tzst-{version}-darwin-amd64.zip` |
+| **🍎 macOS** | Apple Silicon | `tzst-{version}-darwin-arm64.zip` |
 
 #### 🛠️ خطوات التثبيت
 

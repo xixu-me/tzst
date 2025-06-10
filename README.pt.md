@@ -38,12 +38,12 @@ Baixe executáveis independentes que não requerem instalação do Python:
 
 | Plataforma | Arquitetura | Arquivo |
 |----------|-------------|------|
-| **🐧 Linux** | x86_64 | `tzst-v{versão}-linux-x86_64.zip` |
-| **🐧 Linux** | ARM64 | `tzst-v{versão}-linux-aarch64.zip` |
-| **🪟 Windows** | x64 | `tzst-v{versão}-windows-amd64.zip` |
-| **🪟 Windows** | ARM64 | `tzst-v{versão}-windows-arm64.zip` |
-| **🍎 macOS** | Intel | `tzst-v{versão}-macos-x86_64.zip` |
-| **🍎 macOS** | Apple Silicon | `tzst-v{versão}-macos-arm64.zip` |
+| **🐧 Linux** | x86_64 | `tzst-{versão}-linux-amd64.zip` |
+| **🐧 Linux** | ARM64 | `tzst-{versão}-linux-arm64.zip` |
+| **🪟 Windows** | x64 | `tzst-{versão}-windows-amd64.zip` |
+| **🪟 Windows** | ARM64 | `tzst-{versão}-windows-arm64.zip` |
+| **🍎 macOS** | Intel | `tzst-{versão}-darwin-amd64.zip` |
+| **🍎 macOS** | Apple Silicon | `tzst-{versão}-darwin-arm64.zip` |
 
 #### 🛠️ Passos de Instalação
 

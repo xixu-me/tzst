@@ -38,12 +38,12 @@
 
 | Платформа | Архитектура | Файл |
 |----------|-------------|------|
-| **🐧 Linux** | x86_64 | `tzst-v{версия}-linux-x86_64.zip` |
-| **🐧 Linux** | ARM64 | `tzst-v{версия}-linux-aarch64.zip` |
-| **🪟 Windows** | x64 | `tzst-v{версия}-windows-amd64.zip` |
-| **🪟 Windows** | ARM64 | `tzst-v{версия}-windows-arm64.zip` |
-| **🍎 macOS** | Intel | `tzst-v{версия}-macos-x86_64.zip` |
-| **🍎 macOS** | Apple Silicon | `tzst-v{версия}-macos-arm64.zip` |
+| **🐧 Linux** | x86_64 | `tzst-{версия}-linux-amd64.zip` |
+| **🐧 Linux** | ARM64 | `tzst-{версия}-linux-arm64.zip` |
+| **🪟 Windows** | x64 | `tzst-{версия}-windows-amd64.zip` |
+| **🪟 Windows** | ARM64 | `tzst-{версия}-windows-arm64.zip` |
+| **🍎 macOS** | Intel | `tzst-{версия}-darwin-amd64.zip` |
+| **🍎 macOS** | Apple Silicon | `tzst-{версия}-darwin-arm64.zip` |
 
 #### 🛠️ Шаги установки
 

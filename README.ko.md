@@ -38,12 +38,12 @@ Python 설치가 필요 없는 독립형 실행 파일 다운로드:
 
 | 플랫폼 | 아키텍처 | 파일 |
 |----------|-------------|------|
-| **🐧 Linux** | x86_64 | `tzst-v{버전}-linux-x86_64.zip` |
-| **🐧 Linux** | ARM64 | `tzst-v{버전}-linux-aarch64.zip` |
-| **🪟 Windows** | x64 | `tzst-v{버전}-windows-amd64.zip` |
-| **🪟 Windows** | ARM64 | `tzst-v{버전}-windows-arm64.zip` |
-| **🍎 macOS** | Intel | `tzst-v{버전}-macos-x86_64.zip` |
-| **🍎 macOS** | Apple Silicon | `tzst-v{버전}-macos-arm64.zip` |
+| **🐧 Linux** | x86_64 | `tzst-{버전}-linux-amd64.zip` |
+| **🐧 Linux** | ARM64 | `tzst-{버전}-linux-arm64.zip` |
+| **🪟 Windows** | x64 | `tzst-{버전}-windows-amd64.zip` |
+| **🪟 Windows** | ARM64 | `tzst-{버전}-windows-arm64.zip` |
+| **🍎 macOS** | Intel | `tzst-{버전}-darwin-amd64.zip` |
+| **🍎 macOS** | Apple Silicon | `tzst-{버전}-darwin-arm64.zip` |
 
 #### 🛠️ 설치 단계
 

@@ -38,12 +38,12 @@ Lade eigenständige ausführbare Dateien herunter, die keine Python-Installation
 
 | Plattform | Architektur | Datei |
 |----------|-------------|------|
-| **🐧 Linux** | x86_64 | `tzst-v{Version}-linux-x86_64.zip` |
-| **🐧 Linux** | ARM64 | `tzst-v{Version}-linux-aarch64.zip` |
-| **🪟 Windows** | x64 | `tzst-v{Version}-windows-amd64.zip` |
-| **🪟 Windows** | ARM64 | `tzst-v{Version}-windows-arm64.zip` |
-| **🍎 macOS** | Intel | `tzst-v{Version}-macos-x86_64.zip` |
-| **🍎 macOS** | Apple Silicon | `tzst-v{Version}-macos-arm64.zip` |
+| **🐧 Linux** | x86_64 | `tzst-{version}-linux-amd64.zip` |
+| **🐧 Linux** | ARM64 | `tzst-{version}-linux-arm64.zip` |
+| **🪟 Windows** | x64 | `tzst-{version}-windows-amd64.zip` |
+| **🪟 Windows** | ARM64 | `tzst-{version}-windows-arm64.zip` |
+| **🍎 macOS** | Intel | `tzst-{version}-darwin-amd64.zip` |
+| **🍎 macOS** | Apple Silicon | `tzst-{version}-darwin-arm64.zip` |
 
 #### 🛠️ Installationsschritte
 

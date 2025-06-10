@@ -87,6 +87,24 @@ def _get_unique_filename(file_path: Path) -> Path:
         counter += 1
 
 
+def _move_file_cross_platform(src: Path, dst: Path) -> None:
+    """Move a file from src to dst, handling cross-drive moves on Windows."""
+    try:
+        # Try the fast rename operation first
+        src.rename(dst)
+    except OSError as e:
+        # On Windows, rename fails across drives with error 17
+        # Fall back to copy + delete for cross-drive moves
+        import shutil
+
+        try:
+            shutil.copy2(src, dst)
+            src.unlink()
+        except Exception:
+            # If copy also fails, re-raise the original rename error
+            raise e from None
+
+
 def _handle_file_conflict(
     target_path: Path,
     resolution: ConflictResolution | str,
@@ -845,15 +863,14 @@ def extract_archive(
                         ):
                             continue
                         elif actual_resolution == ConflictResolution.EXIT:
-                            break
-
-                        # For AUTO_RENAME, we need to adjust the member path
+                            break  # For AUTO_RENAME, we need to adjust the member path
                         if actual_resolution in (
                             ConflictResolution.AUTO_RENAME,
                             ConflictResolution.AUTO_RENAME_ALL,
                         ):
                             # Create parent directories for renamed file
-                            final_path.parent.mkdir(parents=True, exist_ok=True)
+                            if final_path:
+                                final_path.parent.mkdir(parents=True, exist_ok=True)
                             # Extract to temporary location, then move
                             temp_extract_path = Path(tempfile.mkdtemp())
                             try:
@@ -861,7 +878,8 @@ def extract_archive(
                                     member, temp_extract_path, filter=filter
                                 )
                                 temp_file = temp_extract_path / member
-                                temp_file.rename(final_path)
+                                if final_path:
+                                    _move_file_cross_platform(temp_file, final_path)
                             finally:
                                 # Clean up temp directory
                                 import shutil
@@ -920,7 +938,7 @@ def extract_archive(
                                         target_path.unlink()  # Remove existing file
 
                             if target_path:
-                                temp_file.rename(target_path)
+                                _move_file_cross_platform(temp_file, target_path)
                 finally:
                     # Clean up temp directory
                     import shutil

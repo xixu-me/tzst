@@ -123,11 +123,11 @@ jobs:
           # Linux architectures
           - os: ubuntu-latest
             os_name: linux
-            arch: x86_64
+            arch: amd64
             python-version: "3.12"
           - os: ubuntu-latest
             os_name: linux
-            arch: aarch64
+            arch: arm64
             python-version: "3.12"
             cross_compile: true
           # Windows architectures
@@ -142,11 +142,11 @@ jobs:
             cross_compile: true
           # macOS architectures
           - os: macos-13 # Intel-based runner
-            os_name: macos
-            arch: x86_64
+            os_name: darwin
+            arch: amd64
             python-version: "3.12"
           - os: macos-14 # ARM-based runner (M1/M2)
-            os_name: macos
+            os_name: darwin
             arch: arm64
             python-version: "3.12"
     runs-on: ${{ matrix.os }}
@@ -204,13 +204,13 @@ jobs:
           python -m PyInstaller --onefile --name tzst --console --target-arch arm64 --icon docs/_static/favicon.ico src/main.py
 
       - name: Setup cross-compilation for Linux ARM64
-        if: matrix.os == 'ubuntu-latest' && matrix.arch == 'aarch64'
+        if: matrix.os == 'ubuntu-latest' && matrix.arch == 'arm64'
         run: |
           sudo apt-get update
           sudo apt-get install -y gcc-aarch64-linux-gnu binutils-aarch64-linux-gnu
 
       - name: Build binary for ARM64 on Linux
-        if: matrix.os == 'ubuntu-latest' && matrix.arch == 'aarch64'
+        if: matrix.os == 'ubuntu-latest' && matrix.arch == 'arm64'
         env:
           CC: aarch64-linux-gnu-gcc
         run: |
@@ -236,19 +236,19 @@ jobs:
         if: matrix.os != 'windows-latest'
         run: |
           cd archive
-          zip -r ../tzst-v${{ steps.version.outputs.version }}-${{ matrix.os_name }}-${{ matrix.arch }}.zip .
+          zip -r ../tzst-${{ steps.version.outputs.version }}-${{ matrix.os_name }}-${{ matrix.arch }}.zip .
 
       - name: Create zip archive (Windows)
         if: matrix.os == 'windows-latest'
         run: |
           cd archive
-          Compress-Archive -Path * -DestinationPath ../tzst-v${{ steps.version.outputs.version }}-${{ matrix.os_name }}-${{ matrix.arch }}.zip
+          Compress-Archive -Path * -DestinationPath ../tzst-${{ steps.version.outputs.version }}-${{ matrix.os_name }}-${{ matrix.arch }}.zip
 
       - name: Upload binary artifacts
         uses: actions/upload-artifact@v4
         with:
           name: binary-${{ matrix.os_name }}-${{ matrix.arch }}
-          path: tzst-v${{ steps.version.outputs.version }}-${{ matrix.os_name }}-${{ matrix.arch }}.zip
+          path: tzst-${{ steps.version.outputs.version }}-${{ matrix.os_name }}-${{ matrix.arch }}.zip
 
   create-release:
     needs: [publish, build-binaries]
@@ -282,10 +282,10 @@ jobs:
       - name: Upload Release Assets
         run: |
           echo "Available files:"
-          ls -la tzst-v${{ steps.version.outputs.version }}-*.zip 2>/dev/null || echo "No zip files found"
+          ls -la tzst-${{ steps.version.outputs.version }}-*.zip 2>/dev/null || echo "No zip files found"
 
           success=0
-          for file in tzst-v${{ steps.version.outputs.version }}-*.zip; do
+          for file in tzst-${{ steps.version.outputs.version }}-*.zip; do
             if [ -f "$file" ]; then
               echo "Uploading $file"
               if gh release upload ${{ github.ref_name }} "$file" --clobber; then

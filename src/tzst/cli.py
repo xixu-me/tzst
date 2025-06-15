@@ -16,6 +16,31 @@ from .core import (
 from .exceptions import TzstArchiveError, TzstDecompressionError
 
 
+def _normalize_archive_path(archive_path: Path) -> Path:
+    """Normalize archive path by ensuring correct extension.
+
+    This exactly mirrors the logic in core.py's create_archive function to show
+    the correct final path in CLI output.
+
+    Args:
+        archive_path: Input archive path
+
+    Returns:
+        Path: Normalized path with correct extension
+    """
+    # Convert to Path if it's not already
+    archive_path = Path(archive_path)
+
+    # Ensure archive has correct extension - this logic exactly matches core.py
+    if archive_path.suffix.lower() not in [".tzst", ".zst"]:
+        if archive_path.suffix.lower() == ".tar":
+            archive_path = archive_path.with_suffix(".tar.zst")
+        else:
+            archive_path = archive_path.with_suffix(archive_path.suffix + ".tzst")
+
+    return archive_path
+
+
 def _interactive_conflict_callback(target_path: Path) -> ConflictResolution:
     """Interactive callback for handling file conflicts in CLI.
 
@@ -219,14 +244,17 @@ def _execute_archive_creation(
     Returns:
         int: Exit code (0 for success, non-zero for failure)
     """
-    print(f"Creating archive: {archive_path}")
+    # Normalize archive path to show the correct final filename
+    normalized_archive_path = _normalize_archive_path(archive_path)
+
+    print(f"Creating archive: {normalized_archive_path}")
     for file_path in files:
         print(f"  Adding: {file_path}")
 
     # Use atomic file operations by default for better reliability
     # This creates the archive in a temporary file first, then moves it
     create_archive(archive_path, files, compression_level, use_temp_file=use_temp_file)
-    print(f"Archive created successfully - {archive_path}")
+    print(f"Archive created successfully - {normalized_archive_path}")
     return 0
 
 

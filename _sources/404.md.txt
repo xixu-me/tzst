@@ -1,0 +1,76 @@
+---
+myst:
+  html_meta:
+    description: "Page not found - tzst documentation. Return to the main documentation or search for what you're looking for."
+    keywords: "404, page not found, tzst documentation, error"
+    og:title: "Page Not Found - tzst Documentation"
+    og:description: "The requested page could not be found. Visit the tzst documentation homepage or use the search feature."
+    twitter:title: "Page Not Found - tzst Documentation"
+    twitter:description: "The requested page could not be found. Visit the tzst documentation homepage or use the search feature."
+    og:type: "website"
+    og:image: "https://tzst.xi-xu.me/_static/tzst-square-logo.png"
+    og:url: "https://tzst.xi-xu.me/"
+    twitter:card: "summary_large_image"
+    twitter:image: "https://tzst.xi-xu.me/_static/tzst-square-logo.png"
+---
+
+# 404 - Page Not Found
+
+## Oops! The page you're looking for doesn't exist
+
+The URL you requested could not be found in the tzst documentation. This might happen if:
+
+- The page has been moved or renamed
+- You followed a broken link
+- There's a typo in the URL
+- The page has been removed
+
+## Where would you like to go?
+
+### Popular Pages
+
+- **{doc}`index`** - Documentation homepage
+- **{doc}`quickstart`** - Get started with tzst
+- **{doc}`performance`** - Learn about performance optimizations
+- **{doc}`examples`** - Practical examples and use cases
+- **{doc}`api/index`** - Complete API reference
+- **{doc}`development`** - Contributing to tzst
+- **{ref}`genindex`** - Index of all documented items
+
+### Quick Navigation
+
+- **Installation Guide** - {ref}`installation`
+- **Basic Usage** - {ref}`basic-usage`
+- **Security Features** - {ref}`security-and-filtering`
+- **Error Handling** - {ref}`error-handling`
+
+## Search Documentation
+
+Use the search box in the top navigation to find what you're looking for, or browse through these sections:
+
+### Core Features
+
+- **{doc}`api/core`** - Core TzstArchive class and functions
+- **{doc}`api/cli`** - Command-line interface
+- **{doc}`api/exceptions`** - Exception handling
+
+### Examples & Tutorials
+
+- **Archive Creation** - {ref}`basic-archive-operations`
+- **Security Best Practices** - {ref}`security-and-filtering`
+- **Integration Examples** - {ref}`integration-examples`
+- **Performance Optimization** - {ref}`performance-optimization`
+
+## Additional Resources
+
+- [GitHub Repository](https://github.com/xixu-me/tzst) - Source code and issue tracker
+- [PyPI Package](https://pypi.org/project/tzst/) - Download and installation
+- [Release Notes](https://github.com/xixu-me/tzst/releases) - Latest updates and changes
+
+## Report an Issue
+
+If you believe this is a broken link within our documentation, please [report it on GitHub](https://github.com/xixu-me/tzst/issues).
+
+---
+
+**Need help?** Check our {doc}`quickstart` guide or browse the {doc}`examples` for common use cases.

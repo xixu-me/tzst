@@ -96,7 +96,7 @@ class TestUtilityFunctions:
             validate_compression_level("abc")
 
         with pytest.raises(
-            argparse.ArgumentTypeError, match="Invalid compression level: '1.5'"
+            argparse.ArgumentTypeError, match=r"Invalid compression level: '1\\.5'"
         ):
             validate_compression_level("1.5")
 

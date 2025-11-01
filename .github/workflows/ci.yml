@@ -87,7 +87,7 @@ jobs:
         run: twine check dist/*
 
       - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: dist
           path: dist/
@@ -245,7 +245,7 @@ jobs:
           Compress-Archive -Path * -DestinationPath ../tzst-${{ steps.version.outputs.version }}-${{ matrix.os_name }}-${{ matrix.arch }}.zip
 
       - name: Upload binary artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: binary-${{ matrix.os_name }}-${{ matrix.arch }}
           path: tzst-${{ steps.version.outputs.version }}-${{ matrix.os_name }}-${{ matrix.arch }}.zip

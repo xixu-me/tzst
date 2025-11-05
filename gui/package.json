@@ -4,6 +4,7 @@
   "description": "Cross-platform GUI for tzst archive management",
   "type": "module",
   "scripts": {
+    "serve": "npx http-server src -p 1420 -c-1 --cors",
     "dev": "tauri dev",
     "build": "tauri build",
     "tauri": "tauri"
@@ -12,7 +13,8 @@
   "author": "tzst contributors",
   "license": "BSD-3-Clause",
   "devDependencies": {
-    "@tauri-apps/cli": "^2.9.3"
+    "@tauri-apps/cli": "^2.9.3",
+    "http-server": "^14.1.1"
   },
   "dependencies": {
     "@tauri-apps/api": "^2.1.1",

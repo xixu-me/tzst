@@ -4,9 +4,9 @@
   "version": "1.0.0",
   "identifier": "me.xixu.tzst",
   "build": {
-    "beforeDevCommand": "",
+    "beforeDevCommand": "npm run serve",
     "beforeBuildCommand": "",
-    "devUrl": "../src",
+    "devUrl": "http://localhost:1420",
     "frontendDist": "../src"
   },
   "bundle": {

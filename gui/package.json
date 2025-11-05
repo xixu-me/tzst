@@ -1,0 +1,22 @@
+{
+  "name": "tzst-gui",
+  "version": "1.0.0",
+  "description": "Cross-platform GUI for tzst archive management",
+  "type": "module",
+  "scripts": {
+    "dev": "tauri dev",
+    "build": "tauri build",
+    "tauri": "tauri"
+  },
+  "keywords": ["tauri", "tzst", "archive", "compression"],
+  "author": "tzst contributors",
+  "license": "BSD-3-Clause",
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.9.3"
+  },
+  "dependencies": {
+    "@tauri-apps/api": "^2.1.1",
+    "@tauri-apps/plugin-shell": "^2.0.2",
+    "@tauri-apps/plugin-dialog": "^2.0.2"
+  }
+}

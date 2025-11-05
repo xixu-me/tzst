@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>tzst GUI</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app">
+        <aside class="sidebar">
+            <div class="logo">
+                <h1>tzst</h1>
+                <p>Archive Manager</p>
+            </div>
+            <nav class="nav">
+                <button class="nav-btn active" data-view="create">Create</button>
+                <button class="nav-btn" data-view="extract">Extract</button>
+                <button class="nav-btn" data-view="list">List</button>
+                <button class="nav-btn" data-view="test">Test</button>
+                <button class="nav-btn" data-view="history">History</button>
+                <button class="nav-btn" data-view="settings">Settings</button>
+            </nav>
+        </aside>
+
+        <main class="main">
+            <!-- Settings View -->
+            <div id="settings-view" class="view" style="display: none;">
+                <h2>Settings</h2>
+
+                <div class="settings-section">
+                    <h3>tzst CLI Configuration</h3>
+                    <div class="form-group">
+                        <label>CLI Path</label>
+                        <div class="input-group">
+                            <input type="text" id="tzst-path" readonly placeholder="Not configured">
+                            <button id="discover-btn">Auto Discover</button>
+                            <button id="browse-btn">Browse...</button>
+                        </div>
+                        <div id="tzst-info" class="info-box"></div>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h3>Appearance</h3>
+                    <div class="form-group">
+                        <label>Theme</label>
+                        <select id="theme-select">
+                            <option value="light">Light</option>
+                            <option value="dark">Dark</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Language</label>
+                        <select id="language-select">
+                            <option value="en">English</option>
+                            <option value="zh">中文</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Create View -->
+            <div id="create-view" class="view">
+                <h2>Create Archive</h2>
+
+                <div class="form-group">
+                    <label>Archive Path</label>
+                    <input type="text" id="create-archive-path" placeholder="/path/to/archive.tzst">
+                </div>
+
+                <div class="form-group">
+                    <label>Files/Directories to Add</label>
+                    <textarea id="create-files" rows="4" placeholder="/path/to/file1&#10;/path/to/dir1"></textarea>
+                    <small>One path per line</small>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Compression Level (1-22)</label>
+                        <input type="number" id="create-level" min="1" max="22" value="3">
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="create-verbose">
+                            Verbose output
+                        </label>
+                    </div>
+                </div>
+
+                <div class="action-bar">
+                    <button class="btn-primary" id="create-execute">Create Archive</button>
+                    <button class="btn-secondary" id="create-clear">Clear</button>
+                </div>
+
+                <div id="create-output" class="output-section"></div>
+            </div>
+
+            <!-- Extract View -->
+            <div id="extract-view" class="view" style="display: none;">
+                <h2>Extract Archive</h2>
+
+                <div class="form-group">
+                    <label>Archive Path</label>
+                    <input type="text" id="extract-archive-path" placeholder="/path/to/archive.tzst">
+                </div>
+
+                <div class="form-group">
+                    <label>Output Directory</label>
+                    <input type="text" id="extract-output" placeholder="/path/to/output">
+                </div>
+
+                <div class="form-group">
+                    <label>Specific Files (optional)</label>
+                    <textarea id="extract-files" rows="3" placeholder="file1.txt&#10;dir/file2.txt"></textarea>
+                    <small>Leave empty to extract all. One path per line.</small>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Security Filter</label>
+                        <select id="extract-filter">
+                            <option value="data">Data (most secure)</option>
+                            <option value="tar">Tar (standard)</option>
+                            <option value="fully_trusted">Fully Trusted</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="extract-streaming">
+                            Use streaming mode
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="extract-verbose">
+                            Verbose output
+                        </label>
+                    </div>
+                </div>
+
+                <div class="action-bar">
+                    <button class="btn-primary" id="extract-execute">Extract Archive</button>
+                    <button class="btn-secondary" id="extract-clear">Clear</button>
+                </div>
+
+                <div id="extract-output" class="output-section"></div>
+            </div>
+
+            <!-- List View -->
+            <div id="list-view" class="view" style="display: none;">
+                <h2>List Archive Contents</h2>
+
+                <div class="form-group">
+                    <label>Archive Path</label>
+                    <input type="text" id="list-archive-path" placeholder="/path/to/archive.tzst">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="list-verbose" checked>
+                            Verbose output (show details)
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="list-streaming">
+                            Use streaming mode
+                        </label>
+                    </div>
+                </div>
+
+                <div class="action-bar">
+                    <button class="btn-primary" id="list-execute">List Contents</button>
+                    <button class="btn-secondary" id="list-clear">Clear</button>
+                </div>
+
+                <div id="list-output" class="output-section"></div>
+            </div>
+
+            <!-- Test View -->
+            <div id="test-view" class="view" style="display: none;">
+                <h2>Test Archive Integrity</h2>
+
+                <div class="form-group">
+                    <label>Archive Path</label>
+                    <input type="text" id="test-archive-path" placeholder="/path/to/archive.tzst">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="test-streaming">
+                            Use streaming mode
+                        </label>
+                    </div>
+                </div>
+
+                <div class="action-bar">
+                    <button class="btn-primary" id="test-execute">Test Archive</button>
+                    <button class="btn-secondary" id="test-clear">Clear</button>
+                </div>
+
+                <div id="test-output" class="output-section"></div>
+            </div>
+
+            <!-- History View -->
+            <div id="history-view" class="view" style="display: none;">
+                <h2>Command History</h2>
+                <div id="history-list" class="history-list">
+                    <p class="empty-state">No commands executed yet</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script type="module" src="main.js"></script>
+</body>
+</html>

@@ -63,8 +63,16 @@ Lade eigenständige ausführbare Dateien herunter, die keine Python-Installation
 
 ### 📦 Von PyPI
 
+Mit pip:
+
 ```bash
 pip install tzst
+```
+
+Oder mit uv (empfohlen):
+
+```bash
+uv tool install tzst
 ```
 
 ### 🔧 Aus dem Quellcode
@@ -88,8 +96,6 @@ pip install -e .[dev]
 ## 🚀 Schnellstart
 
 ### 💻 Kommandozeilennutzung
-
-> **Hinweis**: Lade die [eigenständige Binärdatei](#von-github-releases) für beste Leistung und keine Python-Abhängigkeit herunter. Alternativ verwende `uvx tzst` für die Ausführung ohne Installation. Siehe [uv-Dokumentation](https://docs.astral.sh/uv/) für Details.
 
 ```bash
 # 📁 Archiv erstellen

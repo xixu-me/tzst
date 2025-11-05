@@ -63,8 +63,16 @@ Download standalone executables that don't require Python installation:
 
 ### 📦 From PyPI
 
+Using pip:
+
 ```bash
 pip install tzst
+```
+
+Or using uv (recommended):
+
+```bash
+uv tool install tzst
 ```
 
 ### 🔧 From Source
@@ -88,8 +96,6 @@ pip install -e .[dev]
 ## 🚀 Quick Start
 
 ### 💻 Command Line Usage
-
-> **Note**: Download the [standalone binary](#from-github-releases) for the best performance and no Python dependency. Alternatively, use `uvx tzst` for running without installation. See [uv documentation](https://docs.astral.sh/uv/) for details.
 
 ```bash
 # 📁 Create an archive

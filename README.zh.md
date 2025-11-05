@@ -63,8 +63,16 @@
 
 ### 📦 通过 PyPI 安装
 
+使用 pip：
+
 ```bash
 pip install tzst
+```
+
+或使用 uv（推荐）：
+
+```bash
+uv tool install tzst
 ```
 
 ### 🔧 从源码安装
@@ -86,8 +94,6 @@ pip install -e .[dev]
 ## 🚀 快速开始
 
 ### 💻 命令行使用
-
-> **注意**：下载[独立二进制文件](#从-github-releases-安装)可获得最佳性能且无需 Python 环境。也可使用 `uvx tzst` 免安装运行，详见 [uv 文档](https://docs.astral.sh/uv/)。
 
 ```bash
 # 📁 创建归档

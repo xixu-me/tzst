@@ -63,8 +63,16 @@ Baixe executáveis independentes que não requerem instalação do Python:
 
 ### 📦 Do PyPI
 
+Usando pip:
+
 ```bash
 pip install tzst
+```
+
+Ou usando uv (recomendado):
+
+```bash
+uv tool install tzst
 ```
 
 ### 🔧 Do Código Fonte
@@ -88,8 +96,6 @@ pip install -e .[dev]
 ## 🚀 Início Rápido
 
 ### 💻 Uso da Linha de Comando
-
-> **Nota**: Baixe o [binário independente](#dos-releases-do-github) para melhor desempenho e sem dependência do Python. Alternativamente, use `uvx tzst` para executar sem instalação. Veja a [documentação do uv](https://docs.astral.sh/uv/) para detalhes.
 
 ```bash
 # 📁 Criar um arquivo

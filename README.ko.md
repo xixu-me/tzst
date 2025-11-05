@@ -63,8 +63,16 @@ Python 설치가 필요 없는 독립형 실행 파일 다운로드:
 
 ### 📦 PyPI에서
 
+pip 사용:
+
 ```bash
 pip install tzst
+```
+
+또는 uv 사용 (권장):
+
+```bash
+uv tool install tzst
 ```
 
 ### 🔧 소스에서
@@ -88,8 +96,6 @@ pip install -e .[dev]
 ## 🚀 빠른 시작
 
 ### 💻 명령줄 사용법
-
-> **참고**: 최상의 성능과 Python 의존성 없이 사용하려면 [독립형 바이너리](#github-릴리스에서)를 다운로드하세요. 또는 설치 없이 실행하려면 `uvx tzst`를 사용하세요. 자세한 내용은 [uv 문서](https://docs.astral.sh/uv/) 참조.
 
 ```bash
 # 📁 아카이브 생성

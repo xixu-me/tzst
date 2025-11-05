@@ -63,8 +63,16 @@ Téléchargez des exécutables autonomes qui ne nécessitent pas d'installation 
 
 ### 📦 Depuis PyPI
 
+Avec pip :
+
 ```bash
 pip install tzst
+```
+
+Ou avec uv (recommandé) :
+
+```bash
+uv tool install tzst
 ```
 
 ### 🔧 Depuis le code source
@@ -88,8 +96,6 @@ pip install -e .[dev]
 ## 🚀 Démarrage rapide
 
 ### 💻 Utilisation en ligne de commande
-
-> **Note** : Téléchargez le [binaire autonome](#depuis-les-releases-github) pour les meilleures performances et aucune dépendance Python. Alternativement, utilisez `uvx tzst` pour exécuter sans installation. Voir la [documentation uv](https://docs.astral.sh/uv/) pour les détails.
 
 ```bash
 # 📁 Créer une archive

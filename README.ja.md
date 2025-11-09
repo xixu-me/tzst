@@ -15,6 +15,8 @@
 
 **tzst** は、最新の Zstandard 圧縮技術を活用した次世代 Python ライブラリで、優れたパフォーマンス、セキュリティ、信頼性を提供するモダンなアーカイブ管理を実現します。 Python 3.12+ 専用に構築されたこのエンタープライズグレードのソリューションは、アトミック操作、ストリーミング効率、厳密に設計された API を組み合わせ、本番環境における `.tzst` / `.tar.zst` アーカイブの扱い方を再定義します。 🚀
 
+技術詳細分析記事が公開されました: **[Deep Dive into tzst: A Modern Python Archiving Library Based on Zstandard](https://blog.xi-xu.me/2025/11/01/deep-dive-into-tzst-en.html)**。
+
 ## ✨ 特徴
 
 - **🗜️ 高圧縮率**: Zstandard 圧縮による優れた圧縮率と速度

@@ -15,6 +15,8 @@
 
 **tzst** 是一个面向现代归档管理的新一代 Python 库，利用前沿的 Zstandard 压缩技术，提供卓越的性能、安全性和可靠性。专为 Python 3.12+ 打造，这个企业级解决方案结合原子操作、流式处理效率和精心设计的 API，重新定义了开发者在生产环境中处理 `.tzst`/`.tar.zst` 归档文件的方式。🚀
 
+技术深度解析文章已发布：**[《深入解析 tzst：一个基于 Zstandard 的现代 Python 归档库》](https://blog.xi-xu.me/2025/11/01/deep-dive-into-tzst.html)**。
+
 ## ✨ 功能特性
 
 - **🗜️ 高效压缩**：采用 Zstandard 压缩算法，实现优异的压缩率和速度

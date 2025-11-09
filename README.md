@@ -15,6 +15,8 @@
 
 **tzst** is a next-generation Python library engineered for modern archive management, leveraging cutting-edge Zstandard compression to deliver superior performance, security, and reliability. Built exclusively for Python 3.12+, this enterprise-grade solution combines atomic operations, streaming efficiency, and a meticulously crafted API to redefine how developers handle `.tzst`/`.tar.zst` archives in production environments. 🚀
 
+In-depth technical analysis article published: **[Deep Dive into tzst: A Modern Python Archiving Library Based on Zstandard](https://blog.xi-xu.me/2025/11/01/deep-dive-into-tzst-en.html)**.
+
 ## ✨ Features
 
 - **🗜️ High Compression**: Zstandard compression for excellent compression ratios and speed

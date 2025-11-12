@@ -29,7 +29,7 @@ extensions = [
 ]
 
 templates_path = ["_templates"]
-exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
+exclude_patterns = ["_build", "Thumbs.db", ".DS_Store", "SEO_ENHANCEMENTS.md"]
 
 # Base URL for sitemap generation
 html_baseurl = "https://tzst.xi-xu.me/"

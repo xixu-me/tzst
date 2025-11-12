@@ -1,0 +1,21 @@
+# robots.txt for tzst documentation
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://tzst.xi-xu.me/sitemap.xml
+
+# Disallow build artifacts and internal directories
+Disallow: /_sources/
+Disallow: /_static/*.js$
+Disallow: /_images/
+
+# Allow static assets like CSS and images
+Allow: /_static/*.css$
+Allow: /_static/*.png$
+Allow: /_static/*.jpg$
+Allow: /_static/*.ico$
+Allow: /_static/*.svg$
+
+# Crawl delay (optional, considerate to search engines)
+Crawl-delay: 1

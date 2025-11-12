@@ -1,3 +1,19 @@
+---
+myst:
+  html_meta:
+    description: "Complete development guide for tzst - Setup, testing, contribution guidelines, and best practices"
+    keywords: "tzst development, Python development, contributing to tzst, testing guide, documentation"
+    og:title: "tzst Development Guide"
+    og:description: "Complete development guide for tzst - Setup, testing, contribution guidelines, and best practices"
+    twitter:title: "tzst Development Guide"
+    twitter:description: "Complete development guide for tzst - Setup, testing, contribution guidelines, and best practices"
+    og:type: "website"
+    og:image: "https://tzst.xi-xu.me/_static/tzst-square-logo.png"
+    og:url: "https://tzst.xi-xu.me/development.html"
+    twitter:card: "summary_large_image"
+    twitter:image: "https://tzst.xi-xu.me/_static/tzst-square-logo.png"
+---
+
 # Development Guide
 
 This guide provides comprehensive information for developers contributing to or working with the tzst library.

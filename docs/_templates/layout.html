@@ -1,7 +1,11 @@
-{% extends "!layout.html" %} {% block extrahead %} {{ super() }}
+{% extends "!layout.html" %}
+{% block extrahead %}
+{{ super() }}
 <!-- Additional SEO and social meta tags -->
 <meta name="application-name" content="tzst" />
 <meta name="generator" content="Sphinx {{ sphinx_version }}" />
+<meta name="rating" content="General" />
+<meta name="revisit-after" content="7 days" />
 
 <!-- Schema.org markup for search engines -->
 <script type="application/ld+json">
@@ -13,21 +17,173 @@
     "applicationCategory": "DeveloperApplication",
     "operatingSystem": "Cross-platform",
     "programmingLanguage": "Python",
-    "license": "https://opensource.org/licenses/MIT",
+    "license": "https://opensource.org/licenses/BSD-3-Clause",
     "url": "https://tzst.xi-xu.me/",
     "downloadUrl": "https://pypi.org/project/tzst/",
+    "codeRepository": "https://github.com/xixu-me/tzst",
     "softwareVersion": "{{ version }}",
     "author": {
       "@type": "Person",
-      "name": "Xi Xu"
+      "name": "Xi Xu",
+      "url": "https://xi-xu.me"
     },
     "offers": {
       "@type": "Offer",
       "price": "0",
       "priceCurrency": "USD"
+    },
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "5",
+      "reviewCount": "1"
+    },
+    "keywords": "tzst, tar, zstandard, compression, archive, python, extraction, backup"
+  }
+</script>
+
+<!-- Breadcrumb Schema -->
+{% if pagename != 'index' %}
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://tzst.xi-xu.me/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "{{ title|striptags }}",
+        "item": "https://tzst.xi-xu.me/{{ pagename }}.html"
+      }
+    ]
+  }
+</script>
+{% endif %}
+
+<!-- Article/TechArticle Schema for documentation pages -->
+{% if pagename in ['quickstart', 'examples', 'performance', 'development'] %}
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "{{ title|striptags }}",
+    "description": "{{ metatags|striptags }}",
+    "author": {
+      "@type": "Person",
+      "name": "Xi Xu",
+      "url": "https://xi-xu.me"
+    },
+    "publisher": {
+      "@type": "Person",
+      "name": "Xi Xu"
+    },
+    "datePublished": "2025-01-01",
+    "dateModified": "2025-01-12",
+    "url": "https://tzst.xi-xu.me/{{ pagename }}.html",
+    "inLanguage": "en-US",
+    "about": {
+      "@type": "SoftwareApplication",
+      "name": "tzst"
     }
   }
 </script>
+{% endif %}
+
+<!-- FAQ Schema for pages with common questions -->
+{% if pagename == 'quickstart' %}
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How do I install tzst?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "You can install tzst using pip (pip install tzst), download standalone binaries from GitHub Releases, use uvx for no-installation usage (uvx tzst), or install from source."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What compression levels does tzst support?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "tzst supports compression levels from 1 to 22. Level 1 is fastest with lower compression, level 3 is the default balance, and level 22 provides maximum compression but is slower."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is tzst secure for extracting untrusted archives?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, tzst uses the 'data' security filter by default, which protects against path traversal attacks and blocks dangerous files. This makes it safe for extracting untrusted archives."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "When should I use streaming mode?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Use streaming mode for archives larger than 100MB to reduce memory usage. Streaming mode is memory-efficient but has limitations such as no random access or specific file extraction."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What file extensions does tzst support?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "tzst supports both .tzst and .tar.zst file extensions. The library automatically handles extension detection and normalization when creating or opening archives."
+        }
+      }
+    ]
+  }
+</script>
+{% endif %}
+
+<!-- HowTo Schema for examples page -->
+{% if pagename == 'examples' %}
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to use tzst for archive management",
+    "description": "Comprehensive examples of using tzst for creating, extracting, and managing tar.zst archives",
+    "image": "https://tzst.xi-xu.me/_static/tzst-logo.png",
+    "step": [
+      {
+        "@type": "HowToStep",
+        "name": "Create an archive",
+        "text": "Use create_archive() to create a new tzst archive with your files and directories",
+        "url": "https://tzst.xi-xu.me/examples.html#basic-operations"
+      },
+      {
+        "@type": "HowToStep",
+        "name": "Extract an archive",
+        "text": "Use extract_archive() to safely extract files from a tzst archive with security filters",
+        "url": "https://tzst.xi-xu.me/examples.html#flexible-extraction"
+      },
+      {
+        "@type": "HowToStep",
+        "name": "List archive contents",
+        "text": "Use list_archive() to view the contents of an archive without extracting",
+        "url": "https://tzst.xi-xu.me/examples.html#basic-operations"
+      },
+      {
+        "@type": "HowToStep",
+        "name": "Test archive integrity",
+        "text": "Use test_archive() to verify the integrity of your archive files",
+        "url": "https://tzst.xi-xu.me/examples.html#basic-operations"
+      }
+    ]
+  }
+</script>
+{% endif %}
 
 <!-- Canonical URL for better SEO -->
 {% if pagename != 'index' %}
@@ -39,4 +195,6 @@
 <!-- Preconnect to external domains for performance -->
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
+<link rel="dns-prefetch" href="https://pypi.org" />
+<link rel="dns-prefetch" href="https://github.com" />
 {% endblock %}

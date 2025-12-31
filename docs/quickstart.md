@@ -24,50 +24,67 @@ This guide will get you up and running with tzst in just a few minutes.
 
 Choose your preferred installation method:
 
-### Option 1: PyPI
+### From GitHub Releases
+
+Download standalone executables that don't require Python installation:
+
+#### Supported Platforms
+
+| Platform | Architecture | File |
+|----------|-------------|------|
+| **🐧 Linux** | x86_64 | `tzst-{version}-linux-amd64.zip` |
+| **🐧 Linux** | ARM64 | `tzst-{version}-linux-arm64.zip` |
+| **🪟 Windows** | x64 | `tzst-{version}-windows-amd64.zip` |
+| **🪟 Windows** | ARM64 | `tzst-{version}-windows-arm64.zip` |
+| **🍎 macOS** | Intel | `tzst-{version}-darwin-amd64.zip` |
+| **🍎 macOS** | Apple Silicon | `tzst-{version}-darwin-arm64.zip` |
+
+#### 🛠️ Installation Steps
+
+1. **📥 Download** the appropriate archive for your platform from the [latest releases page](https://github.com/xixu-me/tzst/releases/latest)
+2. **📦 Extract** the archive to get the `tzst` executable (or `tzst.exe` on Windows)
+3. **📂 Move** the executable to a directory in your PATH:
+   - **🐧 Linux/macOS**: `sudo mv tzst /usr/local/bin/`
+   - **🪟 Windows**: Add the directory containing `tzst.exe` to your PATH environment variable
+4. **✅ Verify** installation: `tzst --help`
+
+#### 🎯 Benefits of Binary Installation
+
+- ✅ **No Python required** - Standalone executable
+- ✅ **Faster startup** - No Python interpreter overhead
+- ✅ **Easy deployment** - Single file distribution
+- ✅ **Consistent behavior** - Bundled dependencies
+
+### From PyPI
+
+Using pip:
 
 ```bash
 pip install tzst
 ```
 
-### Option 2: Standalone Binary
-
-Download the appropriate executable from [GitHub Releases](https://github.com/xixu-me/tzst/releases):
-
-| Platform | Architecture | Download |
-|----------|--------------|----------|
-| **Linux** | x86_64 | `tzst-{version}-linux-amd64.zip` |
-| **Linux** | ARM64 | `tzst-{version}-linux-arm64.zip` |
-| **Windows** | x64 | `tzst-{version}-windows-amd64.zip` |
-| **Windows** | ARM64 | `tzst-{version}-windows-arm64.zip` |
-| **macOS** | Intel | `tzst-{version}-darwin-amd64.zip` |
-| **macOS** | Apple Silicon | `tzst-{version}-darwin-arm64.zip` |
-
-Extract the archive and add the executable to your PATH.
-
-### Option 3: Using uvx (No Installation)
-
-Run tzst directly without installation using [uvx](https://docs.astral.sh/uv/):
+Or using uv (recommended):
 
 ```bash
-uvx tzst --help
-uvx tzst a archive.tzst file1.txt file2.txt directory/
-uvx tzst x archive.tzst
+uv tool install tzst
 ```
 
-This option is perfect for:
-
-- **One-time usage** - No permanent installation needed
-- **Testing** - Try tzst without committing to installation
-- **CI/CD pipelines** - Use tzst in automated workflows
-- **Isolated environments** - Avoid dependency conflicts
-
-### Option 4: From Source
+### From Source
 
 ```bash
 git clone https://github.com/xixu-me/tzst.git
 cd tzst
 pip install .
+```
+
+### Development Installation
+
+This project uses modern Python packaging standards:
+
+```bash
+git clone https://github.com/xixu-me/tzst.git
+cd tzst
+pip install -e .[dev]
 ```
 
 (basic-usage)=

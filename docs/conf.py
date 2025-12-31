@@ -2,6 +2,7 @@
 
 import os
 import sys
+from datetime import datetime
 
 # Add the source directory to the Python path
 sys.path.insert(0, os.path.abspath("../src"))
@@ -11,7 +12,7 @@ from tzst import __version__
 
 # -- Project information -----------------------------------------------------
 project = "tzst"
-copyright = "2025, Xi Xu"
+copyright = f"{datetime.now().year}, Xi Xu"
 author = "Xi Xu"
 release = __version__
 version = __version__

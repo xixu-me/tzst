@@ -520,6 +520,6 @@ python -m pytest tests/
 
 ## 📄 ライセンス
 
-著作権 &copy; 2025 [Xi Xu](https://xi-xu.me)。全著作権を保留します。
+著作権 &copy; [Xi Xu](https://xi-xu.me)。全著作権を保留します。
 
 [BSD 3-Clause](LICENSE) ライセンスのもとで公開されています。

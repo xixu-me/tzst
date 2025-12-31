@@ -168,7 +168,7 @@ We welcome contributions! Please read our [Contributing Guide](https://github.co
 
 ## License
 
-Copyright © 2025 [Xi Xu](https://xi-xu.me). All rights reserved.
+Copyright © [Xi Xu](https://xi-xu.me). All rights reserved.
 
 Licensed under the [BSD 3-Clause](https://github.com/xixu-me/tzst/blob/main/LICENSE) license.
 

@@ -520,6 +520,6 @@ python -m pytest tests/
 
 ## 📄 Licencia
 
-Copyright &copy; 2025 [Xi Xu](https://xi-xu.me). Todos los derechos reservados.
+Copyright &copy; [Xi Xu](https://xi-xu.me). Todos los derechos reservados.
 
 Licenciado bajo la licencia [BSD 3-Clause](LICENSE).

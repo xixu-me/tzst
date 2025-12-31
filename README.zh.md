@@ -516,6 +516,6 @@ python -m pytest tests/
 
 ## 📄 许可证
 
-版权所有 &copy; 2025 [Xi Xu](https://xi-xu.me)。保留所有权利。
+版权所有 &copy; [Xi Xu](https://xi-xu.me)。保留所有权利。
 
 采用 [BSD 3-Clause](LICENSE) 许可证授权。

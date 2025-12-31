@@ -101,73 +101,19 @@ with TzstArchive("data.tzst", "r") as archive:
 
 ## Installation
 
-### From PyPI
+For detailed installation instructions, including standalone binaries and source installation, please refer to the {doc}`quickstart` guide.
 
 ```bash
+# Install from PyPI
 pip install tzst
-```
 
-### From GitHub Releases
-
-Download platform-specific standalone executables from [GitHub Releases](https://github.com/xixu-me/tzst/releases) - no Python installation required!
-
-#### Supported Platforms
-
-| Platform | Architecture | File |
-|----------|-------------|------|
-| **Linux** | x86_64 | `tzst-{version}-linux-amd64.zip` |
-| **Linux** | ARM64 | `tzst-{version}-linux-arm64.zip` |
-| **Windows** | x64 | `tzst-{version}-windows-amd64.zip` |
-| **Windows** | ARM64 | `tzst-{version}-windows-arm64.zip` |
-| **macOS** | Intel | `tzst-{version}-darwin-amd64.zip` |
-| **macOS** | Apple Silicon | `tzst-{version}-darwin-arm64.zip` |
-
-#### Installation Steps
-
-1. **Download** the appropriate archive for your platform from the [latest releases page](https://github.com/xixu-me/tzst/releases/latest)
-2. **Extract** the archive to get the `tzst` executable (or `tzst.exe` on Windows)
-3. **Move** the executable to a directory in your PATH:
-   - **Linux/macOS**: `sudo mv tzst /usr/local/bin/`
-   - **Windows**: Add the directory containing `tzst.exe` to your PATH environment variable
-4. **Verify** installation: `tzst --help`
-
-#### Benefits of Binary Installation
-
-- **No Python required** - Standalone executable
-- **Faster startup** - No Python interpreter overhead
-- **Easy deployment** - Single file distribution
-- **Consistent behavior** - Bundled dependencies
-
-### Using uvx (No Installation)
-
-Run tzst directly without installation using [uvx](https://docs.astral.sh/uv/):
-
-```bash
-uvx tzst --help
-uvx tzst a archive.tzst file1.txt file2.txt directory/
-uvx tzst x archive.tzst
-```
-
-Perfect for one-time usage, testing, CI/CD pipelines, and isolated environments.
-
-### From Source
-
-```bash
-git clone https://github.com/xixu-me/tzst.git
-cd tzst
-pip install .
+# Or using uv (recommended)
+uv tool install tzst
 ```
 
 ## Getting Started
 
 For a quick introduction, see the {doc}`quickstart` guide. For comprehensive usage examples, explore the {doc}`examples` section.
-
-### Installation Options
-
-1. **PyPI Installation**: `pip install tzst`
-2. **Standalone Binaries**: Download from [GitHub Releases](https://github.com/xixu-me/tzst/releases)
-3. **uvx (No Installation)**: Run directly with `uvx tzst`
-4. **From Source**: Clone and install from repository
 
 ### API Documentation
 

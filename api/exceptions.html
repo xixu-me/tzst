@@ -1,0 +1,577 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="Complete reference for tzst exception classes and error handling. Learn about TzstError, TzstArchiveError, and other custom exceptions for robust archive operations." name="description" />
+<meta content="tzst exceptions, Python exceptions, error handling, TzstError, TzstArchiveError, archive errors, compression errors" name="keywords" />
+<meta content="tzst Exceptions API Reference" name="og:title" />
+<meta content="Complete reference for tzst exception classes and error handling. Learn about TzstError, TzstArchiveError, and other custom exceptions for robust archive operations." name="og:description" />
+<meta content="website" name="og:type" />
+<meta content="tzst Exceptions API Reference" name="twitter:title" />
+<meta content="Complete reference for tzst exception classes and error handling. Learn about TzstError, TzstArchiveError, and other custom exceptions for robust archive operations." name="twitter:description" />
+<meta content="https://tzst.xi-xu.me/_static/tzst-square-logo.png" name="og:image" />
+<meta content="https://tzst.xi-xu.me/" name="og:url" />
+<meta content="summary_large_image" name="twitter:card" />
+<meta content="https://tzst.xi-xu.me/_static/tzst-square-logo.png" name="twitter:image" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Exceptions API &mdash; tzst 1.2.8 Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="canonical" href="https://tzst.xi-xu.me/api/exceptions.html" />
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=143ec3a1"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="search" type="application/opensearchdescription+xml"
+          title="Search within tzst 1.2.8 Documentation"
+          href="../_static/opensearch.xml"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Development Guide" href="../development.html" />
+    <link rel="prev" title="CLI API" href="cli.html" />
+ 
+<!-- Additional SEO and social meta tags -->
+<meta name="application-name" content="tzst" />
+<meta name="generator" content="Sphinx 8.2.3" />
+<meta name="rating" content="General" />
+<meta name="revisit-after" content="7 days" />
+
+<!-- Schema.org markup for search engines -->
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "tzst",
+    "description": "A Python library for creating and extracting tar.zst archives with high performance and comprehensive features",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Cross-platform",
+    "programmingLanguage": "Python",
+    "license": "https://opensource.org/licenses/BSD-3-Clause",
+    "url": "https://tzst.xi-xu.me/",
+    "downloadUrl": "https://pypi.org/project/tzst/",
+    "codeRepository": "https://github.com/xixu-me/tzst",
+    "softwareVersion": "1.2.8",
+    "author": {
+      "@type": "Person",
+      "name": "Xi Xu",
+      "url": "https://xi-xu.me"
+    },
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "5",
+      "reviewCount": "1"
+    },
+    "keywords": "tzst, tar, zstandard, compression, archive, python, extraction, backup"
+  }
+</script>
+
+<!-- Breadcrumb Schema -->
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://tzst.xi-xu.me/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Exceptions API",
+        "item": "https://tzst.xi-xu.me/api/exceptions.html"
+      }
+    ]
+  }
+</script>
+
+
+<!-- Article/TechArticle Schema for documentation pages -->
+
+
+<!-- FAQ Schema for pages with common questions -->
+
+
+<!-- HowTo Schema for examples page -->
+
+
+<!-- Canonical URL for better SEO -->
+
+<link rel="canonical" href="https://tzst.xi-xu.me/api/exceptions.html" />
+
+
+<!-- Preconnect to external domains for performance -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" />
+<link rel="dns-prefetch" href="https://pypi.org" />
+<link rel="dns-prefetch" href="https://github.com" />
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            tzst
+              <img src="../_static/tzst-logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../performance.html">Performance Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="core.html">Core API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli.html">CLI API</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Exceptions API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#overview">Overview</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#exception-hierarchy">Exception Hierarchy</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#exception-classes">Exception Classes</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#base-exception">Base Exception</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#archive-operation-exceptions">Archive Operation Exceptions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#compression-exceptions">Compression Exceptions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#decompression-exceptions">Decompression Exceptions</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#error-handling-best-practices">Error Handling Best Practices</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#basic-error-handling">Basic Error Handling</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#comprehensive-error-handling">Comprehensive Error Handling</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#specific-exception-handling">Specific Exception Handling</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#logging-integration">Logging Integration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#error-recovery-patterns">Error Recovery Patterns</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#key-features">Key Features</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../development.html">Development Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../genindex.html">Index</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">tzst</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">API Reference</a></li>
+      <li class="breadcrumb-item active">Exceptions API</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/xixu-me/tzst/blob/main/docs/api/exceptions.md" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="exceptions-api">
+<h1>Exceptions API<a class="headerlink" href="#exceptions-api" title="Link to this heading"></a></h1>
+<p>Custom exception classes used by tzst for comprehensive error handling and debugging.</p>
+<p>Exception classes for tzst.</p>
+<dl class="py exception">
+<dt class="sig sig-object py">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tzst.exceptions.</span></span><span class="sig-name descname"><span class="pre">TzstArchiveError</span></span><a class="reference internal" href="../_modules/tzst/exceptions.html#TzstArchiveError"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#tzst.exceptions.TzstError" title="tzst.exceptions.TzstError"><code class="xref py py-class docutils literal notranslate"><span class="pre">TzstError</span></code></a></p>
+<p>Exception raised when archive operations fail.</p>
+<p>This can occur when:
+- Archive file cannot be opened or created
+- File permissions prevent archive access
+- Archive structure is malformed
+- Tar operations fail within the archive
+- Atomic file operations fail during creation</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tzst.exceptions.</span></span><span class="sig-name descname"><span class="pre">TzstCompressionError</span></span><a class="reference internal" href="../_modules/tzst/exceptions.html#TzstCompressionError"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#tzst.exceptions.TzstError" title="tzst.exceptions.TzstError"><code class="xref py py-class docutils literal notranslate"><span class="pre">TzstError</span></code></a></p>
+<p>Exception raised when compression operations fail.</p>
+<p>This can occur when:
+- Invalid compression level is specified
+- Disk space is insufficient during compression
+- Input data cannot be compressed due to corruption
+- Zstandard compression encounters an internal error</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tzst.exceptions.</span></span><span class="sig-name descname"><span class="pre">TzstDecompressionError</span></span><a class="reference internal" href="../_modules/tzst/exceptions.html#TzstDecompressionError"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#tzst.exceptions.TzstError" title="tzst.exceptions.TzstError"><code class="xref py py-class docutils literal notranslate"><span class="pre">TzstError</span></code></a></p>
+<p>Exception raised when decompression operations fail.</p>
+<p>This can occur when:
+- Archive file is corrupted or incomplete
+- Archive was not created with zstandard compression
+- Decompression buffer overflows or underflows
+- Archive format is invalid or unsupported</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tzst.exceptions.</span></span><span class="sig-name descname"><span class="pre">TzstError</span></span><a class="reference internal" href="../_modules/tzst/exceptions.html#TzstError"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></a></p>
+<p>Base exception for all tzst operations.</p>
+<p>This is the parent class for all tzst-specific exceptions.
+Catch this to handle any tzst-related error.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tzst.exceptions.</span></span><span class="sig-name descname"><span class="pre">TzstFileNotFoundError</span></span><a class="reference internal" href="../_modules/tzst/exceptions.html#TzstFileNotFoundError"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#tzst.exceptions.TzstError" title="tzst.exceptions.TzstError"><code class="xref py py-class docutils literal notranslate"><span class="pre">TzstError</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#FileNotFoundError" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">FileNotFoundError</span></code></a></p>
+<p>Exception raised when a required file is not found.</p>
+<p>This can occur when:
+- Archive file does not exist for reading operations
+- Input files for archiving do not exist
+- Output directory cannot be created for extraction
+- Temporary files cannot be created during atomic operations</p>
+<p>Inherits from both TzstError and FileNotFoundError for compatibility
+with standard Python exception handling patterns.</p>
+</dd></dl>
+
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p>The tzst library provides a comprehensive hierarchy of exceptions to help identify and handle different types of errors that may occur during archive operations. All exceptions inherit from the base <code class="docutils literal notranslate"><span class="pre">TzstError</span></code> class, making it easy to catch all tzst-related errors with a single exception handler.</p>
+<section id="exception-hierarchy">
+<h3>Exception Hierarchy<a class="headerlink" href="#exception-hierarchy" title="Link to this heading"></a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>TzstError (base exception)
+├── TzstArchiveError (archive operation failures)
+├── TzstCompressionError (compression failures)
+└── TzstDecompressionError (decompression failures)
+</pre></div>
+</div>
+</section>
+</section>
+<section id="exception-classes">
+<h2>Exception Classes<a class="headerlink" href="#exception-classes" title="Link to this heading"></a></h2>
+<section id="base-exception">
+<h3>Base Exception<a class="headerlink" href="#base-exception" title="Link to this heading"></a></h3>
+<section id="tzsterror">
+<h4>TzstError<a class="headerlink" href="#tzsterror" title="Link to this heading"></a></h4>
+<dl class="py exception">
+<dt class="sig sig-object py" id="tzst.exceptions.TzstError">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tzst.exceptions.</span></span><span class="sig-name descname"><span class="pre">TzstError</span></span><a class="reference internal" href="../_modules/tzst/exceptions.html#TzstError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tzst.exceptions.TzstError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></a></p>
+<p>Base exception for all tzst operations.</p>
+<p>This is the parent class for all tzst-specific exceptions.
+Catch this to handle any tzst-related error.</p>
+</dd></dl>
+
+<p>The base exception class for all tzst operations. Catch this exception to handle any tzst-related error in your application.</p>
+<p><strong>Usage:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tzst</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_archive</span><span class="p">,</span> <span class="n">TzstError</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">create_archive</span><span class="p">(</span><span class="s2">&quot;backup.tzst&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;files/&quot;</span><span class="p">])</span>
+<span class="k">except</span> <span class="n">TzstError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;tzst operation failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="archive-operation-exceptions">
+<h3>Archive Operation Exceptions<a class="headerlink" href="#archive-operation-exceptions" title="Link to this heading"></a></h3>
+<section id="tzstarchiveerror">
+<h4>TzstArchiveError<a class="headerlink" href="#tzstarchiveerror" title="Link to this heading"></a></h4>
+<dl class="py exception">
+<dt class="sig sig-object py" id="tzst.exceptions.TzstArchiveError">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tzst.exceptions.</span></span><span class="sig-name descname"><span class="pre">TzstArchiveError</span></span><a class="reference internal" href="../_modules/tzst/exceptions.html#TzstArchiveError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tzst.exceptions.TzstArchiveError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#tzst.exceptions.TzstError" title="tzst.exceptions.TzstError"><code class="xref py py-class docutils literal notranslate"><span class="pre">TzstError</span></code></a></p>
+<p>Exception raised when archive operations fail.</p>
+<p>This can occur when:
+- Archive file cannot be opened or created
+- File permissions prevent archive access
+- Archive structure is malformed
+- Tar operations fail within the archive
+- Atomic file operations fail during creation</p>
+</dd></dl>
+
+<p>Raised when archive operations fail, such as:</p>
+<ul class="simple">
+<li><p>Archive file cannot be opened or created</p></li>
+<li><p>File permissions prevent archive access</p></li>
+<li><p>Archive structure is malformed</p></li>
+<li><p>Tar operations fail within the archive</p></li>
+<li><p>Atomic file operations fail during creation</p></li>
+</ul>
+<p><strong>Common Scenarios:</strong></p>
+<ul class="simple">
+<li><p>Invalid archive file path</p></li>
+<li><p>Insufficient disk space</p></li>
+<li><p>File permission errors</p></li>
+<li><p>Corrupt archive structure</p></li>
+</ul>
+</section>
+</section>
+<section id="compression-exceptions">
+<h3>Compression Exceptions<a class="headerlink" href="#compression-exceptions" title="Link to this heading"></a></h3>
+<section id="tzstcompressionerror">
+<h4>TzstCompressionError<a class="headerlink" href="#tzstcompressionerror" title="Link to this heading"></a></h4>
+<dl class="py exception">
+<dt class="sig sig-object py" id="tzst.exceptions.TzstCompressionError">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tzst.exceptions.</span></span><span class="sig-name descname"><span class="pre">TzstCompressionError</span></span><a class="reference internal" href="../_modules/tzst/exceptions.html#TzstCompressionError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tzst.exceptions.TzstCompressionError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#tzst.exceptions.TzstError" title="tzst.exceptions.TzstError"><code class="xref py py-class docutils literal notranslate"><span class="pre">TzstError</span></code></a></p>
+<p>Exception raised when compression operations fail.</p>
+<p>This can occur when:
+- Invalid compression level is specified
+- Disk space is insufficient during compression
+- Input data cannot be compressed due to corruption
+- Zstandard compression encounters an internal error</p>
+</dd></dl>
+
+<p>Raised when compression operations fail, including:</p>
+<ul class="simple">
+<li><p>Invalid compression level is specified</p></li>
+<li><p>Disk space is insufficient during compression</p></li>
+<li><p>Input data cannot be compressed due to corruption</p></li>
+<li><p>Zstandard compression encounters an internal error</p></li>
+</ul>
+<p><strong>Common Scenarios:</strong></p>
+<ul class="simple">
+<li><p>Compression level out of range (1-22)</p></li>
+<li><p>Insufficient disk space during compression</p></li>
+<li><p>Source file corruption</p></li>
+<li><p>Zstandard library errors</p></li>
+</ul>
+</section>
+</section>
+<section id="decompression-exceptions">
+<h3>Decompression Exceptions<a class="headerlink" href="#decompression-exceptions" title="Link to this heading"></a></h3>
+<section id="tzstdecompressionerror">
+<h4>TzstDecompressionError<a class="headerlink" href="#tzstdecompressionerror" title="Link to this heading"></a></h4>
+<dl class="py exception">
+<dt class="sig sig-object py" id="tzst.exceptions.TzstDecompressionError">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tzst.exceptions.</span></span><span class="sig-name descname"><span class="pre">TzstDecompressionError</span></span><a class="reference internal" href="../_modules/tzst/exceptions.html#TzstDecompressionError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#tzst.exceptions.TzstDecompressionError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#tzst.exceptions.TzstError" title="tzst.exceptions.TzstError"><code class="xref py py-class docutils literal notranslate"><span class="pre">TzstError</span></code></a></p>
+<p>Exception raised when decompression operations fail.</p>
+<p>This can occur when:
+- Archive file is corrupted or incomplete
+- Archive was not created with zstandard compression
+- Decompression buffer overflows or underflows
+- Archive format is invalid or unsupported</p>
+</dd></dl>
+
+<p>Raised when decompression operations fail, such as:</p>
+<ul class="simple">
+<li><p>Archive file is corrupted or incomplete</p></li>
+<li><p>Archive was not created with zstandard compression</p></li>
+<li><p>Decompression buffer overflows or underflows</p></li>
+<li><p>Archive format is invalid or unsupported</p></li>
+</ul>
+<p><strong>Common Scenarios:</strong></p>
+<ul class="simple">
+<li><p>Corrupted or truncated archive files</p></li>
+<li><p>Non-zstandard compressed archives</p></li>
+<li><p>Invalid tar structure within archive</p></li>
+<li><p>Archive format version mismatches</p></li>
+</ul>
+</section>
+</section>
+</section>
+<section id="error-handling-best-practices">
+<h2>Error Handling Best Practices<a class="headerlink" href="#error-handling-best-practices" title="Link to this heading"></a></h2>
+<section id="basic-error-handling">
+<h3>Basic Error Handling<a class="headerlink" href="#basic-error-handling" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tzst</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_archive</span><span class="p">,</span> <span class="n">TzstArchiveError</span><span class="p">,</span> <span class="n">TzstCompressionError</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">create_archive</span><span class="p">(</span><span class="s2">&quot;backup.tzst&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;documents/&quot;</span><span class="p">])</span>
+<span class="k">except</span> <span class="n">TzstCompressionError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Compression failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">except</span> <span class="n">TzstArchiveError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Archive operation failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="comprehensive-error-handling">
+<h3>Comprehensive Error Handling<a class="headerlink" href="#comprehensive-error-handling" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tzst</span><span class="w"> </span><span class="kn">import</span> <span class="n">extract_archive</span><span class="p">,</span> <span class="n">TzstError</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">extract_archive</span><span class="p">(</span><span class="s2">&quot;backup.tzst&quot;</span><span class="p">,</span> <span class="s2">&quot;restore/&quot;</span><span class="p">)</span>
+<span class="k">except</span> <span class="n">TzstError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="c1"># Catch any tzst-related error</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Operation failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="c1"># Perform cleanup or fallback operations</span>
+</pre></div>
+</div>
+</section>
+<section id="specific-exception-handling">
+<h3>Specific Exception Handling<a class="headerlink" href="#specific-exception-handling" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tzst</span><span class="w"> </span><span class="kn">import</span> <span class="n">TzstArchive</span><span class="p">,</span> <span class="n">TzstDecompressionError</span><span class="p">,</span> <span class="n">TzstArchiveError</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">safe_extract</span><span class="p">(</span><span class="n">archive_path</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">TzstArchive</span><span class="p">(</span><span class="n">archive_path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">archive</span><span class="p">:</span>
+            <span class="c1"># Test integrity first</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">archive</span><span class="o">.</span><span class="n">test</span><span class="p">():</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Archive integrity check failed&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="kc">False</span>
+            
+            <span class="c1"># Extract files</span>
+            <span class="n">archive</span><span class="o">.</span><span class="n">extractall</span><span class="p">(</span><span class="n">output_dir</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span>
+            
+    <span class="k">except</span> <span class="n">TzstDecompressionError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Archive is corrupted or invalid: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">except</span> <span class="n">TzstArchiveError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Archive operation failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Archive file not found: </span><span class="si">{</span><span class="n">archive_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">except</span> <span class="ne">PermissionError</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Permission denied accessing: </span><span class="si">{</span><span class="n">archive_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+</pre></div>
+</div>
+</section>
+<section id="logging-integration">
+<h3>Logging Integration<a class="headerlink" href="#logging-integration" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tzst</span><span class="w"> </span><span class="kn">import</span> <span class="n">test_archive</span><span class="p">,</span> <span class="n">TzstDecompressionError</span><span class="p">,</span> <span class="n">TzstError</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">verify_archive</span><span class="p">(</span><span class="n">archive_path</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Verify archive integrity with comprehensive logging.&quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">test_archive</span><span class="p">(</span><span class="n">archive_path</span><span class="p">):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Archive </span><span class="si">{</span><span class="n">archive_path</span><span class="si">}</span><span class="s2"> is valid&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">except</span> <span class="n">TzstDecompressionError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Archive </span><span class="si">{</span><span class="n">archive_path</span><span class="si">}</span><span class="s2"> is corrupted: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">TzstError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;tzst error for </span><span class="si">{</span><span class="n">archive_path</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unexpected error testing </span><span class="si">{</span><span class="n">archive_path</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="kc">False</span>
+</pre></div>
+</div>
+</section>
+<section id="error-recovery-patterns">
+<h3>Error Recovery Patterns<a class="headerlink" href="#error-recovery-patterns" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tzst</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_archive</span><span class="p">,</span> <span class="n">extract_archive</span><span class="p">,</span> <span class="n">TzstError</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">robust_backup_and_restore</span><span class="p">(</span><span class="n">source_dir</span><span class="p">,</span> <span class="n">backup_path</span><span class="p">,</span> <span class="n">restore_dir</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Robust backup with error recovery and validation.&quot;&quot;&quot;</span>
+    <span class="n">temp_backup</span> <span class="o">=</span> <span class="kc">None</span>
+    
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># Create backup with temporary file for atomicity</span>
+        <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="n">suffix</span><span class="o">=</span><span class="s1">&#39;.tzst&#39;</span><span class="p">,</span> <span class="n">delete</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">temp_file</span><span class="p">:</span>
+            <span class="n">temp_backup</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">temp_file</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        
+        <span class="c1"># Create archive</span>
+        <span class="n">create_archive</span><span class="p">(</span><span class="n">temp_backup</span><span class="p">,</span> <span class="p">[</span><span class="n">source_dir</span><span class="p">],</span> <span class="n">compression_level</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
+        
+        <span class="c1"># Verify archive before moving to final location</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">test_archive</span><span class="p">(</span><span class="n">temp_backup</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">TzstArchiveError</span><span class="p">(</span><span class="s2">&quot;Created archive failed integrity check&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Move to final location atomically</span>
+        <span class="n">shutil</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="n">temp_backup</span><span class="p">,</span> <span class="n">backup_path</span><span class="p">)</span>
+        <span class="n">temp_backup</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Successfully moved</span>
+        
+        <span class="c1"># Test restoration</span>
+        <span class="n">extract_archive</span><span class="p">(</span><span class="n">backup_path</span><span class="p">,</span> <span class="n">restore_dir</span><span class="p">)</span>
+        
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Backup and restore completed successfully&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span>
+        
+    <span class="k">except</span> <span class="n">TzstError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;tzst operation failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="c1"># Cleanup and recovery logic</span>
+        <span class="k">if</span> <span class="n">restore_dir</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">restore_dir</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span>
+          <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unexpected error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span>
+        
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="c1"># Cleanup temporary files</span>
+        <span class="k">if</span> <span class="n">temp_backup</span> <span class="ow">and</span> <span class="n">temp_backup</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="n">temp_backup</span><span class="o">.</span><span class="n">unlink</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="cli.html" class="btn btn-neutral float-left" title="CLI API" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../development.html" class="btn btn-neutral float-right" title="Development Guide" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Xi Xu.</p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

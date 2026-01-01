@@ -1,0 +1,378 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Documentation &mdash; tzst 1.2.8 Documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+    <link rel="canonical" href="https://tzst.xi-xu.me/README.html" />
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=143ec3a1"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="search" type="application/opensearchdescription+xml"
+          title="Search within tzst 1.2.8 Documentation"
+          href="_static/opensearch.xml"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="404 - Page Not Found" href="404.html" />
+ 
+<!-- Additional SEO and social meta tags -->
+<meta name="application-name" content="tzst" />
+<meta name="generator" content="Sphinx 8.2.3" />
+<meta name="rating" content="General" />
+<meta name="revisit-after" content="7 days" />
+
+<!-- Schema.org markup for search engines -->
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "tzst",
+    "description": "A Python library for creating and extracting tar.zst archives with high performance and comprehensive features",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Cross-platform",
+    "programmingLanguage": "Python",
+    "license": "https://opensource.org/licenses/BSD-3-Clause",
+    "url": "https://tzst.xi-xu.me/",
+    "downloadUrl": "https://pypi.org/project/tzst/",
+    "codeRepository": "https://github.com/xixu-me/tzst",
+    "softwareVersion": "1.2.8",
+    "author": {
+      "@type": "Person",
+      "name": "Xi Xu",
+      "url": "https://xi-xu.me"
+    },
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "5",
+      "reviewCount": "1"
+    },
+    "keywords": "tzst, tar, zstandard, compression, archive, python, extraction, backup"
+  }
+</script>
+
+<!-- Breadcrumb Schema -->
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://tzst.xi-xu.me/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Documentation",
+        "item": "https://tzst.xi-xu.me/README.html"
+      }
+    ]
+  }
+</script>
+
+
+<!-- Article/TechArticle Schema for documentation pages -->
+
+
+<!-- FAQ Schema for pages with common questions -->
+
+
+<!-- HowTo Schema for examples page -->
+
+
+<!-- Canonical URL for better SEO -->
+
+<link rel="canonical" href="https://tzst.xi-xu.me/README.html" />
+
+
+<!-- Preconnect to external domains for performance -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" />
+<link rel="dns-prefetch" href="https://pypi.org" />
+<link rel="dns-prefetch" href="https://github.com" />
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            tzst
+              <img src="_static/tzst-logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="performance.html">Performance Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/index.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="development.html">Development Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="genindex.html">Index</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">tzst</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Documentation</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/xixu-me/tzst/blob/main/docs/README.md" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="documentation">
+<h1>Documentation<a class="headerlink" href="#documentation" title="Link to this heading"></a></h1>
+<p>This directory contains the Sphinx documentation for the tzst library.</p>
+<section id="setup">
+<h2>Setup<a class="headerlink" href="#setup" title="Link to this heading"></a></h2>
+<ol class="arabic">
+<li><p>Install documentation dependencies:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+</pre></div>
+</div>
+</li>
+<li><p>Install the tzst package in development mode (required for autodoc):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>..
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+<section id="building-documentation">
+<h2>Building Documentation<a class="headerlink" href="#building-documentation" title="Link to this heading"></a></h2>
+<section id="local-development">
+<h3>Local Development<a class="headerlink" href="#local-development" title="Link to this heading"></a></h3>
+<p>Build the documentation locally:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># On Unix/macOS</span>
+make<span class="w"> </span>html
+
+<span class="c1"># On Windows</span>
+make.bat<span class="w"> </span>html
+</pre></div>
+</div>
+<p>The built documentation will be in <code class="docutils literal notranslate"><span class="pre">_build/html/</span></code>. Open <code class="docutils literal notranslate"><span class="pre">_build/html/index.html</span></code> in your browser.</p>
+</section>
+<section id="live-reload-recommended-for-development">
+<h3>Live Reload (Recommended for Development)<a class="headerlink" href="#live-reload-recommended-for-development" title="Link to this heading"></a></h3>
+<p>For automatic rebuilding when files change:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Install sphinx-autobuild if not already installed</span>
+pip<span class="w"> </span>install<span class="w"> </span>sphinx-autobuild
+
+<span class="c1"># Start live reload server</span>
+make<span class="w"> </span>livehtml
+<span class="c1"># or</span>
+sphinx-autobuild<span class="w"> </span>.<span class="w"> </span>_build/html
+</pre></div>
+</div>
+<p>This will start a local server (usually at <a class="reference external" href="http://localhost:8000">http://localhost:8000</a>) that automatically rebuilds and refreshes when you save changes.</p>
+</section>
+<section id="other-build-targets">
+<h3>Other Build Targets<a class="headerlink" href="#other-build-targets" title="Link to this heading"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Check documentation coverage</span>
+make<span class="w"> </span>coverage
+
+<span class="c1"># Check for broken links</span>
+make<span class="w"> </span>linkcheck
+
+<span class="c1"># Build PDF (requires LaTeX)</span>
+make<span class="w"> </span>latexpdf
+
+<span class="c1"># Clean build directory</span>
+make<span class="w"> </span>clean
+</pre></div>
+</div>
+</section>
+</section>
+<section id="documentation-structure">
+<h2>Documentation Structure<a class="headerlink" href="#documentation-structure" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">index.md</span></code> - Main documentation homepage</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">quickstart.md</span></code> - Quick start guide for new users</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">examples.md</span></code> - Practical examples and use cases</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">api/</span></code> - API reference documentation</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">index.md</span></code> - API overview</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">core.md</span></code> - Core functionality documentation</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cli.md</span></code> - CLI documentation</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">exceptions.md</span></code> - Exception classes documentation</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="writing-documentation">
+<h2>Writing Documentation<a class="headerlink" href="#writing-documentation" title="Link to this heading"></a></h2>
+<section id="markdown-vs-restructuredtext">
+<h3>Markdown vs reStructuredText<a class="headerlink" href="#markdown-vs-restructuredtext" title="Link to this heading"></a></h3>
+<p>This documentation uses MyST parser, which allows you to write in Markdown with some reStructuredText features. You can use either <code class="docutils literal notranslate"><span class="pre">.md</span></code> or <code class="docutils literal notranslate"><span class="pre">.rst</span></code> files.</p>
+</section>
+<section id="adding-new-pages">
+<h3>Adding New Pages<a class="headerlink" href="#adding-new-pages" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p>Create a new <code class="docutils literal notranslate"><span class="pre">.md</span></code> file in the appropriate directory</p></li>
+<li><p>Add it to the relevant <code class="docutils literal notranslate"><span class="pre">toctree</span></code> directive in the parent index file</p></li>
+<li><p>Use proper Markdown headers and cross-references</p></li>
+</ol>
+</section>
+<section id="api-documentation">
+<h3>API Documentation<a class="headerlink" href="#api-documentation" title="Link to this heading"></a></h3>
+<p>API documentation is automatically generated from docstrings using Sphinx autodoc. To document a new module:</p>
+<ol class="arabic simple">
+<li><p>Add the module to the appropriate API file (e.g., <code class="docutils literal notranslate"><span class="pre">api/core.md</span></code>)</p></li>
+<li><p>Use autodoc directives like <code class="docutils literal notranslate"><span class="pre">automodule</span></code>, <code class="docutils literal notranslate"><span class="pre">autoclass</span></code>, <code class="docutils literal notranslate"><span class="pre">autofunction</span></code></p></li>
+</ol>
+</section>
+<section id="code-examples">
+<h3>Code Examples<a class="headerlink" href="#code-examples" title="Link to this heading"></a></h3>
+<p>Use fenced code blocks with language specification:</p>
+<div class="highlight-markdown notranslate"><div class="highlight"><pre><span></span><span class="sb">```python</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tzst</span><span class="w"> </span><span class="kn">import</span> <span class="n">TzstArchive</span>
+
+<span class="k">with</span> <span class="n">TzstArchive</span><span class="p">(</span><span class="s2">&quot;example.tzst&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">archive</span><span class="p">:</span>
+    <span class="n">archive</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">&quot;file.txt&quot;</span><span class="p">)</span>
+<span class="sb">```</span>
+</pre></div>
+</div>
+</section>
+<section id="cross-references">
+<h3>Cross-References<a class="headerlink" href="#cross-references" title="Link to this heading"></a></h3>
+<p>Link to other documentation pages:</p>
+<div class="highlight-markdown notranslate"><div class="highlight"><pre><span></span>See the {doc}`quickstart` guide for more information.
+</pre></div>
+</div>
+<p>Link to API documentation:</p>
+<div class="highlight-markdown notranslate"><div class="highlight"><pre><span></span>Use the {class}`tzst.TzstArchive` class.
+</pre></div>
+</div>
+</section>
+</section>
+<section id="automated-deployment">
+<h2>Automated Deployment<a class="headerlink" href="#automated-deployment" title="Link to this heading"></a></h2>
+<p>Documentation is automatically built and deployed to GitHub Pages when changes are pushed to the main branch. The workflow is defined in <code class="docutils literal notranslate"><span class="pre">.github/workflows/publish_docs.yml</span></code>.</p>
+<section id="local-testing-of-deployment">
+<h3>Local Testing of Deployment<a class="headerlink" href="#local-testing-of-deployment" title="Link to this heading"></a></h3>
+<p>To test the deployment process locally:</p>
+<ol class="arabic simple">
+<li><p>Build the documentation: <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">html</span></code></p></li>
+<li><p>Serve the built files: <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">http.server</span> <span class="pre">8000</span> <span class="pre">-d</span> <span class="pre">_build/html</span></code></p></li>
+<li><p>Visit <a class="reference external" href="http://localhost:8000">http://localhost:8000</a></p></li>
+</ol>
+</section>
+</section>
+<section id="troubleshooting">
+<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Link to this heading"></a></h2>
+<section id="import-errors">
+<h3>Import Errors<a class="headerlink" href="#import-errors" title="Link to this heading"></a></h3>
+<p>If you get import errors when building documentation:</p>
+<ol class="arabic simple">
+<li><p>Make sure the tzst package is installed: <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-e</span> <span class="pre">..</span></code></p></li>
+<li><p>Check that all dependencies are installed: <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-r</span> <span class="pre">requirements.txt</span></code></p></li>
+<li><p>Verify your Python path includes the src directory</p></li>
+</ol>
+</section>
+<section id="theme-issues">
+<h3>Theme Issues<a class="headerlink" href="#theme-issues" title="Link to this heading"></a></h3>
+<p>If the RTD theme isn’t working:</p>
+<ol class="arabic simple">
+<li><p>Install the theme: <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">sphinx-rtd-theme</span></code></p></li>
+<li><p>Check that it’s listed in <code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code></p></li>
+<li><p>Verify the theme configuration in <code class="docutils literal notranslate"><span class="pre">conf.py</span></code></p></li>
+</ol>
+</section>
+<section id="build-warnings">
+<h3>Build Warnings<a class="headerlink" href="#build-warnings" title="Link to this heading"></a></h3>
+<p>Address all Sphinx warnings to ensure high-quality documentation:</p>
+<ul class="simple">
+<li><p>Fix broken cross-references</p></li>
+<li><p>Add missing docstrings</p></li>
+<li><p>Resolve autodoc import issues</p></li>
+<li><p>Fix malformed markup</p></li>
+</ul>
+</section>
+</section>
+<section id="contributing">
+<h2>Contributing<a class="headerlink" href="#contributing" title="Link to this heading"></a></h2>
+<p>When contributing to documentation:</p>
+<ol class="arabic simple">
+<li><p>Follow the existing style and structure</p></li>
+<li><p>Test your changes locally before submitting</p></li>
+<li><p>Add examples for new features</p></li>
+<li><p>Update the changelog if appropriate</p></li>
+<li><p>Ensure all links work correctly</p></li>
+</ol>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="404.html" class="btn btn-neutral float-left" title="404 - Page Not Found" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Xi Xu.</p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

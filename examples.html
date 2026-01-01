@@ -1,0 +1,1473 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="Comprehensive tzst examples - Learn advanced archive creation, extraction, security, and performance optimization" name="description" />
+<meta content="tzst examples, Python archive examples, tar.zst tutorials, Zstandard compression examples" name="keywords" />
+<meta content="tzst Examples and Tutorials" name="og:title" />
+<meta content="Comprehensive examples for tzst - archive creation, extraction, security, and performance optimization" name="og:description" />
+<meta content="tzst Examples and Tutorials" name="twitter:title" />
+<meta content="Comprehensive examples for tzst - archive creation, extraction, security, and performance optimization" name="twitter:description" />
+<meta content="website" name="og:type" />
+<meta content="https://tzst.xi-xu.me/_static/tzst-square-logo.png" name="og:image" />
+<meta content="https://tzst.xi-xu.me/" name="og:url" />
+<meta content="summary_large_image" name="twitter:card" />
+<meta content="https://tzst.xi-xu.me/_static/tzst-square-logo.png" name="twitter:image" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Examples &mdash; tzst 1.2.8 Documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+    <link rel="canonical" href="https://tzst.xi-xu.me/examples.html" />
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=143ec3a1"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="search" type="application/opensearchdescription+xml"
+          title="Search within tzst 1.2.8 Documentation"
+          href="_static/opensearch.xml"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="API Reference" href="api/index.html" />
+    <link rel="prev" title="Performance Guide" href="performance.html" />
+ 
+<!-- Additional SEO and social meta tags -->
+<meta name="application-name" content="tzst" />
+<meta name="generator" content="Sphinx 8.2.3" />
+<meta name="rating" content="General" />
+<meta name="revisit-after" content="7 days" />
+
+<!-- Schema.org markup for search engines -->
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "tzst",
+    "description": "A Python library for creating and extracting tar.zst archives with high performance and comprehensive features",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Cross-platform",
+    "programmingLanguage": "Python",
+    "license": "https://opensource.org/licenses/BSD-3-Clause",
+    "url": "https://tzst.xi-xu.me/",
+    "downloadUrl": "https://pypi.org/project/tzst/",
+    "codeRepository": "https://github.com/xixu-me/tzst",
+    "softwareVersion": "1.2.8",
+    "author": {
+      "@type": "Person",
+      "name": "Xi Xu",
+      "url": "https://xi-xu.me"
+    },
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "5",
+      "reviewCount": "1"
+    },
+    "keywords": "tzst, tar, zstandard, compression, archive, python, extraction, backup"
+  }
+</script>
+
+<!-- Breadcrumb Schema -->
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://tzst.xi-xu.me/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Examples",
+        "item": "https://tzst.xi-xu.me/examples.html"
+      }
+    ]
+  }
+</script>
+
+
+<!-- Article/TechArticle Schema for documentation pages -->
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Examples",
+    "description": "",
+    "author": {
+      "@type": "Person",
+      "name": "Xi Xu",
+      "url": "https://xi-xu.me"
+    },
+    "publisher": {
+      "@type": "Person",
+      "name": "Xi Xu"
+    },
+    "datePublished": "2025-01-01",
+    "dateModified": "2025-01-12",
+    "url": "https://tzst.xi-xu.me/examples.html",
+    "inLanguage": "en-US",
+    "about": {
+      "@type": "SoftwareApplication",
+      "name": "tzst"
+    }
+  }
+</script>
+
+
+<!-- FAQ Schema for pages with common questions -->
+
+
+<!-- HowTo Schema for examples page -->
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to use tzst for archive management",
+    "description": "Comprehensive examples of using tzst for creating, extracting, and managing tar.zst archives",
+    "image": "https://tzst.xi-xu.me/_static/tzst-logo.png",
+    "step": [
+      {
+        "@type": "HowToStep",
+        "name": "Create an archive",
+        "text": "Use create_archive() to create a new tzst archive with your files and directories",
+        "url": "https://tzst.xi-xu.me/examples.html#basic-operations"
+      },
+      {
+        "@type": "HowToStep",
+        "name": "Extract an archive",
+        "text": "Use extract_archive() to safely extract files from a tzst archive with security filters",
+        "url": "https://tzst.xi-xu.me/examples.html#flexible-extraction"
+      },
+      {
+        "@type": "HowToStep",
+        "name": "List archive contents",
+        "text": "Use list_archive() to view the contents of an archive without extracting",
+        "url": "https://tzst.xi-xu.me/examples.html#basic-operations"
+      },
+      {
+        "@type": "HowToStep",
+        "name": "Test archive integrity",
+        "text": "Use test_archive() to verify the integrity of your archive files",
+        "url": "https://tzst.xi-xu.me/examples.html#basic-operations"
+      }
+    ]
+  }
+</script>
+
+
+<!-- Canonical URL for better SEO -->
+
+<link rel="canonical" href="https://tzst.xi-xu.me/examples.html" />
+
+
+<!-- Preconnect to external domains for performance -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" />
+<link rel="dns-prefetch" href="https://pypi.org" />
+<link rel="dns-prefetch" href="https://github.com" />
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            tzst
+              <img src="_static/tzst-logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="performance.html">Performance Guide</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#table-of-contents">Table of Contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#basic-operations">Basic Operations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#creating-your-first-archive">Creating Your First Archive</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#command-line-equivalent">Command Line Equivalent</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#basic-extraction">Basic Extraction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#listing-archive-contents">Listing Archive Contents</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#command-line-usage">Command Line Usage</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#archive-creation-commands">Archive Creation Commands</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#extraction-commands">Extraction Commands</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#archive-inspection-commands">Archive Inspection Commands</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#advanced-archive-creation">Advanced Archive Creation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#working-with-the-tzstarchive-class">Working with the TzstArchive Class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#conditional-file-addition">Conditional File Addition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#atomic-archive-creation">Atomic Archive Creation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#flexible-extraction">Flexible Extraction</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#extracting-with-different-structures">Extracting with Different Structures</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#selective-extraction">Selective Extraction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#custom-extraction-logic">Custom Extraction Logic</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#security-and-filtering">Security and Filtering</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#safe-extraction-practices">Safe Extraction Practices</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#custom-security-filter">Custom Security Filter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#handling-file-conflicts">Handling File Conflicts</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#custom-conflict-resolution">Custom Conflict Resolution</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#performance-optimization">Performance Optimization</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#streaming-for-large-archives">Streaming for Large Archives</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#compression-level-optimization">Compression Level Optimization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#parallel-processing">Parallel Processing</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#error-handling">Error Handling</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#comprehensive-error-handling">Comprehensive Error Handling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#validation-and-recovery">Validation and Recovery</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#real-world-scenarios">Real-World Scenarios</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#automated-backup-system">Automated Backup System</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#log-file-archiver">Log File Archiver</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#data-migration-tool">Data Migration Tool</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#integration-examples">Integration Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#django-management-command">Django Management Command</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#flask-application-integration">Flask Application Integration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#jupyter-notebook-integration">Jupyter Notebook Integration</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/index.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="development.html">Development Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="genindex.html">Index</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">tzst</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Examples</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/xixu-me/tzst/blob/main/docs/examples.md" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="examples">
+<h1>Examples<a class="headerlink" href="#examples" title="Link to this heading"></a></h1>
+<p>This section provides comprehensive examples of using tzst for various scenarios and use cases.</p>
+<section id="table-of-contents">
+<h2>Table of Contents<a class="headerlink" href="#table-of-contents" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="#basic-operations"><span class="std std-ref">Basic Operations</span></a></p></li>
+<li><p><a class="reference internal" href="#advanced-archive-creation"><span class="std std-ref">Advanced Archive Creation</span></a></p></li>
+<li><p><a class="reference internal" href="#flexible-extraction"><span class="std std-ref">Flexible Extraction</span></a></p></li>
+<li><p><a class="reference internal" href="#security-and-filtering"><span class="std std-ref">Security and Filtering</span></a></p></li>
+<li><p><a class="reference internal" href="#performance-optimization"><span class="std std-ref">Performance Optimization</span></a></p></li>
+<li><p><a class="reference internal" href="#error-handling"><span class="std std-ref">Error Handling</span></a></p></li>
+<li><p><a class="reference internal" href="#real-world-scenarios"><span class="std std-ref">Real-World Scenarios</span></a></p></li>
+<li><p><a class="reference internal" href="#integration-examples"><span class="std std-ref">Integration Examples</span></a></p></li>
+</ul>
+</section>
+<section id="basic-operations">
+<span id="id1"></span><h2>Basic Operations<a class="headerlink" href="#basic-operations" title="Link to this heading"></a></h2>
+<section id="creating-your-first-archive">
+<span id="basic-archive-operations"></span><h3>Creating Your First Archive<a class="headerlink" href="#creating-your-first-archive" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tzst</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_archive</span>
+
+<span class="c1"># Simple archive creation</span>
+<span class="n">files_to_archive</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;document.pdf&quot;</span><span class="p">,</span> <span class="s2">&quot;photos/&quot;</span><span class="p">,</span> <span class="s2">&quot;config.json&quot;</span><span class="p">]</span>
+<span class="n">create_archive</span><span class="p">(</span><span class="s2">&quot;my-archive.tzst&quot;</span><span class="p">,</span> <span class="n">files_to_archive</span><span class="p">)</span>
+
+<span class="c1"># With custom compression level</span>
+<span class="n">create_archive</span><span class="p">(</span><span class="s2">&quot;high-compression.tzst&quot;</span><span class="p">,</span> <span class="n">files_to_archive</span><span class="p">,</span> <span class="n">compression_level</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="command-line-equivalent">
+<h3>Command Line Equivalent<a class="headerlink" href="#command-line-equivalent" title="Link to this heading"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create archive</span>
+tzst<span class="w"> </span>a<span class="w"> </span>my-archive.tzst<span class="w"> </span>document.pdf<span class="w"> </span>photos/<span class="w"> </span>config.json
+
+<span class="c1"># With high compression</span>
+tzst<span class="w"> </span>a<span class="w"> </span>high-compression.tzst<span class="w"> </span>document.pdf<span class="w"> </span>photos/<span class="w"> </span>config.json<span class="w"> </span>-l<span class="w"> </span><span class="m">9</span>
+</pre></div>
+</div>
+</section>
+<section id="basic-extraction">
+<h3>Basic Extraction<a class="headerlink" href="#basic-extraction" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tzst</span><span class="w"> </span><span class="kn">import</span> <span class="n">extract_archive</span>
+
+<span class="c1"># Extract to current directory</span>
+<span class="n">extract_archive</span><span class="p">(</span><span class="s2">&quot;my-archive.tzst&quot;</span><span class="p">)</span>
+
+<span class="c1"># Extract to specific directory</span>
+<span class="n">extract_archive</span><span class="p">(</span><span class="s2">&quot;my-archive.tzst&quot;</span><span class="p">,</span> <span class="s2">&quot;extracted/&quot;</span><span class="p">)</span>
+
+<span class="c1"># Extract specific files only</span>
+<span class="n">extract_archive</span><span class="p">(</span><span class="s2">&quot;my-archive.tzst&quot;</span><span class="p">,</span> <span class="s2">&quot;output/&quot;</span><span class="p">,</span> <span class="n">members</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;document.pdf&quot;</span><span class="p">,</span> <span class="s2">&quot;config.json&quot;</span><span class="p">])</span>
+
+<span class="c1"># Extract with conflict resolution</span>
+<span class="n">extract_archive</span><span class="p">(</span><span class="s2">&quot;my-archive.tzst&quot;</span><span class="p">,</span> <span class="s2">&quot;output/&quot;</span><span class="p">,</span> <span class="n">conflict_resolution</span><span class="o">=</span><span class="s2">&quot;skip&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="listing-archive-contents">
+<h3>Listing Archive Contents<a class="headerlink" href="#listing-archive-contents" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tzst</span><span class="w"> </span><span class="kn">import</span> <span class="n">list_archive</span>
+
+<span class="c1"># Simple listing</span>
+<span class="n">contents</span> <span class="o">=</span> <span class="n">list_archive</span><span class="p">(</span><span class="s2">&quot;my-archive.tzst&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">contents</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">item</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">item</span><span class="p">[</span><span class="s1">&#39;size&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> bytes)&quot;</span><span class="p">)</span>
+
+<span class="c1"># Detailed listing with timestamps and permissions</span>
+<span class="n">contents</span> <span class="o">=</span> <span class="n">list_archive</span><span class="p">(</span><span class="s2">&quot;my-archive.tzst&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">contents</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">item</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">30</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">item</span><span class="p">[</span><span class="s1">&#39;size&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">&gt;10</span><span class="si">}</span><span class="s2"> bytes  </span><span class="si">{</span><span class="n">item</span><span class="p">[</span><span class="s1">&#39;mtime&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="command-line-usage">
+<h2>Command Line Usage<a class="headerlink" href="#command-line-usage" title="Link to this heading"></a></h2>
+<blockquote>
+<div><p><strong>Note</strong>: Download the <a class="reference external" href="https://github.com/xixu-me/tzst/releases">standalone binary</a> for the best performance and no Python dependency. Alternatively, use <code class="docutils literal notranslate"><span class="pre">uvx</span> <span class="pre">tzst</span></code> for running without installation. See <a class="reference external" href="https://docs.astral.sh/uv/">uv documentation</a> for details.</p>
+</div></blockquote>
+<section id="archive-creation-commands">
+<h3>Archive Creation Commands<a class="headerlink" href="#archive-creation-commands" title="Link to this heading"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Basic archive creation</span>
+tzst<span class="w"> </span>a<span class="w"> </span>backup.tzst<span class="w"> </span>documents/<span class="w"> </span>photos/
+<span class="c1"># Or with uvx (no installation needed)</span>
+uvx<span class="w"> </span>tzst<span class="w"> </span>a<span class="w"> </span>backup.tzst<span class="w"> </span>documents/<span class="w"> </span>photos/
+
+<span class="c1"># Create with specific compression level</span>
+tzst<span class="w"> </span>a<span class="w"> </span>backup.tzst<span class="w"> </span>documents/<span class="w"> </span>photos/<span class="w"> </span>-l<span class="w"> </span><span class="m">6</span>
+uvx<span class="w"> </span>tzst<span class="w"> </span>a<span class="w"> </span>backup.tzst<span class="w"> </span>documents/<span class="w"> </span>photos/<span class="w"> </span>-l<span class="w"> </span><span class="m">6</span>
+
+<span class="c1"># Create from multiple sources</span>
+tzst<span class="w"> </span>a<span class="w"> </span>complete-backup.tzst<span class="w"> </span>/home/user/documents<span class="w"> </span>/home/user/photos<span class="w"> </span>/etc/config
+
+<span class="c1"># Create with verbose output</span>
+tzst<span class="w"> </span>a<span class="w"> </span>backup.tzst<span class="w"> </span>documents/<span class="w"> </span>photos/<span class="w"> </span>-v
+</pre></div>
+</div>
+</section>
+<section id="extraction-commands">
+<h3>Extraction Commands<a class="headerlink" href="#extraction-commands" title="Link to this heading"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Extract to current directory</span>
+tzst<span class="w"> </span>x<span class="w"> </span>backup.tzst
+<span class="c1"># Or with uvx</span>
+uvx<span class="w"> </span>tzst<span class="w"> </span>x<span class="w"> </span>backup.tzst
+
+<span class="c1"># Extract to specific directory</span>
+tzst<span class="w"> </span>x<span class="w"> </span>backup.tzst<span class="w"> </span>--output<span class="w"> </span>/restore/
+
+<span class="c1"># Extract specific files only</span>
+tzst<span class="w"> </span>x<span class="w"> </span>backup.tzst<span class="w"> </span>documents/report.pdf<span class="w"> </span>photos/vacation.jpg
+
+<span class="c1"># Extract with conflict resolution</span>
+tzst<span class="w"> </span>x<span class="w"> </span>backup.tzst<span class="w"> </span>--conflict-resolution<span class="w"> </span>skip
+
+<span class="c1"># Extract flattening directory structure</span>
+tzst<span class="w"> </span>e<span class="w"> </span>backup.tzst<span class="w"> </span>--output<span class="w"> </span>flat-restore/
+</pre></div>
+</div>
+</section>
+<section id="archive-inspection-commands">
+<h3>Archive Inspection Commands<a class="headerlink" href="#archive-inspection-commands" title="Link to this heading"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># List archive contents</span>
+tzst<span class="w"> </span>l<span class="w"> </span>backup.tzst
+<span class="c1"># Or with uvx</span>
+uvx<span class="w"> </span>tzst<span class="w"> </span>l<span class="w"> </span>backup.tzst
+
+<span class="c1"># List with detailed information</span>
+tzst<span class="w"> </span>l<span class="w"> </span>backup.tzst<span class="w"> </span>--verbose
+
+<span class="c1"># Test archive integrity</span>
+tzst<span class="w"> </span>t<span class="w"> </span>backup.tzst
+
+<span class="c1"># Stream large archives efficiently</span>
+tzst<span class="w"> </span>l<span class="w"> </span>huge-archive.tzst<span class="w"> </span>--streaming
+</pre></div>
+</div>
+</section>
+</section>
+<section id="advanced-archive-creation">
+<span id="id2"></span><h2>Advanced Archive Creation<a class="headerlink" href="#advanced-archive-creation" title="Link to this heading"></a></h2>
+<section id="working-with-the-tzstarchive-class">
+<h3>Working with the TzstArchive Class<a class="headerlink" href="#working-with-the-tzstarchive-class" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tzst</span><span class="w"> </span><span class="kn">import</span> <span class="n">TzstArchive</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="c1"># Create archive with fine-grained control</span>
+<span class="k">with</span> <span class="n">TzstArchive</span><span class="p">(</span><span class="s2">&quot;project-backup.tzst&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">compression_level</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span> <span class="k">as</span> <span class="n">archive</span><span class="p">:</span>
+    <span class="c1"># Add individual files</span>
+    <span class="n">archive</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">&quot;README.md&quot;</span><span class="p">)</span>
+    <span class="n">archive</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">&quot;LICENSE&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Add directories recursively</span>
+    <span class="n">archive</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">&quot;src/&quot;</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">archive</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">&quot;tests/&quot;</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    
+    <span class="c1"># Add with custom archive names</span>
+    <span class="n">archive</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">&quot;config/production.yaml&quot;</span><span class="p">,</span> <span class="n">arcname</span><span class="o">=</span><span class="s2">&quot;config.yaml&quot;</span><span class="p">)</span>
+    <span class="n">archive</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">&quot;/tmp/build-info.json&quot;</span><span class="p">,</span> <span class="n">arcname</span><span class="o">=</span><span class="s2">&quot;build-info.json&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="conditional-file-addition">
+<h3>Conditional File Addition<a class="headerlink" href="#conditional-file-addition" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tzst</span><span class="w"> </span><span class="kn">import</span> <span class="n">TzstArchive</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">backup_project</span><span class="p">(</span><span class="n">project_path</span><span class="p">,</span> <span class="n">output_archive</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a project backup excluding certain files.&quot;&quot;&quot;</span>
+    <span class="n">project_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">project_path</span><span class="p">)</span>
+    
+    <span class="c1"># Define exclusion patterns</span>
+    <span class="n">exclude_patterns</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;*.pyc&quot;</span><span class="p">,</span> <span class="s2">&quot;*.pyo&quot;</span><span class="p">,</span> <span class="s2">&quot;__pycache__&quot;</span><span class="p">,</span> 
+        <span class="s2">&quot;.git&quot;</span><span class="p">,</span> <span class="s2">&quot;.svn&quot;</span><span class="p">,</span> <span class="s2">&quot;node_modules&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;*.tmp&quot;</span><span class="p">,</span> <span class="s2">&quot;*.log&quot;</span><span class="p">,</span> <span class="s2">&quot;.DS_Store&quot;</span>
+    <span class="p">}</span>
+    
+    <span class="k">with</span> <span class="n">TzstArchive</span><span class="p">(</span><span class="n">output_archive</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">compression_level</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span> <span class="k">as</span> <span class="n">archive</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">project_path</span><span class="o">.</span><span class="n">rglob</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">):</span>
+            <span class="c1"># Skip excluded patterns</span>
+            <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span> <span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="n">exclude_patterns</span><span class="p">):</span>
+                <span class="k">continue</span>
+                
+            <span class="c1"># Skip if it&#39;s a directory (will be created automatically)</span>
+            <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">is_dir</span><span class="p">():</span>
+                <span class="k">continue</span>
+                
+            <span class="c1"># Add file with relative path</span>
+            <span class="n">rel_path</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">relative_to</span><span class="p">(</span><span class="n">project_path</span><span class="p">)</span>
+            <span class="n">archive</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">item</span><span class="p">),</span> <span class="n">arcname</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">rel_path</span><span class="p">))</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Added: </span><span class="si">{</span><span class="n">rel_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Usage</span>
+<span class="n">backup_project</span><span class="p">(</span><span class="s2">&quot;/home/user/myproject&quot;</span><span class="p">,</span> <span class="s2">&quot;project-clean.tzst&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="atomic-archive-creation">
+<h3>Atomic Archive Creation<a class="headerlink" href="#atomic-archive-creation" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tzst</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_archive</span>
+
+<span class="c1"># Safe atomic creation (default behavior)</span>
+<span class="c1"># Creates in temporary file first, then moves to final location</span>
+<span class="n">create_archive</span><span class="p">(</span><span class="s2">&quot;important-data.tzst&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;critical/&quot;</span><span class="p">],</span> <span class="n">use_temp_file</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Direct creation (faster but not atomic)</span>
+<span class="n">create_archive</span><span class="p">(</span><span class="s2">&quot;temp-data.tzst&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;temp/&quot;</span><span class="p">],</span> <span class="n">use_temp_file</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="flexible-extraction">
+<span id="id3"></span><h2>Flexible Extraction<a class="headerlink" href="#flexible-extraction" title="Link to this heading"></a></h2>
+<section id="extracting-with-different-structures">
+<h3>Extracting with Different Structures<a class="headerlink" href="#extracting-with-different-structures" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tzst</span><span class="w"> </span><span class="kn">import</span> <span class="n">extract_archive</span><span class="p">,</span> <span class="n">TzstArchive</span>
+
+<span class="c1"># Standard extraction (preserves directory structure)</span>
+<span class="n">extract_archive</span><span class="p">(</span><span class="s2">&quot;archive.tzst&quot;</span><span class="p">,</span> <span class="s2">&quot;output/&quot;</span><span class="p">)</span>
+
+<span class="c1"># Flatten all files to single directory</span>
+<span class="n">extract_archive</span><span class="p">(</span><span class="s2">&quot;archive.tzst&quot;</span><span class="p">,</span> <span class="s2">&quot;flat-output/&quot;</span><span class="p">,</span> <span class="n">flatten</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Extract with streaming for large archives</span>
+<span class="n">extract_archive</span><span class="p">(</span><span class="s2">&quot;huge-archive.tzst&quot;</span><span class="p">,</span> <span class="s2">&quot;output/&quot;</span><span class="p">,</span> <span class="n">streaming</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="selective-extraction">
+<h3>Selective Extraction<a class="headerlink" href="#selective-extraction" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tzst</span><span class="w"> </span><span class="kn">import</span> <span class="n">TzstArchive</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">extract_by_extension</span><span class="p">(</span><span class="n">archive_path</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">,</span> <span class="n">extensions</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract only files with specific extensions.&quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="n">TzstArchive</span><span class="p">(</span><span class="n">archive_path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">archive</span><span class="p">:</span>
+        <span class="n">members</span> <span class="o">=</span> <span class="n">archive</span><span class="o">.</span><span class="n">getmembers</span><span class="p">()</span>
+        
+        <span class="c1"># Filter members by extension</span>
+        <span class="n">filtered_members</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">member</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">member</span> <span class="ow">in</span> <span class="n">members</span> 
+            <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">member</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="n">ext</span><span class="p">)</span> <span class="k">for</span> <span class="n">ext</span> <span class="ow">in</span> <span class="n">extensions</span><span class="p">)</span>
+        <span class="p">]</span>
+        
+        <span class="k">if</span> <span class="n">filtered_members</span><span class="p">:</span>
+            <span class="n">archive</span><span class="o">.</span><span class="n">extractall</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">members</span><span class="o">=</span><span class="n">filtered_members</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Extracted </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">filtered_members</span><span class="p">)</span><span class="si">}</span><span class="s2"> files&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No matching files found&quot;</span><span class="p">)</span>
+
+<span class="c1"># Extract only images</span>
+<span class="n">extract_by_extension</span><span class="p">(</span><span class="s2">&quot;photos.tzst&quot;</span><span class="p">,</span> <span class="s2">&quot;images/&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;.jpg&quot;</span><span class="p">,</span> <span class="s2">&quot;.png&quot;</span><span class="p">,</span> <span class="s2">&quot;.gif&quot;</span><span class="p">])</span>
+
+<span class="c1"># Extract only documents</span>
+<span class="n">extract_by_extension</span><span class="p">(</span><span class="s2">&quot;backup.tzst&quot;</span><span class="p">,</span> <span class="s2">&quot;docs/&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;.pdf&quot;</span><span class="p">,</span> <span class="s2">&quot;.docx&quot;</span><span class="p">,</span> <span class="s2">&quot;.txt&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</section>
+<section id="custom-extraction-logic">
+<h3>Custom Extraction Logic<a class="headerlink" href="#custom-extraction-logic" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tzst</span><span class="w"> </span><span class="kn">import</span> <span class="n">TzstArchive</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">extract_large_files_only</span><span class="p">(</span><span class="n">archive_path</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">,</span> <span class="n">min_size_mb</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract only files larger than specified size.&quot;&quot;&quot;</span>
+    <span class="n">min_size_bytes</span> <span class="o">=</span> <span class="n">min_size_mb</span> <span class="o">*</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span>
+    
+    <span class="k">with</span> <span class="n">TzstArchive</span><span class="p">(</span><span class="n">archive_path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">archive</span><span class="p">:</span>
+        <span class="n">large_files</span> <span class="o">=</span> <span class="p">[]</span>
+        
+        <span class="k">for</span> <span class="n">member</span> <span class="ow">in</span> <span class="n">archive</span><span class="o">.</span><span class="n">getmembers</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">member</span><span class="o">.</span><span class="n">isfile</span><span class="p">()</span> <span class="ow">and</span> <span class="n">member</span><span class="o">.</span><span class="n">size</span> <span class="o">&gt;</span> <span class="n">min_size_bytes</span><span class="p">:</span>
+                <span class="n">large_files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">member</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+                <span class="n">size_mb</span> <span class="o">=</span> <span class="n">member</span><span class="o">.</span><span class="n">size</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Will extract: </span><span class="si">{</span><span class="n">member</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">size_mb</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> MB)&quot;</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">large_files</span><span class="p">:</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">large_files</span><span class="p">:</span>
+                <span class="n">archive</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Extracted </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">large_files</span><span class="p">)</span><span class="si">}</span><span class="s2"> large files&quot;</span><span class="p">)</span>
+
+<span class="n">extract_large_files_only</span><span class="p">(</span><span class="s2">&quot;mixed-content.tzst&quot;</span><span class="p">,</span> <span class="s2">&quot;large-files/&quot;</span><span class="p">,</span> <span class="n">min_size_mb</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="security-and-filtering">
+<span id="id4"></span><h2>Security and Filtering<a class="headerlink" href="#security-and-filtering" title="Link to this heading"></a></h2>
+<section id="safe-extraction-practices">
+<h3>Safe Extraction Practices<a class="headerlink" href="#safe-extraction-practices" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tzst</span><span class="w"> </span><span class="kn">import</span> <span class="n">extract_archive</span>
+
+<span class="c1"># Always use secure filters (default behavior)</span>
+<span class="n">extract_archive</span><span class="p">(</span><span class="s2">&quot;untrusted.tzst&quot;</span><span class="p">,</span> <span class="s2">&quot;safe-output/&quot;</span><span class="p">,</span> <span class="nb">filter</span><span class="o">=</span><span class="s2">&quot;data&quot;</span><span class="p">)</span>
+
+<span class="c1"># For trusted archives with special tar features</span>
+<span class="n">extract_archive</span><span class="p">(</span><span class="s2">&quot;trusted.tzst&quot;</span><span class="p">,</span> <span class="s2">&quot;output/&quot;</span><span class="p">,</span> <span class="nb">filter</span><span class="o">=</span><span class="s2">&quot;tar&quot;</span><span class="p">)</span>
+
+<span class="c1"># Only for completely trusted archives</span>
+<span class="n">extract_archive</span><span class="p">(</span><span class="s2">&quot;internal.tzst&quot;</span><span class="p">,</span> <span class="s2">&quot;output/&quot;</span><span class="p">,</span> <span class="nb">filter</span><span class="o">=</span><span class="s2">&quot;fully_trusted&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="custom-security-filter">
+<h3>Custom Security Filter<a class="headerlink" href="#custom-security-filter" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">tarfile</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tzst</span><span class="w"> </span><span class="kn">import</span> <span class="n">TzstArchive</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">secure_data_filter</span><span class="p">(</span><span class="n">member</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Custom filter that only allows regular files and directories.&quot;&quot;&quot;</span>
+    <span class="c1"># Only allow regular files and directories</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">member</span><span class="o">.</span><span class="n">isfile</span><span class="p">()</span> <span class="ow">or</span> <span class="n">member</span><span class="o">.</span><span class="n">isdir</span><span class="p">()):</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    
+    <span class="c1"># Prevent path traversal</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isabs</span><span class="p">(</span><span class="n">member</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;..&quot;</span> <span class="ow">in</span> <span class="n">member</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    
+    <span class="c1"># Limit file size (100MB max)</span>
+    <span class="k">if</span> <span class="n">member</span><span class="o">.</span><span class="n">isfile</span><span class="p">()</span> <span class="ow">and</span> <span class="n">member</span><span class="o">.</span><span class="n">size</span> <span class="o">&gt;</span> <span class="mi">100</span> <span class="o">*</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    
+    <span class="k">return</span> <span class="n">member</span>
+
+<span class="c1"># Use custom filter</span>
+<span class="k">with</span> <span class="n">TzstArchive</span><span class="p">(</span><span class="s2">&quot;archive.tzst&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">archive</span><span class="p">:</span>
+    <span class="n">archive</span><span class="o">.</span><span class="n">extractall</span><span class="p">(</span><span class="s2">&quot;secure-output/&quot;</span><span class="p">,</span> <span class="nb">filter</span><span class="o">=</span><span class="n">secure_data_filter</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="handling-file-conflicts">
+<h3>Handling File Conflicts<a class="headerlink" href="#handling-file-conflicts" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tzst</span><span class="w"> </span><span class="kn">import</span> <span class="n">extract_archive</span><span class="p">,</span> <span class="n">ConflictResolution</span>
+
+<span class="c1"># Skip existing files</span>
+<span class="n">extract_archive</span><span class="p">(</span><span class="s2">&quot;archive.tzst&quot;</span><span class="p">,</span> <span class="s2">&quot;output/&quot;</span><span class="p">,</span> 
+                <span class="n">conflict_resolution</span><span class="o">=</span><span class="n">ConflictResolution</span><span class="o">.</span><span class="n">SKIP_ALL</span><span class="p">)</span>
+
+<span class="c1"># Replace all existing files</span>
+<span class="n">extract_archive</span><span class="p">(</span><span class="s2">&quot;archive.tzst&quot;</span><span class="p">,</span> <span class="s2">&quot;output/&quot;</span><span class="p">,</span> 
+                <span class="n">conflict_resolution</span><span class="o">=</span><span class="n">ConflictResolution</span><span class="o">.</span><span class="n">REPLACE_ALL</span><span class="p">)</span>
+
+<span class="c1"># Auto-rename conflicting files (adds suffix like &quot;_1&quot;, &quot;_2&quot;, etc.)</span>
+<span class="n">extract_archive</span><span class="p">(</span><span class="s2">&quot;archive.tzst&quot;</span><span class="p">,</span> <span class="s2">&quot;output/&quot;</span><span class="p">,</span> 
+                <span class="n">conflict_resolution</span><span class="o">=</span><span class="n">ConflictResolution</span><span class="o">.</span><span class="n">AUTO_RENAME_ALL</span><span class="p">)</span>
+
+<span class="c1"># Interactive resolution (command line only)</span>
+<span class="n">extract_archive</span><span class="p">(</span><span class="s2">&quot;archive.tzst&quot;</span><span class="p">,</span> <span class="s2">&quot;output/&quot;</span><span class="p">,</span> 
+                <span class="n">conflict_resolution</span><span class="o">=</span><span class="n">ConflictResolution</span><span class="o">.</span><span class="n">ASK</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="custom-conflict-resolution">
+<h3>Custom Conflict Resolution<a class="headerlink" href="#custom-conflict-resolution" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tzst</span><span class="w"> </span><span class="kn">import</span> <span class="n">extract_archive</span><span class="p">,</span> <span class="n">ConflictResolution</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">custom_conflict_handler</span><span class="p">(</span><span class="n">target_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ConflictResolution</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Custom logic for handling file conflicts.&quot;&quot;&quot;</span>
+    <span class="c1"># Check file age</span>
+    <span class="k">if</span> <span class="n">target_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+        <span class="n">file_age_days</span> <span class="o">=</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">target_path</span><span class="o">.</span><span class="n">stat</span><span class="p">()</span><span class="o">.</span><span class="n">st_mtime</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">24</span> <span class="o">*</span> <span class="mi">3600</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">file_age_days</span> <span class="o">&gt;</span> <span class="mi">30</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Replacing old file: </span><span class="si">{</span><span class="n">target_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">ConflictResolution</span><span class="o">.</span><span class="n">REPLACE</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Keeping newer file: </span><span class="si">{</span><span class="n">target_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">ConflictResolution</span><span class="o">.</span><span class="n">SKIP</span>
+    
+    <span class="k">return</span> <span class="n">ConflictResolution</span><span class="o">.</span><span class="n">REPLACE</span>
+
+<span class="c1"># Use custom callback</span>
+<span class="n">extract_archive</span><span class="p">(</span><span class="s2">&quot;archive.tzst&quot;</span><span class="p">,</span> <span class="s2">&quot;output/&quot;</span><span class="p">,</span> 
+                <span class="n">conflict_resolution</span><span class="o">=</span><span class="n">ConflictResolution</span><span class="o">.</span><span class="n">ASK</span><span class="p">,</span>
+                <span class="n">interactive_callback</span><span class="o">=</span><span class="n">custom_conflict_handler</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="performance-optimization">
+<span id="id5"></span><h2>Performance Optimization<a class="headerlink" href="#performance-optimization" title="Link to this heading"></a></h2>
+<section id="streaming-for-large-archives">
+<h3>Streaming for Large Archives<a class="headerlink" href="#streaming-for-large-archives" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tzst</span><span class="w"> </span><span class="kn">import</span> <span class="n">TzstArchive</span><span class="p">,</span> <span class="n">list_archive</span><span class="p">,</span> <span class="n">test_archive</span>
+
+<span class="c1"># Memory-efficient operations for large archives</span>
+<span class="n">large_archive</span> <span class="o">=</span> <span class="s2">&quot;backup-500gb.tzst&quot;</span>
+
+<span class="c1"># Test integrity with streaming</span>
+<span class="n">is_valid</span> <span class="o">=</span> <span class="n">test_archive</span><span class="p">(</span><span class="n">large_archive</span><span class="p">,</span> <span class="n">streaming</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># List contents with streaming</span>
+<span class="n">contents</span> <span class="o">=</span> <span class="n">list_archive</span><span class="p">(</span><span class="n">large_archive</span><span class="p">,</span> <span class="n">streaming</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Extract with streaming</span>
+<span class="k">with</span> <span class="n">TzstArchive</span><span class="p">(</span><span class="n">large_archive</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">streaming</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">as</span> <span class="n">archive</span><span class="p">:</span>
+    <span class="n">archive</span><span class="o">.</span><span class="n">extractall</span><span class="p">(</span><span class="s2">&quot;restore/&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="compression-level-optimization">
+<h3>Compression Level Optimization<a class="headerlink" href="#compression-level-optimization" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tzst</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_archive</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">benchmark_compression_levels</span><span class="p">(</span><span class="n">files</span><span class="p">,</span> <span class="n">output_prefix</span><span class="o">=</span><span class="s2">&quot;test&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compare different compression levels.&quot;&quot;&quot;</span>
+    <span class="n">levels_to_test</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">22</span><span class="p">]</span>
+    
+    <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">level</span> <span class="ow">in</span> <span class="n">levels_to_test</span><span class="p">:</span>
+        <span class="n">output_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">output_prefix</span><span class="si">}</span><span class="s2">_level_</span><span class="si">{</span><span class="n">level</span><span class="si">}</span><span class="s2">.tzst&quot;</span>
+        
+        <span class="c1"># Measure compression time</span>
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">create_archive</span><span class="p">(</span><span class="n">output_file</span><span class="p">,</span> <span class="n">files</span><span class="p">,</span> <span class="n">compression_level</span><span class="o">=</span><span class="n">level</span><span class="p">)</span>
+        <span class="n">compress_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+        
+        <span class="c1"># Get file size</span>
+        <span class="n">file_size</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output_file</span><span class="p">)</span><span class="o">.</span><span class="n">stat</span><span class="p">()</span><span class="o">.</span><span class="n">st_size</span>
+        
+        <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+            <span class="s1">&#39;level&#39;</span><span class="p">:</span> <span class="n">level</span><span class="p">,</span>
+            <span class="s1">&#39;time&#39;</span><span class="p">:</span> <span class="n">compress_time</span><span class="p">,</span>
+            <span class="s1">&#39;size&#39;</span><span class="p">:</span> <span class="n">file_size</span><span class="p">,</span>
+            <span class="s1">&#39;size_mb&#39;</span><span class="p">:</span> <span class="n">file_size</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">)</span>
+        <span class="p">})</span>
+        
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Level </span><span class="si">{</span><span class="n">level</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">compress_time</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">s, </span><span class="si">{</span><span class="n">file_size</span><span class="o">/</span><span class="mi">1024</span><span class="o">/</span><span class="mi">1024</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> MB&quot;</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">results</span>
+
+<span class="c1"># Test different compression levels</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">benchmark_compression_levels</span><span class="p">([</span><span class="s2">&quot;large-directory/&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</section>
+<section id="parallel-processing">
+<h3>Parallel Processing<a class="headerlink" href="#parallel-processing" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">concurrent.futures</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tzst</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_archive</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">create_archive_batch</span><span class="p">(</span><span class="n">file_groups</span><span class="p">,</span> <span class="n">output_dir</span><span class="o">=</span><span class="s2">&quot;archives/&quot;</span><span class="p">,</span> <span class="n">compression_level</span><span class="o">=</span><span class="mi">6</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create multiple archives in parallel.&quot;&quot;&quot;</span>
+    <span class="n">Path</span><span class="p">(</span><span class="n">output_dir</span><span class="p">)</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_single_archive</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+        <span class="n">group_name</span><span class="p">,</span> <span class="n">files</span> <span class="o">=</span> <span class="n">args</span>
+        <span class="n">output_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output_dir</span><span class="p">)</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">group_name</span><span class="si">}</span><span class="s2">.tzst&quot;</span>
+        <span class="n">create_archive</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="n">files</span><span class="p">,</span> <span class="n">compression_level</span><span class="o">=</span><span class="n">compression_level</span><span class="p">)</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Created </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2">&quot;</span>
+    
+    <span class="c1"># Use ThreadPoolExecutor for I/O-bound operations</span>
+    <span class="k">with</span> <span class="n">concurrent</span><span class="o">.</span><span class="n">futures</span><span class="o">.</span><span class="n">ThreadPoolExecutor</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span> <span class="k">as</span> <span class="n">executor</span><span class="p">:</span>
+        <span class="n">future_to_group</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">create_single_archive</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span> <span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> 
+            <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">file_groups</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+        <span class="p">}</span>
+        
+        <span class="k">for</span> <span class="n">future</span> <span class="ow">in</span> <span class="n">concurrent</span><span class="o">.</span><span class="n">futures</span><span class="o">.</span><span class="n">as_completed</span><span class="p">(</span><span class="n">future_to_group</span><span class="p">):</span>
+            <span class="n">group_name</span> <span class="o">=</span> <span class="n">future_to_group</span><span class="p">[</span><span class="n">future</span><span class="p">]</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">future</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Archive </span><span class="si">{</span><span class="n">group_name</span><span class="si">}</span><span class="s2"> failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Example usage</span>
+<span class="n">file_groups</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;documents&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;docs/&quot;</span><span class="p">,</span> <span class="s2">&quot;papers/&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;projects&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;src/&quot;</span><span class="p">,</span> <span class="s2">&quot;tests/&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;media&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;photos/&quot;</span><span class="p">,</span> <span class="s2">&quot;videos/&quot;</span><span class="p">]</span>
+<span class="p">}</span>
+
+<span class="n">create_archive_batch</span><span class="p">(</span><span class="n">file_groups</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="error-handling">
+<span id="id6"></span><h2>Error Handling<a class="headerlink" href="#error-handling" title="Link to this heading"></a></h2>
+<section id="comprehensive-error-handling">
+<h3>Comprehensive Error Handling<a class="headerlink" href="#comprehensive-error-handling" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tzst</span><span class="w"> </span><span class="kn">import</span> <span class="n">TzstArchive</span><span class="p">,</span> <span class="n">TzstArchiveError</span><span class="p">,</span> <span class="n">TzstDecompressionError</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">safe_archive_operation</span><span class="p">(</span><span class="n">operation</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Wrapper for safe archive operations with logging.&quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">operation</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">TzstDecompressionError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Decompression error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The archive appears to be corrupted or not a valid tzst file.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">except</span> <span class="n">TzstArchiveError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Archive error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Archive operation failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">except</span> <span class="ne">PermissionError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Permission error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Permission denied. Check file/directory permissions.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">except</span> <span class="ne">FileNotFoundError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;File not found: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;File or directory not found: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unexpected error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;An unexpected error occurred: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+<span class="c1"># Example usage</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_backup_safely</span><span class="p">(</span><span class="n">files</span><span class="p">,</span> <span class="n">output_archive</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_operation</span><span class="p">():</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">tzst</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_archive</span>
+        <span class="k">return</span> <span class="n">create_archive</span><span class="p">(</span><span class="n">output_archive</span><span class="p">,</span> <span class="n">files</span><span class="p">)</span>
+    
+    <span class="n">result</span> <span class="o">=</span> <span class="n">safe_archive_operation</span><span class="p">(</span><span class="n">create_operation</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">result</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Backup created successfully: </span><span class="si">{</span><span class="n">output_archive</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Backup creation failed!&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="validation-and-recovery">
+<h3>Validation and Recovery<a class="headerlink" href="#validation-and-recovery" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tzst</span><span class="w"> </span><span class="kn">import</span> <span class="n">test_archive</span><span class="p">,</span> <span class="n">list_archive</span><span class="p">,</span> <span class="n">TzstArchive</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">validate_and_repair_archive</span><span class="p">(</span><span class="n">archive_path</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validate archive and attempt basic recovery.&quot;&quot;&quot;</span>
+    <span class="n">archive_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">archive_path</span><span class="p">)</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Validating </span><span class="si">{</span><span class="n">archive_path</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Test basic integrity</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">test_archive</span><span class="p">(</span><span class="n">archive_path</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Archive integrity test passed&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Integrity test failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Try to list contents</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">contents</span> <span class="o">=</span> <span class="n">list_archive</span><span class="p">(</span><span class="n">archive_path</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Archive contains </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">contents</span><span class="p">)</span><span class="si">}</span><span class="s2"> items&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Try streaming mode if regular mode fails</span>
+        <span class="n">contents_streaming</span> <span class="o">=</span> <span class="n">list_archive</span><span class="p">(</span><span class="n">archive_path</span><span class="p">,</span> <span class="n">streaming</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">contents_streaming</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">contents</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Different results between modes - possible corruption&quot;</span><span class="p">)</span>
+        
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Cannot list contents: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    
+    <span class="c1"># Try partial extraction</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">backup_dir</span> <span class="o">=</span> <span class="n">archive_path</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">archive_path</span><span class="o">.</span><span class="n">stem</span><span class="si">}</span><span class="s2">_recovery&quot;</span>
+        <span class="n">backup_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        
+        <span class="k">with</span> <span class="n">TzstArchive</span><span class="p">(</span><span class="n">archive_path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">archive</span><span class="p">:</span>
+            <span class="n">extracted_count</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">member</span> <span class="ow">in</span> <span class="n">archive</span><span class="o">.</span><span class="n">getmembers</span><span class="p">():</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">member</span><span class="o">.</span><span class="n">isfile</span><span class="p">():</span>
+                        <span class="n">archive</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="n">member</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">backup_dir</span><span class="p">)</span>
+                        <span class="n">extracted_count</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to extract </span><span class="si">{</span><span class="n">member</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Recovered </span><span class="si">{</span><span class="n">extracted_count</span><span class="si">}</span><span class="s2"> files to </span><span class="si">{</span><span class="n">backup_dir</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span>
+        
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Recovery failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+<span class="c1"># Example usage</span>
+<span class="n">validate_and_repair_archive</span><span class="p">(</span><span class="s2">&quot;potentially-corrupted.tzst&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="real-world-scenarios">
+<span id="id7"></span><h2>Real-World Scenarios<a class="headerlink" href="#real-world-scenarios" title="Link to this heading"></a></h2>
+<section id="automated-backup-system">
+<h3>Automated Backup System<a class="headerlink" href="#automated-backup-system" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Daily backup script with rotation and validation.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tzst</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_archive</span><span class="p">,</span> <span class="n">test_archive</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">BackupManager</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source_dirs</span><span class="p">,</span> <span class="n">backup_dir</span><span class="p">,</span> <span class="n">retention_days</span><span class="o">=</span><span class="mi">30</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">source_dirs</span> <span class="o">=</span> <span class="p">[</span><span class="n">Path</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">source_dirs</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">backup_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">backup_dir</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">retention_days</span> <span class="o">=</span> <span class="n">retention_days</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">backup_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_backup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a new backup with timestamp.&quot;&quot;&quot;</span>
+        <span class="n">timestamp</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">_%H%M%S&quot;</span><span class="p">)</span>
+        <span class="n">backup_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;backup_</span><span class="si">{</span><span class="n">timestamp</span><span class="si">}</span><span class="s2">.tzst&quot;</span>
+        <span class="n">backup_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">backup_dir</span> <span class="o">/</span> <span class="n">backup_name</span>
+        
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Creating backup: </span><span class="si">{</span><span class="n">backup_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Collect all existing files</span>
+        <span class="n">files_to_backup</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">source_dir</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">source_dirs</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">source_dir</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+                <span class="n">files_to_backup</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">source_dir</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Warning: Source directory not found: </span><span class="si">{</span><span class="n">source_dir</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">files_to_backup</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No files to backup!&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Create backup with high compression for storage efficiency</span>
+            <span class="n">create_archive</span><span class="p">(</span><span class="n">backup_path</span><span class="p">,</span> <span class="n">files_to_backup</span><span class="p">,</span> <span class="n">compression_level</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
+            
+            <span class="c1"># Validate the backup</span>
+            <span class="k">if</span> <span class="n">test_archive</span><span class="p">(</span><span class="n">backup_path</span><span class="p">):</span>
+                <span class="n">file_size</span> <span class="o">=</span> <span class="n">backup_path</span><span class="o">.</span><span class="n">stat</span><span class="p">()</span><span class="o">.</span><span class="n">st_size</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Backup created and validated: </span><span class="si">{</span><span class="n">file_size</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> MB&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">backup_path</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Backup validation failed!&quot;</span><span class="p">)</span>
+                <span class="n">backup_path</span><span class="o">.</span><span class="n">unlink</span><span class="p">()</span>  <span class="c1"># Remove invalid backup</span>
+                <span class="k">return</span> <span class="kc">None</span>
+                
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Backup failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">cleanup_old_backups</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove backups older than retention period.&quot;&quot;&quot;</span>
+        <span class="n">cutoff_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">retention_days</span><span class="p">)</span>
+        
+        <span class="n">removed_count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">backup_file</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">backup_dir</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;backup_*.tzst&quot;</span><span class="p">):</span>
+            <span class="c1"># Extract timestamp from filename</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">timestamp_str</span> <span class="o">=</span> <span class="n">backup_file</span><span class="o">.</span><span class="n">stem</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">file_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">timestamp_str</span><span class="p">,</span> <span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">_%H%M%S&quot;</span><span class="p">)</span>
+                
+                <span class="k">if</span> <span class="n">file_date</span> <span class="o">&lt;</span> <span class="n">cutoff_date</span><span class="p">:</span>
+                    <span class="n">backup_file</span><span class="o">.</span><span class="n">unlink</span><span class="p">()</span>
+                    <span class="n">removed_count</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Removed old backup: </span><span class="si">{</span><span class="n">backup_file</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    
+            <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">IndexError</span><span class="p">):</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Warning: Could not parse backup date: </span><span class="si">{</span><span class="n">backup_file</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Cleaned up </span><span class="si">{</span><span class="n">removed_count</span><span class="si">}</span><span class="s2"> old backups&quot;</span><span class="p">)</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">run_backup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Run complete backup process.&quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Starting backup process...&quot;</span><span class="p">)</span>
+        
+        <span class="n">backup_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_backup</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">backup_path</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cleanup_old_backups</span><span class="p">()</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Backup process completed successfully!&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Backup process failed!&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+<span class="c1"># Configuration</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="c1"># Customize these paths for your setup</span>
+    <span class="n">BACKUP_SOURCES</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s2">&quot;~/Documents&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;~/Projects&quot;</span><span class="p">,</span> 
+        <span class="s2">&quot;~/Pictures&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;/etc&quot;</span><span class="p">,</span>  <span class="c1"># System configs (Linux/macOS)</span>
+    <span class="p">]</span>
+    
+    <span class="n">BACKUP_DESTINATION</span> <span class="o">=</span> <span class="s2">&quot;~/Backups&quot;</span>
+    <span class="n">RETENTION_DAYS</span> <span class="o">=</span> <span class="mi">30</span>
+    
+    <span class="c1"># Expand user paths</span>
+    <span class="n">sources</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">BACKUP_SOURCES</span><span class="p">]</span>
+    <span class="n">destination</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="n">BACKUP_DESTINATION</span><span class="p">)</span>
+    
+    <span class="c1"># Run backup</span>
+    <span class="n">backup_manager</span> <span class="o">=</span> <span class="n">BackupManager</span><span class="p">(</span><span class="n">sources</span><span class="p">,</span> <span class="n">destination</span><span class="p">,</span> <span class="n">RETENTION_DAYS</span><span class="p">)</span>
+    <span class="n">success</span> <span class="o">=</span> <span class="n">backup_manager</span><span class="o">.</span><span class="n">run_backup</span><span class="p">()</span>
+    
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">0</span> <span class="k">if</span> <span class="n">success</span> <span class="k">else</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="log-file-archiver">
+<h3>Log File Archiver<a class="headerlink" href="#log-file-archiver" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Archive and compress log files by date.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tzst</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_archive</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">archive_logs_by_date</span><span class="p">(</span><span class="n">log_dir</span><span class="p">,</span> <span class="n">archive_dir</span><span class="p">,</span> <span class="n">days_old</span><span class="o">=</span><span class="mi">7</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Archive log files older than specified days.&quot;&quot;&quot;</span>
+    <span class="n">log_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">log_dir</span><span class="p">)</span>
+    <span class="n">archive_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">archive_dir</span><span class="p">)</span>
+    <span class="n">archive_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    
+    <span class="n">cutoff_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="n">days_old</span><span class="p">)</span>
+    
+    <span class="c1"># Group log files by date</span>
+    <span class="n">log_groups</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">log_pattern</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;(\d</span><span class="si">{4}</span><span class="s2">-\d</span><span class="si">{2}</span><span class="s2">-\d</span><span class="si">{2}</span><span class="s2">)&quot;</span><span class="p">)</span>
+    
+    <span class="k">for</span> <span class="n">log_file</span> <span class="ow">in</span> <span class="n">log_dir</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;*.log&quot;</span><span class="p">):</span>
+        <span class="c1"># Try to extract date from filename or modification time</span>
+        <span class="n">date_match</span> <span class="o">=</span> <span class="n">log_pattern</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">log_file</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">date_match</span><span class="p">:</span>
+            <span class="n">file_date_str</span> <span class="o">=</span> <span class="n">date_match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">file_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">file_date_str</span><span class="p">,</span> <span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="c1"># Fall back to modification time</span>
+                <span class="n">file_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">fromtimestamp</span><span class="p">(</span><span class="n">log_file</span><span class="o">.</span><span class="n">stat</span><span class="p">()</span><span class="o">.</span><span class="n">st_mtime</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Use modification time</span>
+            <span class="n">file_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">fromtimestamp</span><span class="p">(</span><span class="n">log_file</span><span class="o">.</span><span class="n">stat</span><span class="p">()</span><span class="o">.</span><span class="n">st_mtime</span><span class="p">)</span>
+        
+        <span class="c1"># Skip recent files</span>
+        <span class="k">if</span> <span class="n">file_date</span> <span class="o">&gt;=</span> <span class="n">cutoff_date</span><span class="p">:</span>
+            <span class="k">continue</span>
+        
+        <span class="c1"># Group by date</span>
+        <span class="n">date_key</span> <span class="o">=</span> <span class="n">file_date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">date_key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">log_groups</span><span class="p">:</span>
+            <span class="n">log_groups</span><span class="p">[</span><span class="n">date_key</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">log_groups</span><span class="p">[</span><span class="n">date_key</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">log_file</span><span class="p">)</span>
+    
+    <span class="c1"># Create archives for each date group</span>
+    <span class="n">archived_files</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">date_key</span><span class="p">,</span> <span class="n">files</span> <span class="ow">in</span> <span class="n">log_groups</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">archive_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;logs_</span><span class="si">{</span><span class="n">date_key</span><span class="si">}</span><span class="s2">.tzst&quot;</span>
+        <span class="n">archive_path</span> <span class="o">=</span> <span class="n">archive_dir</span> <span class="o">/</span> <span class="n">archive_name</span>
+        
+        <span class="c1"># Skip if archive already exists</span>
+        <span class="k">if</span> <span class="n">archive_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Archive already exists: </span><span class="si">{</span><span class="n">archive_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">continue</span>
+        
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Archiving </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">files</span><span class="p">)</span><span class="si">}</span><span class="s2"> log files for </span><span class="si">{</span><span class="n">date_key</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Create archive with maximum compression (logs compress well)</span>
+            <span class="n">create_archive</span><span class="p">(</span><span class="n">archive_path</span><span class="p">,</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">files</span><span class="p">],</span> <span class="n">compression_level</span><span class="o">=</span><span class="mi">22</span><span class="p">)</span>
+            
+            <span class="c1"># Verify archive</span>
+            <span class="kn">from</span><span class="w"> </span><span class="nn">tzst</span><span class="w"> </span><span class="kn">import</span> <span class="n">test_archive</span>
+            <span class="k">if</span> <span class="n">test_archive</span><span class="p">(</span><span class="n">archive_path</span><span class="p">):</span>
+                <span class="c1"># Remove original files after successful archiving</span>
+                <span class="k">for</span> <span class="n">log_file</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
+                    <span class="n">log_file</span><span class="o">.</span><span class="n">unlink</span><span class="p">()</span>
+                    <span class="n">archived_files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">log_file</span><span class="p">)</span>
+                
+                <span class="n">file_size</span> <span class="o">=</span> <span class="n">archive_path</span><span class="o">.</span><span class="n">stat</span><span class="p">()</span><span class="o">.</span><span class="n">st_size</span> <span class="o">/</span> <span class="mi">1024</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Created </span><span class="si">{</span><span class="n">archive_name</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">file_size</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> KB)&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Archive validation failed for </span><span class="si">{</span><span class="n">archive_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">archive_path</span><span class="o">.</span><span class="n">unlink</span><span class="p">()</span>
+        
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to archive logs for </span><span class="si">{</span><span class="n">date_key</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Archived </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">archived_files</span><span class="p">)</span><span class="si">}</span><span class="s2"> log files&quot;</span><span class="p">)</span>
+
+<span class="c1"># Usage</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">archive_logs_by_date</span><span class="p">(</span><span class="s2">&quot;/var/log&quot;</span><span class="p">,</span> <span class="s2">&quot;/var/archives&quot;</span><span class="p">,</span> <span class="n">days_old</span><span class="o">=</span><span class="mi">7</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="data-migration-tool">
+<h3>Data Migration Tool<a class="headerlink" href="#data-migration-tool" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Migrate data between systems using tzst archives.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">hashlib</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tzst</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_archive</span><span class="p">,</span> <span class="n">extract_archive</span><span class="p">,</span> <span class="n">test_archive</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">DataMigrator</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source_dir</span><span class="p">,</span> <span class="n">staging_dir</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">source_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">source_dir</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">staging_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">staging_dir</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">staging_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">calculate_checksum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate SHA256 checksum of a file.&quot;&quot;&quot;</span>
+        <span class="n">sha256_hash</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">()</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="nb">iter</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">4096</span><span class="p">),</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+                <span class="n">sha256_hash</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">sha256_hash</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_migration_package</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">package_name</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a migration package with checksums.&quot;&quot;&quot;</span>
+        <span class="n">package_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">staging_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">package_name</span><span class="si">}</span><span class="s2">.tzst&quot;</span>
+        <span class="n">checksum_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">staging_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">package_name</span><span class="si">}</span><span class="s2">.sha256&quot;</span>
+        
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Creating migration package: </span><span class="si">{</span><span class="n">package_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Create the archive</span>
+        <span class="n">create_archive</span><span class="p">(</span>
+            <span class="n">package_path</span><span class="p">,</span> 
+            <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">source_dir</span><span class="p">)],</span> 
+            <span class="n">compression_level</span><span class="o">=</span><span class="mi">6</span>  <span class="c1"># Balanced for network transfer</span>
+        <span class="p">)</span>
+        
+        <span class="c1"># Verify archive</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">test_archive</span><span class="p">(</span><span class="n">package_path</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Archive validation failed&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Calculate and save checksum</span>
+        <span class="n">checksum</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calculate_checksum</span><span class="p">(</span><span class="n">package_path</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">checksum_file</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">checksum</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">package_path</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="n">package_size</span> <span class="o">=</span> <span class="n">package_path</span><span class="o">.</span><span class="n">stat</span><span class="p">()</span><span class="o">.</span><span class="n">st_size</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">)</span>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Package created: </span><span class="si">{</span><span class="n">package_size</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> MB&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Checksum: </span><span class="si">{</span><span class="n">checksum</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">package_path</span><span class="p">,</span> <span class="n">checksum_file</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">verify_and_extract_package</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">package_path</span><span class="p">,</span> <span class="n">checksum_path</span><span class="p">,</span> <span class="n">destination</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Verify package integrity and extract.&quot;&quot;&quot;</span>
+        <span class="n">package_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">package_path</span><span class="p">)</span>
+        <span class="n">checksum_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">checksum_path</span><span class="p">)</span>
+        <span class="n">destination</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">destination</span><span class="p">)</span>
+        
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Verifying package: </span><span class="si">{</span><span class="n">package_path</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Verify checksum</span>
+        <span class="n">expected_checksum</span> <span class="o">=</span> <span class="n">checksum_path</span><span class="o">.</span><span class="n">read_text</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">actual_checksum</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calculate_checksum</span><span class="p">(</span><span class="n">package_path</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">expected_checksum</span> <span class="o">!=</span> <span class="n">actual_checksum</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Checksum mismatch! Expected: </span><span class="si">{</span><span class="n">expected_checksum</span><span class="si">}</span><span class="s2">, Got: </span><span class="si">{</span><span class="n">actual_checksum</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Checksum verification passed&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Test archive integrity</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">test_archive</span><span class="p">(</span><span class="n">package_path</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Archive integrity check failed&quot;</span><span class="p">)</span>
+        
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Archive integrity verified&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Extract with conflict resolution</span>
+        <span class="n">destination</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">extract_archive</span><span class="p">(</span>
+            <span class="n">package_path</span><span class="p">,</span> 
+            <span class="n">destination</span><span class="p">,</span>
+            <span class="n">conflict_resolution</span><span class="o">=</span><span class="s2">&quot;replace_all&quot;</span>  <span class="c1"># Overwrite for migration</span>
+        <span class="p">)</span>
+        
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Package extracted to: </span><span class="si">{</span><span class="n">destination</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Example usage</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="c1"># Create migration package</span>
+    <span class="n">migrator</span> <span class="o">=</span> <span class="n">DataMigrator</span><span class="p">(</span><span class="s2">&quot;/home/user/important-data&quot;</span><span class="p">,</span> <span class="s2">&quot;/tmp/migration&quot;</span><span class="p">)</span>
+    <span class="n">package_path</span><span class="p">,</span> <span class="n">checksum_path</span> <span class="o">=</span> <span class="n">migrator</span><span class="o">.</span><span class="n">create_migration_package</span><span class="p">(</span><span class="s2">&quot;data-migration-v1&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Simulate transfer and extraction on target system</span>
+    <span class="n">migrator</span><span class="o">.</span><span class="n">verify_and_extract_package</span><span class="p">(</span>
+        <span class="n">package_path</span><span class="p">,</span> 
+        <span class="n">checksum_path</span><span class="p">,</span> 
+        <span class="s2">&quot;/home/user/restored-data&quot;</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="integration-examples">
+<span id="id8"></span><h2>Integration Examples<a class="headerlink" href="#integration-examples" title="Link to this heading"></a></h2>
+<section id="django-management-command">
+<h3>Django Management Command<a class="headerlink" href="#django-management-command" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># management/commands/backup_media.py</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.core.management.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseCommand</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.conf</span><span class="w"> </span><span class="kn">import</span> <span class="n">settings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tzst</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_archive</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Command</span><span class="p">(</span><span class="n">BaseCommand</span><span class="p">):</span>
+    <span class="n">help</span> <span class="o">=</span> <span class="s1">&#39;Create a backup of media files&#39;</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
+        <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+            <span class="s1">&#39;--output-dir&#39;</span><span class="p">,</span>
+            <span class="n">default</span><span class="o">=</span><span class="s1">&#39;/backups&#39;</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Output directory for backup files&#39;</span>
+        <span class="p">)</span>
+        <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+            <span class="s1">&#39;--compression-level&#39;</span><span class="p">,</span>
+            <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
+            <span class="n">default</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Compression level (1-22)&#39;</span>
+        <span class="p">)</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">options</span><span class="p">):</span>
+        <span class="n">media_root</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">MEDIA_ROOT</span>
+        <span class="n">output_dir</span> <span class="o">=</span> <span class="n">options</span><span class="p">[</span><span class="s1">&#39;output_dir&#39;</span><span class="p">]</span>
+        <span class="n">compression_level</span> <span class="o">=</span> <span class="n">options</span><span class="p">[</span><span class="s1">&#39;compression_level&#39;</span><span class="p">]</span>
+        
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">media_root</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">ERROR</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Media directory not found: </span><span class="si">{</span><span class="n">media_root</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="k">return</span>
+        
+        <span class="c1"># Create backup filename with timestamp</span>
+        <span class="n">timestamp</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">_%H%M%S&#39;</span><span class="p">)</span>
+        <span class="n">backup_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;media_backup_</span><span class="si">{</span><span class="n">timestamp</span><span class="si">}</span><span class="s1">.tzst&#39;</span>
+        <span class="n">backup_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">backup_filename</span><span class="p">)</span>
+        
+        <span class="c1"># Ensure output directory exists</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Creating media backup: </span><span class="si">{</span><span class="n">backup_filename</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">create_archive</span><span class="p">(</span><span class="n">backup_path</span><span class="p">,</span> <span class="p">[</span><span class="n">media_root</span><span class="p">],</span> <span class="n">compression_level</span><span class="o">=</span><span class="n">compression_level</span><span class="p">)</span>
+            
+            <span class="c1"># Verify backup</span>
+            <span class="kn">from</span><span class="w"> </span><span class="nn">tzst</span><span class="w"> </span><span class="kn">import</span> <span class="n">test_archive</span>
+            <span class="k">if</span> <span class="n">test_archive</span><span class="p">(</span><span class="n">backup_path</span><span class="p">):</span>
+                <span class="n">file_size</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getsize</span><span class="p">(</span><span class="n">backup_path</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">SUCCESS</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s1">&#39;Backup created successfully: </span><span class="si">{</span><span class="n">backup_filename</span><span class="si">}</span><span class="s1"> (</span><span class="si">{</span><span class="n">file_size</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1"> MB)&#39;</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">ERROR</span><span class="p">(</span><span class="s1">&#39;Backup validation failed!&#39;</span><span class="p">)</span>
+                <span class="p">)</span>
+                
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">ERROR</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Backup failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="flask-application-integration">
+<h3>Flask Application Integration<a class="headerlink" href="#flask-application-integration" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">flask</span><span class="w"> </span><span class="kn">import</span> <span class="n">Flask</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">send_file</span><span class="p">,</span> <span class="n">jsonify</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tzst</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_archive</span><span class="p">,</span> <span class="n">extract_archive</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/api/backup&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_backup</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;API endpoint to create backups.&quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">get_json</span><span class="p">()</span>
+        <span class="n">paths</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;paths&#39;</span><span class="p">,</span> <span class="p">[])</span>
+        <span class="n">compression_level</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;compression_level&#39;</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">paths</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s1">&#39;error&#39;</span><span class="p">:</span> <span class="s1">&#39;No paths specified&#39;</span><span class="p">}),</span> <span class="mi">400</span>
+        
+        <span class="c1"># Create temporary archive</span>
+        <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="n">suffix</span><span class="o">=</span><span class="s1">&#39;.tzst&#39;</span><span class="p">,</span> <span class="n">delete</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">tmp</span><span class="p">:</span>
+            <span class="n">temp_path</span> <span class="o">=</span> <span class="n">tmp</span><span class="o">.</span><span class="n">name</span>
+        
+        <span class="n">create_archive</span><span class="p">(</span><span class="n">temp_path</span><span class="p">,</span> <span class="n">paths</span><span class="p">,</span> <span class="n">compression_level</span><span class="o">=</span><span class="n">compression_level</span><span class="p">)</span>
+        
+        <span class="c1"># Return archive file</span>
+        <span class="k">return</span> <span class="n">send_file</span><span class="p">(</span>
+            <span class="n">temp_path</span><span class="p">,</span>
+            <span class="n">as_attachment</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">download_name</span><span class="o">=</span><span class="s1">&#39;backup.tzst&#39;</span><span class="p">,</span>
+            <span class="n">mimetype</span><span class="o">=</span><span class="s1">&#39;application/octet-stream&#39;</span>
+        <span class="p">)</span>
+        
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s1">&#39;error&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)}),</span> <span class="mi">500</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="c1"># Clean up temporary file</span>
+        <span class="k">if</span> <span class="s1">&#39;temp_path&#39;</span> <span class="ow">in</span> <span class="nb">locals</span><span class="p">()</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">temp_path</span><span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">unlink</span><span class="p">(</span><span class="n">temp_path</span><span class="p">)</span>
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/api/extract&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">extract_files</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;API endpoint to extract archives.&quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s1">&#39;file&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">files</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s1">&#39;error&#39;</span><span class="p">:</span> <span class="s1">&#39;No file uploaded&#39;</span><span class="p">}),</span> <span class="mi">400</span>
+        
+        <span class="n">file</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">files</span><span class="p">[</span><span class="s1">&#39;file&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">file</span><span class="o">.</span><span class="n">filename</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s1">&#39;error&#39;</span><span class="p">:</span> <span class="s1">&#39;No file selected&#39;</span><span class="p">}),</span> <span class="mi">400</span>
+        
+        <span class="c1"># Save uploaded file temporarily</span>
+        <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="n">suffix</span><span class="o">=</span><span class="s1">&#39;.tzst&#39;</span><span class="p">,</span> <span class="n">delete</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">tmp</span><span class="p">:</span>
+            <span class="n">temp_archive</span> <span class="o">=</span> <span class="n">tmp</span><span class="o">.</span><span class="n">name</span>
+            <span class="n">file</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">temp_archive</span><span class="p">)</span>
+        
+        <span class="c1"># Create extraction directory</span>
+        <span class="n">extract_dir</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">mkdtemp</span><span class="p">()</span>
+        
+        <span class="c1"># Extract archive</span>
+        <span class="n">extract_archive</span><span class="p">(</span><span class="n">temp_archive</span><span class="p">,</span> <span class="n">extract_dir</span><span class="p">)</span>
+        
+        <span class="c1"># List extracted files</span>
+        <span class="n">extracted_files</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">root</span><span class="p">,</span> <span class="n">dirs</span><span class="p">,</span> <span class="n">files</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">extract_dir</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
+                <span class="n">rel_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">file</span><span class="p">),</span> <span class="n">extract_dir</span><span class="p">)</span>
+                <span class="n">extracted_files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rel_path</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span>
+            <span class="s1">&#39;success&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s1">&#39;extracted_files&#39;</span><span class="p">:</span> <span class="n">extracted_files</span><span class="p">,</span>
+            <span class="s1">&#39;extract_path&#39;</span><span class="p">:</span> <span class="n">extract_dir</span>
+        <span class="p">})</span>
+        
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s1">&#39;error&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)}),</span> <span class="mi">500</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="c1"># Clean up temporary archive</span>
+        <span class="k">if</span> <span class="s1">&#39;temp_archive&#39;</span> <span class="ow">in</span> <span class="nb">locals</span><span class="p">()</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">temp_archive</span><span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">unlink</span><span class="p">(</span><span class="n">temp_archive</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">debug</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="jupyter-notebook-integration">
+<h3>Jupyter Notebook Integration<a class="headerlink" href="#jupyter-notebook-integration" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Cell 1: Setup</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tzst</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_archive</span><span class="p">,</span> <span class="n">extract_archive</span><span class="p">,</span> <span class="n">list_archive</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="c1"># Cell 2: Create dataset archive</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">archive_datasets</span><span class="p">(</span><span class="n">data_dir</span><span class="o">=</span><span class="s2">&quot;./data&quot;</span><span class="p">,</span> <span class="n">archive_name</span><span class="o">=</span><span class="s2">&quot;datasets.tzst&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Archive all dataset files for sharing.&quot;&quot;&quot;</span>
+    <span class="n">data_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">data_dir</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">data_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Creating sample data directory: </span><span class="si">{</span><span class="n">data_dir</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">data_path</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        
+        <span class="c1"># Create sample datasets</span>
+        <span class="n">sample_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+            <span class="s1">&#39;A&#39;</span><span class="p">:</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span>
+            <span class="s1">&#39;B&#39;</span><span class="p">:</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">200</span><span class="p">),</span>
+            <span class="s1">&#39;C&#39;</span><span class="p">:</span> <span class="nb">range</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">300</span><span class="p">)</span>
+        <span class="p">})</span>
+        
+        <span class="n">sample_data</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">data_path</span> <span class="o">/</span> <span class="s2">&quot;sample.csv&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">sample_data</span><span class="o">.</span><span class="n">to_parquet</span><span class="p">(</span><span class="n">data_path</span> <span class="o">/</span> <span class="s2">&quot;sample.parquet&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Create archive</span>
+    <span class="n">create_archive</span><span class="p">(</span><span class="n">archive_name</span><span class="p">,</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">data_path</span><span class="p">)],</span> <span class="n">compression_level</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
+    
+    <span class="c1"># Show archive contents</span>
+    <span class="n">contents</span> <span class="o">=</span> <span class="n">list_archive</span><span class="p">(</span><span class="n">archive_name</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">contents</span><span class="p">)</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Created archive: </span><span class="si">{</span><span class="n">archive_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">df</span>
+
+<span class="c1"># Execute</span>
+<span class="n">archive_contents</span> <span class="o">=</span> <span class="n">archive_datasets</span><span class="p">()</span>
+<span class="n">display</span><span class="p">(</span><span class="n">archive_contents</span><span class="p">)</span>
+
+<span class="c1"># Cell 3: Analyze archive</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">analyze_archive</span><span class="p">(</span><span class="n">archive_path</span><span class="o">=</span><span class="s2">&quot;datasets.tzst&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Analyze archive contents and compression.&quot;&quot;&quot;</span>
+    <span class="n">contents</span> <span class="o">=</span> <span class="n">list_archive</span><span class="p">(</span><span class="n">archive_path</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">contents</span><span class="p">)</span>
+    
+    <span class="c1"># File type analysis</span>
+    <span class="n">df</span><span class="p">[</span><span class="s1">&#39;extension&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">file_types</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;extension&#39;</span><span class="p">)[</span><span class="s1">&#39;size&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">agg</span><span class="p">([</span><span class="s1">&#39;count&#39;</span><span class="p">,</span> <span class="s1">&#39;sum&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+    
+    <span class="c1"># Visualization</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+    
+    <span class="c1"># File count by type</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">file_types</span><span class="p">[</span><span class="s1">&#39;extension&#39;</span><span class="p">],</span> <span class="n">file_types</span><span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">])</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;File Count by Type&#39;</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;File Extension&#39;</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Count&#39;</span><span class="p">)</span>
+    
+    <span class="c1"># Size by type</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">file_types</span><span class="p">[</span><span class="s1">&#39;extension&#39;</span><span class="p">],</span> <span class="n">file_types</span><span class="p">[</span><span class="s1">&#39;sum&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="mi">1024</span><span class="p">)</span>  <span class="c1"># KB</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Total Size by Type (KB)&#39;</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;File Extension&#39;</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Size (KB)&#39;</span><span class="p">)</span>
+    
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+    
+    <span class="k">return</span> <span class="n">df</span><span class="p">,</span> <span class="n">file_types</span>
+
+<span class="c1"># Execute</span>
+<span class="n">contents_df</span><span class="p">,</span> <span class="n">file_summary</span> <span class="o">=</span> <span class="n">analyze_archive</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;File Summary:&quot;</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">file_summary</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>These examples demonstrate the flexibility and power of tzst for various real-world scenarios. The library’s clean API and robust error handling make it suitable for everything from simple backup scripts to complex enterprise applications.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="performance.html" class="btn btn-neutral float-left" title="Performance Guide" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="api/index.html" class="btn btn-neutral float-right" title="API Reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Xi Xu.</p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,397 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="Complete tzst API reference - Core functions, CLI tools, and exception handling for tar.zst archives" name="description" />
+<meta content="tzst API, Python API documentation, tar.zst API reference, archive API" name="keywords" />
+<meta content="tzst API Reference" name="og:title" />
+<meta content="Complete API reference for tzst - Core functions, CLI tools, and exception handling" name="og:description" />
+<meta content="tzst API Reference" name="twitter:title" />
+<meta content="Complete API reference for tzst - Core functions, CLI tools, and exception handling" name="twitter:description" />
+<meta content="website" name="og:type" />
+<meta content="https://tzst.xi-xu.me/_static/tzst-square-logo.png" name="og:image" />
+<meta content="https://tzst.xi-xu.me/" name="og:url" />
+<meta content="summary_large_image" name="twitter:card" />
+<meta content="https://tzst.xi-xu.me/_static/tzst-square-logo.png" name="twitter:image" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>API Reference &mdash; tzst 1.2.8 Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="canonical" href="https://tzst.xi-xu.me/api/index.html" />
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=143ec3a1"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="search" type="application/opensearchdescription+xml"
+          title="Search within tzst 1.2.8 Documentation"
+          href="../_static/opensearch.xml"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Core API" href="core.html" />
+    <link rel="prev" title="Examples" href="../examples.html" />
+ 
+<!-- Additional SEO and social meta tags -->
+<meta name="application-name" content="tzst" />
+<meta name="generator" content="Sphinx 8.2.3" />
+<meta name="rating" content="General" />
+<meta name="revisit-after" content="7 days" />
+
+<!-- Schema.org markup for search engines -->
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "tzst",
+    "description": "A Python library for creating and extracting tar.zst archives with high performance and comprehensive features",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Cross-platform",
+    "programmingLanguage": "Python",
+    "license": "https://opensource.org/licenses/BSD-3-Clause",
+    "url": "https://tzst.xi-xu.me/",
+    "downloadUrl": "https://pypi.org/project/tzst/",
+    "codeRepository": "https://github.com/xixu-me/tzst",
+    "softwareVersion": "1.2.8",
+    "author": {
+      "@type": "Person",
+      "name": "Xi Xu",
+      "url": "https://xi-xu.me"
+    },
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "5",
+      "reviewCount": "1"
+    },
+    "keywords": "tzst, tar, zstandard, compression, archive, python, extraction, backup"
+  }
+</script>
+
+<!-- Breadcrumb Schema -->
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://tzst.xi-xu.me/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "API Reference",
+        "item": "https://tzst.xi-xu.me/api/index.html"
+      }
+    ]
+  }
+</script>
+
+
+<!-- Article/TechArticle Schema for documentation pages -->
+
+
+<!-- FAQ Schema for pages with common questions -->
+
+
+<!-- HowTo Schema for examples page -->
+
+
+<!-- Canonical URL for better SEO -->
+
+<link rel="canonical" href="https://tzst.xi-xu.me/api/index.html" />
+
+
+<!-- Preconnect to external domains for performance -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" />
+<link rel="dns-prefetch" href="https://pypi.org" />
+<link rel="dns-prefetch" href="https://github.com" />
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            tzst
+              <img src="../_static/tzst-logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../performance.html">Performance Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="core.html">Core API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli.html">CLI API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="exceptions.html">Exceptions API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#main-components">Main Components</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#architecture-overview">Architecture Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#quick-reference">Quick Reference</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#core-classes">Core Classes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#convenience-functions">Convenience Functions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cli-functions">CLI Functions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#exception-classes">Exception Classes</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#key-features">Key Features</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#security-first">Security First</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#high-performance">High Performance</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#developer-friendly">Developer Friendly</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cross-platform">Cross-Platform</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../development.html">Development Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../genindex.html">Index</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">tzst</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">API Reference</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/xixu-me/tzst/blob/main/docs/api/index.md" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="api-reference">
+<h1>API Reference<a class="headerlink" href="#api-reference" title="Link to this heading"></a></h1>
+<p>This section contains the complete API documentation for tzst, providing detailed information about classes, functions, and exceptions.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="core.html">Core API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="core.html#tzstarchive-class">TzstArchive Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core.html#convenience-functions">Convenience Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core.html#enums-and-supporting-classes">Enums and Supporting Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">CLI API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cli.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli.html#main-functions">Main Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli.html#command-handlers">Command Handlers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli.html#utility-functions">Utility Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli.html#interactive-features">Interactive Features</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="exceptions.html">Exceptions API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="exceptions.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="exceptions.html#exception-classes">Exception Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="exceptions.html#error-handling-best-practices">Error Handling Best Practices</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p>The tzst library provides both high-level convenience functions and a comprehensive class-based API for working with <code class="docutils literal notranslate"><span class="pre">.tzst</span></code>/<code class="docutils literal notranslate"><span class="pre">.tar.zst</span></code> archives. The library is designed with security, performance, and ease of use in mind.</p>
+<section id="main-components">
+<h3>Main Components<a class="headerlink" href="#main-components" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong><a class="reference internal" href="core.html"><span class="doc">Core API</span></a></strong>: Core functionality including <code class="docutils literal notranslate"><span class="pre">TzstArchive</span></code> class and convenience functions for archive operations</p></li>
+<li><p><strong><a class="reference internal" href="cli.html"><span class="doc">CLI API</span></a></strong>: Command-line interface functions and utilities for batch operations</p></li>
+<li><p><strong><a class="reference internal" href="exceptions.html"><span class="doc">Exceptions API</span></a></strong>: Custom exception classes for comprehensive error handling and debugging</p></li>
+</ul>
+</section>
+<section id="architecture-overview">
+<h3>Architecture Overview<a class="headerlink" href="#architecture-overview" title="Link to this heading"></a></h3>
+<p>The tzst library follows a layered architecture:</p>
+<ol class="arabic simple">
+<li><p><strong>High-Level API</strong>: Convenience functions for common operations</p></li>
+<li><p><strong>Class-Based API</strong>: <code class="docutils literal notranslate"><span class="pre">TzstArchive</span></code> class for advanced control</p></li>
+<li><p><strong>CLI Interface</strong>: Command-line tools for interactive and scripted use</p></li>
+<li><p><strong>Exception System</strong>: Comprehensive error handling for robust applications</p></li>
+</ol>
+</section>
+<section id="quick-reference">
+<h3>Quick Reference<a class="headerlink" href="#quick-reference" title="Link to this heading"></a></h3>
+<section id="core-classes">
+<h4>Core Classes<a class="headerlink" href="#core-classes" title="Link to this heading"></a></h4>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="core.html#tzst.TzstArchive" title="tzst.TzstArchive"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TzstArchive</span></code></a></p></td>
+<td><p>A class for handling .tzst/.tar.zst archives.</p></td>
+</tr>
+</tbody>
+</table>
+<p>The main class for archive manipulation with context manager support and comprehensive functionality.</p>
+</section>
+<section id="convenience-functions">
+<h4>Convenience Functions<a class="headerlink" href="#convenience-functions" title="Link to this heading"></a></h4>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="core.html#tzst.create_archive" title="tzst.create_archive"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_archive</span></code></a></p></td>
+<td><p>Create a new .tzst archive with atomic file operations.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core.html#tzst.extract_archive" title="tzst.extract_archive"><code class="xref py py-obj docutils literal notranslate"><span class="pre">extract_archive</span></code></a></p></td>
+<td><p>Extract files from a .tzst archive.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core.html#tzst.list_archive" title="tzst.list_archive"><code class="xref py py-obj docutils literal notranslate"><span class="pre">list_archive</span></code></a></p></td>
+<td><p>List contents of a .tzst archive.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core.html#tzst.test_archive" title="tzst.test_archive"><code class="xref py py-obj docutils literal notranslate"><span class="pre">test_archive</span></code></a></p></td>
+<td><p>Test the integrity of a .tzst archive.</p></td>
+</tr>
+</tbody>
+</table>
+<p>High-level functions that provide simple interfaces for common archive operations.</p>
+</section>
+<section id="cli-functions">
+<h4>CLI Functions<a class="headerlink" href="#cli-functions" title="Link to this heading"></a></h4>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="cli.html#tzst.cli.main" title="tzst.cli.main"><code class="xref py py-obj docutils literal notranslate"><span class="pre">main</span></code></a></p></td>
+<td><p>Main entry point for the tzst command-line interface.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="cli.html#tzst.cli.create_parser" title="tzst.cli.create_parser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_parser</span></code></a></p></td>
+<td><p>Create and configure the command-line argument parser.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="cli.html#tzst.cli.print_banner" title="tzst.cli.print_banner"><code class="xref py py-obj docutils literal notranslate"><span class="pre">print_banner</span></code></a></p></td>
+<td><p>Print the version and copyright banner.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="cli.html#tzst.cli.format_size" title="tzst.cli.format_size"><code class="xref py py-obj docutils literal notranslate"><span class="pre">format_size</span></code></a></p></td>
+<td><p>Format file size in human-readable format.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="cli.html#tzst.cli.validate_compression_level" title="tzst.cli.validate_compression_level"><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate_compression_level</span></code></a></p></td>
+<td><p>Validate and return compression level.</p></td>
+</tr>
+</tbody>
+</table>
+<p>Command-line interface utilities for interactive and batch operations.</p>
+</section>
+<section id="exception-classes">
+<h4>Exception Classes<a class="headerlink" href="#exception-classes" title="Link to this heading"></a></h4>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="exceptions.html#tzst.exceptions.TzstError" title="tzst.exceptions.TzstError"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TzstError</span></code></a></p></td>
+<td><p>Base exception for all tzst operations.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="exceptions.html#tzst.exceptions.TzstArchiveError" title="tzst.exceptions.TzstArchiveError"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TzstArchiveError</span></code></a></p></td>
+<td><p>Exception raised when archive operations fail.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="exceptions.html#tzst.exceptions.TzstCompressionError" title="tzst.exceptions.TzstCompressionError"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TzstCompressionError</span></code></a></p></td>
+<td><p>Exception raised when compression operations fail.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="exceptions.html#tzst.exceptions.TzstDecompressionError" title="tzst.exceptions.TzstDecompressionError"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TzstDecompressionError</span></code></a></p></td>
+<td><p>Exception raised when decompression operations fail.</p></td>
+</tr>
+</tbody>
+</table>
+<p>Exception hierarchy for comprehensive error handling and debugging support.</p>
+</section>
+</section>
+</section>
+<section id="key-features">
+<h2>Key Features<a class="headerlink" href="#key-features" title="Link to this heading"></a></h2>
+<section id="security-first">
+<h3>Security First<a class="headerlink" href="#security-first" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Built-in path traversal protection</p></li>
+<li><p>Multiple security filter options</p></li>
+<li><p>Safe extraction by default</p></li>
+</ul>
+</section>
+<section id="high-performance">
+<h3>High Performance<a class="headerlink" href="#high-performance" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Zstandard compression with configurable levels</p></li>
+<li><p>Streaming support for large archives</p></li>
+<li><p>Memory-efficient operations</p></li>
+</ul>
+</section>
+<section id="developer-friendly">
+<h3>Developer Friendly<a class="headerlink" href="#developer-friendly" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Clean, Pythonic API</p></li>
+<li><p>Comprehensive error handling</p></li>
+<li><p>Context manager support</p></li>
+<li><p>Extensive documentation and examples</p></li>
+</ul>
+</section>
+<section id="cross-platform">
+<h3>Cross-Platform<a class="headerlink" href="#cross-platform" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Works on Windows, macOS, and Linux</p></li>
+<li><p>Consistent behavior across platforms</p></li>
+<li><p>Native performance optimizations</p></li>
+</ul>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../examples.html" class="btn btn-neutral float-left" title="Examples" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="core.html" class="btn btn-neutral float-right" title="Core API" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Xi Xu.</p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

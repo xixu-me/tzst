@@ -1,0 +1,659 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="Complete development guide for tzst - Setup, testing, contribution guidelines, and best practices" name="description" />
+<meta content="tzst development, Python development, contributing to tzst, testing guide, documentation" name="keywords" />
+<meta content="tzst Development Guide" name="og:title" />
+<meta content="Complete development guide for tzst - Setup, testing, contribution guidelines, and best practices" name="og:description" />
+<meta content="tzst Development Guide" name="twitter:title" />
+<meta content="Complete development guide for tzst - Setup, testing, contribution guidelines, and best practices" name="twitter:description" />
+<meta content="website" name="og:type" />
+<meta content="https://tzst.xi-xu.me/_static/tzst-square-logo.png" name="og:image" />
+<meta content="https://tzst.xi-xu.me/development.html" name="og:url" />
+<meta content="summary_large_image" name="twitter:card" />
+<meta content="https://tzst.xi-xu.me/_static/tzst-square-logo.png" name="twitter:image" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Development Guide &mdash; tzst 1.2.8 Documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+    <link rel="canonical" href="https://tzst.xi-xu.me/development.html" />
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=143ec3a1"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="search" type="application/opensearchdescription+xml"
+          title="Search within tzst 1.2.8 Documentation"
+          href="_static/opensearch.xml"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Exceptions API" href="api/exceptions.html" />
+ 
+<!-- Additional SEO and social meta tags -->
+<meta name="application-name" content="tzst" />
+<meta name="generator" content="Sphinx 8.2.3" />
+<meta name="rating" content="General" />
+<meta name="revisit-after" content="7 days" />
+
+<!-- Schema.org markup for search engines -->
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "tzst",
+    "description": "A Python library for creating and extracting tar.zst archives with high performance and comprehensive features",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Cross-platform",
+    "programmingLanguage": "Python",
+    "license": "https://opensource.org/licenses/BSD-3-Clause",
+    "url": "https://tzst.xi-xu.me/",
+    "downloadUrl": "https://pypi.org/project/tzst/",
+    "codeRepository": "https://github.com/xixu-me/tzst",
+    "softwareVersion": "1.2.8",
+    "author": {
+      "@type": "Person",
+      "name": "Xi Xu",
+      "url": "https://xi-xu.me"
+    },
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "5",
+      "reviewCount": "1"
+    },
+    "keywords": "tzst, tar, zstandard, compression, archive, python, extraction, backup"
+  }
+</script>
+
+<!-- Breadcrumb Schema -->
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://tzst.xi-xu.me/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Development Guide",
+        "item": "https://tzst.xi-xu.me/development.html"
+      }
+    ]
+  }
+</script>
+
+
+<!-- Article/TechArticle Schema for documentation pages -->
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Development Guide",
+    "description": "",
+    "author": {
+      "@type": "Person",
+      "name": "Xi Xu",
+      "url": "https://xi-xu.me"
+    },
+    "publisher": {
+      "@type": "Person",
+      "name": "Xi Xu"
+    },
+    "datePublished": "2025-01-01",
+    "dateModified": "2025-01-12",
+    "url": "https://tzst.xi-xu.me/development.html",
+    "inLanguage": "en-US",
+    "about": {
+      "@type": "SoftwareApplication",
+      "name": "tzst"
+    }
+  }
+</script>
+
+
+<!-- FAQ Schema for pages with common questions -->
+
+
+<!-- HowTo Schema for examples page -->
+
+
+<!-- Canonical URL for better SEO -->
+
+<link rel="canonical" href="https://tzst.xi-xu.me/development.html" />
+
+
+<!-- Preconnect to external domains for performance -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" />
+<link rel="dns-prefetch" href="https://pypi.org" />
+<link rel="dns-prefetch" href="https://github.com" />
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            tzst
+              <img src="_static/tzst-logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="performance.html">Performance Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/index.html">API Reference</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Development Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#setting-up-development-environment">Setting up Development Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#running-tests">Running Tests</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#basic-test-commands">Basic Test Commands</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#test-structure">Test Structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#writing-tests">Writing Tests</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#code-quality">Code Quality</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#running-code-style-tools">Running Code Style Tools</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#configuration">Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#code-style-guidelines">Code Style Guidelines</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#documentation">Documentation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#building-documentation">Building Documentation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#documentation-structure">Documentation Structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#writing-documentation">Writing Documentation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#project-structure">Project Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#contributing-workflow">Contributing Workflow</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#making-changes">1. Making Changes</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#types-of-contributions">Types of Contributions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#branch-naming">Branch Naming</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#commit-messages">2. Commit Messages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pull-request-process">3. Pull Request Process</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pull-request-guidelines">4. Pull Request Guidelines</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#development-tips">Development Tips</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#performance-considerations">Performance Considerations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#security-considerations">Security Considerations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#compatibility">Compatibility</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#release-process">Release Process</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#getting-help">Getting Help</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#resources">Resources</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#reporting-issues">Reporting Issues</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#suggesting-features">Suggesting Features</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#code-of-conduct">Code of Conduct</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#recognition">Recognition</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="genindex.html">Index</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">tzst</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Development Guide</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/xixu-me/tzst/blob/main/docs/development.md" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="development-guide">
+<h1>Development Guide<a class="headerlink" href="#development-guide" title="Link to this heading"></a></h1>
+<p>This guide provides comprehensive information for developers contributing to or working with the tzst library.</p>
+<section id="setting-up-development-environment">
+<h2>Setting up Development Environment<a class="headerlink" href="#setting-up-development-environment" title="Link to this heading"></a></h2>
+<p>This project uses modern Python packaging standards:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/xixu-me/tzst.git
+<span class="nb">cd</span><span class="w"> </span>tzst
+pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.<span class="o">[</span>dev<span class="o">]</span>
+</pre></div>
+</div>
+<p>The development installation includes all necessary tools:</p>
+<ul class="simple">
+<li><p><strong>pytest</strong> - Testing framework</p></li>
+<li><p><strong>ruff</strong> - Linting and formatting</p></li>
+<li><p><strong>coverage</strong> - Code coverage analysis</p></li>
+<li><p><strong>sphinx</strong> - Documentation generation</p></li>
+</ul>
+</section>
+<section id="running-tests">
+<h2>Running Tests<a class="headerlink" href="#running-tests" title="Link to this heading"></a></h2>
+<section id="basic-test-commands">
+<h3>Basic Test Commands<a class="headerlink" href="#basic-test-commands" title="Link to this heading"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Run all tests</span>
+python<span class="w"> </span>-m<span class="w"> </span>pytest
+
+<span class="c1"># Run tests with coverage</span>
+pytest<span class="w"> </span>--cov<span class="o">=</span>tzst<span class="w"> </span>--cov-report<span class="o">=</span>html
+
+<span class="c1"># Or use the simpler command (coverage settings are in pyproject.toml)</span>
+pytest
+
+<span class="c1"># Run with verbose output</span>
+python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>-v
+
+<span class="c1"># Run specific test file</span>
+python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>tests/test_core.py
+
+<span class="c1"># Run integration tests only</span>
+python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>-m<span class="w"> </span>integration
+</pre></div>
+</div>
+</section>
+<section id="test-structure">
+<h3>Test Structure<a class="headerlink" href="#test-structure" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>Unit tests</strong>: Test individual functions and methods</p></li>
+<li><p><strong>Integration tests</strong>: Test component interactions</p></li>
+<li><p><strong>CLI tests</strong>: Test command-line interface</p></li>
+<li><p><strong>Platform-specific tests</strong>: Test OS-specific functionality</p></li>
+</ul>
+</section>
+<section id="writing-tests">
+<h3>Writing Tests<a class="headerlink" href="#writing-tests" title="Link to this heading"></a></h3>
+<ol class="arabic">
+<li><p><strong>Use descriptive test names:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">test_create_archive_with_compression_level_9</span><span class="p">():</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>Use fixtures for common test data:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">test_extract_archive</span><span class="p">(</span><span class="n">sample_archive_path</span><span class="p">,</span> <span class="n">temp_dir</span><span class="p">):</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>Test edge cases:</strong></p>
+<ul class="simple">
+<li><p>Empty files</p></li>
+<li><p>Large files</p></li>
+<li><p>Invalid inputs</p></li>
+<li><p>Corrupted archives</p></li>
+</ul>
+</li>
+<li><p><strong>Add markers for test categorization:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">integration</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_full_archive_workflow</span><span class="p">():</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+</section>
+<section id="code-quality">
+<h2>Code Quality<a class="headerlink" href="#code-quality" title="Link to this heading"></a></h2>
+<section id="running-code-style-tools">
+<h3>Running Code Style Tools<a class="headerlink" href="#running-code-style-tools" title="Link to this heading"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Check code quality</span>
+ruff<span class="w"> </span>check<span class="w"> </span>src<span class="w"> </span>tests
+
+<span class="c1"># Fix auto-fixable issues</span>
+ruff<span class="w"> </span>check<span class="w"> </span>--fix<span class="w"> </span>src<span class="w"> </span>tests
+
+<span class="c1"># Format code</span>
+ruff<span class="w"> </span>format<span class="w"> </span>src<span class="w"> </span>tests
+
+<span class="c1"># Check formatting without making changes</span>
+ruff<span class="w"> </span>format<span class="w"> </span>--check<span class="w"> </span>src<span class="w"> </span>tests
+</pre></div>
+</div>
+</section>
+<section id="configuration">
+<h3>Configuration<a class="headerlink" href="#configuration" title="Link to this heading"></a></h3>
+<p>Settings are defined in <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code>:</p>
+<ul class="simple">
+<li><p>Line length: 88 characters</p></li>
+<li><p>Target Python version: 3.12+</p></li>
+<li><p>Import sorting with isort</p></li>
+<li><p>Quote style: double quotes</p></li>
+</ul>
+</section>
+<section id="code-style-guidelines">
+<h3>Code Style Guidelines<a class="headerlink" href="#code-style-guidelines" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p><strong>Follow PEP 8</strong> with project-specific modifications</p></li>
+<li><p><strong>Use type hints</strong> for all public APIs</p></li>
+<li><p><strong>Write docstrings</strong> for classes and public methods</p></li>
+<li><p><strong>Keep functions focused</strong> and reasonably sized</p></li>
+<li><p><strong>Use meaningful variable names</strong></p></li>
+<li><p><strong>Add comments</strong> for complex logic</p></li>
+</ol>
+</section>
+</section>
+<section id="documentation">
+<h2>Documentation<a class="headerlink" href="#documentation" title="Link to this heading"></a></h2>
+<section id="building-documentation">
+<h3>Building Documentation<a class="headerlink" href="#building-documentation" title="Link to this heading"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Navigate to docs directory</span>
+<span class="nb">cd</span><span class="w"> </span>docs
+
+<span class="c1"># Install documentation dependencies</span>
+pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+
+<span class="c1"># Build HTML documentation</span>
+make<span class="w"> </span>html
+
+<span class="c1"># On Windows, use:</span>
+make.bat<span class="w"> </span>html
+
+<span class="c1"># View built documentation</span>
+<span class="c1"># Open docs/_build/html/index.html in your browser</span>
+</pre></div>
+</div>
+</section>
+<section id="documentation-structure">
+<h3>Documentation Structure<a class="headerlink" href="#documentation-structure" title="Link to this heading"></a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>docs/
+├── index.md           # Main documentation landing page
+├── quickstart.md      # Getting started guide
+├── performance.md     # Performance guide and comparisons
+├── examples.md        # Usage examples
+├── development.md     # This development guide
+├── api/               # API reference documentation
+│   ├── index.md
+│   ├── core.md
+│   ├── cli.md
+│   └── exceptions.md
+├── conf.py           # Sphinx configuration
+└── requirements.txt  # Documentation dependencies
+</pre></div>
+</div>
+</section>
+<section id="writing-documentation">
+<h3>Writing Documentation<a class="headerlink" href="#writing-documentation" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Use <strong>MyST Markdown</strong> format</p></li>
+<li><p>Include <strong>code examples</strong> for new features</p></li>
+<li><p>Add <strong>cross-references</strong> using proper syntax</p></li>
+<li><p>Test all <strong>code snippets</strong> to ensure they work</p></li>
+</ul>
+</section>
+</section>
+<section id="project-structure">
+<h2>Project Structure<a class="headerlink" href="#project-structure" title="Link to this heading"></a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>tzst/
+├── src/tzst/           # Main package source code
+│   ├── __init__.py     # Package initialization and exports
+│   ├── __main__.py     # CLI entry point
+│   ├── cli.py          # Command-line interface
+│   ├── core.py         # Core archive functionality
+│   └── exceptions.py   # Custom exceptions
+├── tests/              # Test suite
+│   ├── conftest.py     # Pytest configuration and fixtures
+│   ├── test_core.py    # Core functionality tests
+│   ├── test_cli.py     # CLI tests
+│   └── test_*.py       # Additional test modules
+├── docs/               # Documentation source
+├── .github/            # GitHub workflows and templates
+├── pyproject.toml      # Project configuration
+├── README.md           # Project Readme
+├── LICENSE             # BSD 3-Clause License
+└── CONTRIBUTING.md     # Contribution guidelines
+</pre></div>
+</div>
+</section>
+<section id="contributing-workflow">
+<h2>Contributing Workflow<a class="headerlink" href="#contributing-workflow" title="Link to this heading"></a></h2>
+<section id="making-changes">
+<h3>1. Making Changes<a class="headerlink" href="#making-changes" title="Link to this heading"></a></h3>
+<section id="types-of-contributions">
+<h4>Types of Contributions<a class="headerlink" href="#types-of-contributions" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p><strong>Bug fixes</strong>: Fix issues in existing functionality</p></li>
+<li><p><strong>Features</strong>: Add new capabilities to the library</p></li>
+<li><p><strong>Documentation</strong>: Improve or add documentation</p></li>
+<li><p><strong>Tests</strong>: Add or improve test coverage</p></li>
+<li><p><strong>Performance</strong>: Optimize existing code</p></li>
+<li><p><strong>Security</strong>: Address security vulnerabilities</p></li>
+</ul>
+</section>
+<section id="branch-naming">
+<h4>Branch Naming<a class="headerlink" href="#branch-naming" title="Link to this heading"></a></h4>
+<p>Use descriptive branch names:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">feature/add-streaming-mode</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fix/handle-corrupted-archives</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">docs/improve-api-documentation</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">test/add-compression-tests</span></code></p></li>
+</ul>
+</section>
+</section>
+<section id="commit-messages">
+<h3>2. Commit Messages<a class="headerlink" href="#commit-messages" title="Link to this heading"></a></h3>
+<p>Follow conventional commit format:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">type</span><span class="p">(</span><span class="n">scope</span><span class="p">):</span> <span class="n">description</span>
+
+<span class="p">[</span><span class="n">optional</span> <span class="n">body</span><span class="p">]</span>
+
+<span class="p">[</span><span class="n">optional</span> <span class="n">footer</span><span class="p">]</span>
+</pre></div>
+</div>
+<p><strong>Types:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">feat</span></code>: New feature</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fix</span></code>: Bug fix</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">docs</span></code>: Documentation changes</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">test</span></code>: Adding or modifying tests</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">refactor</span></code>: Code refactoring</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">perf</span></code>: Performance improvements</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">chore</span></code>: Build process or auxiliary tool changes</p></li>
+</ul>
+<p><strong>Examples:</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">feat</span><span class="p">(</span><span class="n">core</span><span class="p">):</span> <span class="n">add</span> <span class="n">streaming</span> <span class="n">compression</span> <span class="n">support</span>
+
+<span class="n">fix</span><span class="p">(</span><span class="n">cli</span><span class="p">):</span> <span class="n">handle</span> <span class="n">invalid</span> <span class="n">archive</span> <span class="n">paths</span> <span class="n">gracefully</span>
+
+<span class="n">docs</span><span class="p">(</span><span class="n">readme</span><span class="p">):</span> <span class="n">update</span> <span class="n">installation</span> <span class="n">instructions</span>
+</pre></div>
+</div>
+</section>
+<section id="pull-request-process">
+<h3>3. Pull Request Process<a class="headerlink" href="#pull-request-process" title="Link to this heading"></a></h3>
+<ol class="arabic">
+<li><p><strong>Create a feature branch:</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </span>feature/your-feature-name
+</pre></div>
+</div>
+</li>
+<li><p><strong>Make your changes</strong> following the guidelines above</p></li>
+<li><p><strong>Add tests</strong> for new functionality</p></li>
+<li><p><strong>Update documentation</strong> if needed</p></li>
+<li><p><strong>Run the test suite:</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pytest
+ruff<span class="w"> </span>check<span class="w"> </span>.
+ruff<span class="w"> </span>format<span class="w"> </span>--check<span class="w"> </span>.
+</pre></div>
+</div>
+</li>
+<li><p><strong>Commit your changes:</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>add<span class="w"> </span>.
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;feat: add your feature description&quot;</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>Push to your fork:</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>feature/your-feature-name
+</pre></div>
+</div>
+</li>
+<li><p><strong>Create a pull request</strong> using the provided template</p></li>
+</ol>
+</section>
+<section id="pull-request-guidelines">
+<h3>4. Pull Request Guidelines<a class="headerlink" href="#pull-request-guidelines" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>Fill out the PR template</strong> completely</p></li>
+<li><p><strong>Link related issues</strong> using keywords (fixes #123)</p></li>
+<li><p><strong>Keep PRs focused</strong> - one feature/fix per PR</p></li>
+<li><p><strong>Ensure all CI checks pass</strong></p></li>
+<li><p><strong>Respond to review feedback</strong> promptly</p></li>
+</ul>
+</section>
+</section>
+<section id="development-tips">
+<h2>Development Tips<a class="headerlink" href="#development-tips" title="Link to this heading"></a></h2>
+<section id="performance-considerations">
+<h3>Performance Considerations<a class="headerlink" href="#performance-considerations" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Use streaming for large files</p></li>
+<li><p>Consider memory usage patterns</p></li>
+<li><p>Profile code for bottlenecks</p></li>
+<li><p>Test with various file sizes</p></li>
+</ul>
+</section>
+<section id="security-considerations">
+<h3>Security Considerations<a class="headerlink" href="#security-considerations" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Validate all user inputs</p></li>
+<li><p>Use secure defaults (e.g., ‘data’ filter)</p></li>
+<li><p>Handle malicious archives safely</p></li>
+<li><p>Be cautious with file paths</p></li>
+</ul>
+</section>
+<section id="compatibility">
+<h3>Compatibility<a class="headerlink" href="#compatibility" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Support Python 3.12+</p></li>
+<li><p>Test on multiple platforms (Windows, macOS, Linux)</p></li>
+<li><p>Consider different filesystem behaviors</p></li>
+<li><p>Maintain backwards compatibility when possible</p></li>
+</ul>
+</section>
+</section>
+<section id="release-process">
+<h2>Release Process<a class="headerlink" href="#release-process" title="Link to this heading"></a></h2>
+<p>Releases are handled by maintainers:</p>
+<ol class="arabic simple">
+<li><p>Update version in <code class="docutils literal notranslate"><span class="pre">src/tzst/__init__.py</span></code></p></li>
+<li><p>Create a release tag</p></li>
+<li><p>Automated CI/CD publishes to PyPI</p></li>
+</ol>
+</section>
+<section id="getting-help">
+<h2>Getting Help<a class="headerlink" href="#getting-help" title="Link to this heading"></a></h2>
+<section id="resources">
+<h3>Resources<a class="headerlink" href="#resources" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>Issues</strong>: <a class="reference external" href="https://github.com/xixu-me/tzst/issues">GitHub Issues</a></p></li>
+<li><p><strong>Discussions</strong>: Use GitHub Discussions for questions</p></li>
+<li><p><strong>Documentation</strong>: Check the README and code comments</p></li>
+</ul>
+</section>
+<section id="reporting-issues">
+<h3>Reporting Issues<a class="headerlink" href="#reporting-issues" title="Link to this heading"></a></h3>
+<p>When reporting bugs:</p>
+<ol class="arabic simple">
+<li><p><strong>Use the bug report template</strong></p></li>
+<li><p><strong>Provide a minimal reproduction case</strong></p></li>
+<li><p><strong>Include system information</strong> (OS, Python version)</p></li>
+<li><p><strong>Attach relevant files</strong> if possible (archives, logs)</p></li>
+</ol>
+</section>
+<section id="suggesting-features">
+<h3>Suggesting Features<a class="headerlink" href="#suggesting-features" title="Link to this heading"></a></h3>
+<p>When suggesting features:</p>
+<ol class="arabic simple">
+<li><p><strong>Use the feature request template</strong></p></li>
+<li><p><strong>Explain the use case</strong> and motivation</p></li>
+<li><p><strong>Consider backwards compatibility</strong></p></li>
+<li><p><strong>Provide implementation ideas</strong> if you have them</p></li>
+</ol>
+</section>
+</section>
+<section id="code-of-conduct">
+<h2>Code of Conduct<a class="headerlink" href="#code-of-conduct" title="Link to this heading"></a></h2>
+<p>This project follows the principles of respectful collaboration. Please be kind, constructive, and professional in all interactions.</p>
+</section>
+<section id="recognition">
+<h2>Recognition<a class="headerlink" href="#recognition" title="Link to this heading"></a></h2>
+<p>Contributors are recognized in several ways:</p>
+<ul class="simple">
+<li><p>Listed in release notes for significant contributions</p></li>
+<li><p>Mentioned in README acknowledgments</p></li>
+<li><p>GitHub contributor statistics</p></li>
+</ul>
+<p>Thank you for contributing to tzst! Your efforts help make this library better for everyone.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="api/exceptions.html" class="btn btn-neutral float-left" title="Exceptions API" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Xi Xu.</p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

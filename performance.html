@@ -1,0 +1,556 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="tzst Performance Guide - Compression level optimization, performance tips, and comparison with other archive tools" name="description" />
+<meta content="tzst performance, compression benchmarks, tar gzip comparison, archive performance optimization" name="keywords" />
+<meta content="tzst Performance Guide" name="og:title" />
+<meta content="Performance optimization tips and comparison with other archive tools for tzst" name="og:description" />
+<meta content="tzst Performance Guide" name="twitter:title" />
+<meta content="Performance optimization tips and comparison with other archive tools for tzst" name="twitter:description" />
+<meta content="website" name="og:type" />
+<meta content="https://tzst.xi-xu.me/_static/tzst-square-logo.png" name="og:image" />
+<meta content="https://tzst.xi-xu.me/" name="og:url" />
+<meta content="summary_large_image" name="twitter:card" />
+<meta content="https://tzst.xi-xu.me/_static/tzst-square-logo.png" name="twitter:image" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Performance Guide &mdash; tzst 1.2.8 Documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+    <link rel="canonical" href="https://tzst.xi-xu.me/performance.html" />
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=143ec3a1"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="search" type="application/opensearchdescription+xml"
+          title="Search within tzst 1.2.8 Documentation"
+          href="_static/opensearch.xml"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Examples" href="examples.html" />
+    <link rel="prev" title="Quick Start Guide" href="quickstart.html" />
+ 
+<!-- Additional SEO and social meta tags -->
+<meta name="application-name" content="tzst" />
+<meta name="generator" content="Sphinx 8.2.3" />
+<meta name="rating" content="General" />
+<meta name="revisit-after" content="7 days" />
+
+<!-- Schema.org markup for search engines -->
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "tzst",
+    "description": "A Python library for creating and extracting tar.zst archives with high performance and comprehensive features",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Cross-platform",
+    "programmingLanguage": "Python",
+    "license": "https://opensource.org/licenses/BSD-3-Clause",
+    "url": "https://tzst.xi-xu.me/",
+    "downloadUrl": "https://pypi.org/project/tzst/",
+    "codeRepository": "https://github.com/xixu-me/tzst",
+    "softwareVersion": "1.2.8",
+    "author": {
+      "@type": "Person",
+      "name": "Xi Xu",
+      "url": "https://xi-xu.me"
+    },
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "5",
+      "reviewCount": "1"
+    },
+    "keywords": "tzst, tar, zstandard, compression, archive, python, extraction, backup"
+  }
+</script>
+
+<!-- Breadcrumb Schema -->
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://tzst.xi-xu.me/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Performance Guide",
+        "item": "https://tzst.xi-xu.me/performance.html"
+      }
+    ]
+  }
+</script>
+
+
+<!-- Article/TechArticle Schema for documentation pages -->
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Performance Guide",
+    "description": "",
+    "author": {
+      "@type": "Person",
+      "name": "Xi Xu",
+      "url": "https://xi-xu.me"
+    },
+    "publisher": {
+      "@type": "Person",
+      "name": "Xi Xu"
+    },
+    "datePublished": "2025-01-01",
+    "dateModified": "2025-01-12",
+    "url": "https://tzst.xi-xu.me/performance.html",
+    "inLanguage": "en-US",
+    "about": {
+      "@type": "SoftwareApplication",
+      "name": "tzst"
+    }
+  }
+</script>
+
+
+<!-- FAQ Schema for pages with common questions -->
+
+
+<!-- HowTo Schema for examples page -->
+
+
+<!-- Canonical URL for better SEO -->
+
+<link rel="canonical" href="https://tzst.xi-xu.me/performance.html" />
+
+
+<!-- Preconnect to external domains for performance -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" />
+<link rel="dns-prefetch" href="https://pypi.org" />
+<link rel="dns-prefetch" href="https://github.com" />
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            tzst
+              <img src="_static/tzst-logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start Guide</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Performance Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#performance-tips">Performance Tips</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#compression-levels">1. Compression Levels</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#streaming">2. Streaming</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#batch-operations">3. Batch Operations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#file-type-considerations">4. File Type Considerations</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#comparison-with-other-tools">Comparison with Other Tools</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#vs-tar-gzip">vs tar + gzip</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#vs-tar-xz">vs tar + xz</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#vs-zip">vs zip</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#benchmarking-examples">Benchmarking Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#compression-level-benchmark">Compression Level Benchmark</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#memory-usage-comparison">Memory Usage Comparison</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#best-practices">Best Practices</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#for-development">For Development</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#for-backups">For Backups</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#for-distribution">For Distribution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#for-archival-storage">For Archival Storage</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#hardware-considerations">Hardware Considerations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#cpu-usage">CPU Usage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#memory-usage">Memory Usage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#storage">Storage</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#integration-with-build-systems">Integration with Build Systems</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#makefile-example">Makefile Example</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#github-actions-example">GitHub Actions Example</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/index.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="development.html">Development Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="genindex.html">Index</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">tzst</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Performance Guide</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/xixu-me/tzst/blob/main/docs/performance.md" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="performance-guide">
+<h1>Performance Guide<a class="headerlink" href="#performance-guide" title="Link to this heading"></a></h1>
+<p>This guide covers performance optimization techniques and provides detailed comparisons with other archive tools.</p>
+<section id="performance-tips">
+<h2>Performance Tips<a class="headerlink" href="#performance-tips" title="Link to this heading"></a></h2>
+<section id="compression-levels">
+<h3>1. Compression Levels<a class="headerlink" href="#compression-levels" title="Link to this heading"></a></h3>
+<p>Choose the right compression level for your use case:</p>
+<ul class="simple">
+<li><p><strong>Level 1-3</strong>: Fast compression, larger files (good for temporary archives or real-time processing)</p></li>
+<li><p><strong>Level 3</strong> (default): Optimal balance for most use cases</p></li>
+<li><p><strong>Level 6-9</strong>: Higher compression, moderate speed (good for regular backups)</p></li>
+<li><p><strong>Level 15-22</strong>: Maximum compression, slower (for long-term storage or bandwidth-limited scenarios)</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tzst</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_archive</span>
+
+<span class="c1"># For temporary files or frequent operations</span>
+<span class="n">create_archive</span><span class="p">(</span><span class="s2">&quot;temp.tzst&quot;</span><span class="p">,</span> <span class="n">files</span><span class="p">,</span> <span class="n">compression_level</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="c1"># Balanced default (recommended)</span>
+<span class="n">create_archive</span><span class="p">(</span><span class="s2">&quot;backup.tzst&quot;</span><span class="p">,</span> <span class="n">files</span><span class="p">,</span> <span class="n">compression_level</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+<span class="c1"># Long-term storage</span>
+<span class="n">create_archive</span><span class="p">(</span><span class="s2">&quot;archive.tzst&quot;</span><span class="p">,</span> <span class="n">files</span><span class="p">,</span> <span class="n">compression_level</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
+
+<span class="c1"># Maximum compression for critical space savings</span>
+<span class="n">create_archive</span><span class="p">(</span><span class="s2">&quot;minimal.tzst&quot;</span><span class="p">,</span> <span class="n">files</span><span class="p">,</span> <span class="n">compression_level</span><span class="o">=</span><span class="mi">22</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="streaming">
+<h3>2. Streaming<a class="headerlink" href="#streaming" title="Link to this heading"></a></h3>
+<p>Use streaming mode for archives larger than 100MB:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tzst</span><span class="w"> </span><span class="kn">import</span> <span class="n">extract_archive</span><span class="p">,</span> <span class="n">list_archive</span><span class="p">,</span> <span class="n">test_archive</span>
+
+<span class="c1"># Memory-efficient operations for large archives</span>
+<span class="n">extract_archive</span><span class="p">(</span><span class="s2">&quot;large-backup.tzst&quot;</span><span class="p">,</span> <span class="s2">&quot;restore/&quot;</span><span class="p">,</span> <span class="n">streaming</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">contents</span> <span class="o">=</span> <span class="n">list_archive</span><span class="p">(</span><span class="s2">&quot;large-backup.tzst&quot;</span><span class="p">,</span> <span class="n">streaming</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">is_valid</span> <span class="o">=</span> <span class="n">test_archive</span><span class="p">(</span><span class="s2">&quot;large-backup.tzst&quot;</span><span class="p">,</span> <span class="n">streaming</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Streaming Benefits:</strong></p>
+<ul class="simple">
+<li><p>Significantly reduced memory usage</p></li>
+<li><p>Better performance for large archives</p></li>
+<li><p>Handles archives that don’t fit in memory</p></li>
+</ul>
+</section>
+<section id="batch-operations">
+<h3>3. Batch Operations<a class="headerlink" href="#batch-operations" title="Link to this heading"></a></h3>
+<p>Add multiple files in a single session when possible:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tzst</span><span class="w"> </span><span class="kn">import</span> <span class="n">TzstArchive</span>
+
+<span class="c1"># Efficient: Single archive session</span>
+<span class="k">with</span> <span class="n">TzstArchive</span><span class="p">(</span><span class="s2">&quot;backup.tzst&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">archive</span><span class="p">:</span>
+    <span class="n">archive</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">&quot;file1.txt&quot;</span><span class="p">)</span>
+    <span class="n">archive</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">&quot;file2.txt&quot;</span><span class="p">)</span>
+    <span class="n">archive</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">&quot;directory/&quot;</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Less efficient: Multiple separate operations</span>
+<span class="n">create_archive</span><span class="p">(</span><span class="s2">&quot;backup1.tzst&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;file1.txt&quot;</span><span class="p">])</span>
+<span class="n">create_archive</span><span class="p">(</span><span class="s2">&quot;backup2.tzst&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;file2.txt&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</section>
+<section id="file-type-considerations">
+<h3>4. File Type Considerations<a class="headerlink" href="#file-type-considerations" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Already compressed files (<code class="docutils literal notranslate"><span class="pre">.jpg</span></code>, <code class="docutils literal notranslate"><span class="pre">.png</span></code>, <code class="docutils literal notranslate"><span class="pre">.mp4</span></code>, <code class="docutils literal notranslate"><span class="pre">.pdf</span></code>) won’t compress much further</p></li>
+<li><p>Text files, source code, and logs compress very well</p></li>
+<li><p>Consider compression level based on your data types</p></li>
+</ul>
+</section>
+</section>
+<section id="comparison-with-other-tools">
+<h2>Comparison with Other Tools<a class="headerlink" href="#comparison-with-other-tools" title="Link to this heading"></a></h2>
+<section id="vs-tar-gzip">
+<h3>vs tar + gzip<a class="headerlink" href="#vs-tar-gzip" title="Link to this heading"></a></h3>
+<p><strong>tzst Advantages:</strong></p>
+<ul class="simple">
+<li><p><strong>Better compression ratios</strong>: 10-40% smaller archives</p></li>
+<li><p><strong>Faster decompression</strong>: 2-3x faster extraction</p></li>
+<li><p><strong>Modern algorithm</strong>: Better handling of various file types</p></li>
+<li><p><strong>Streaming support</strong>: Better memory efficiency</p></li>
+</ul>
+<p><strong>When to use tar + gzip:</strong></p>
+<ul class="simple">
+<li><p>Legacy system compatibility requirements</p></li>
+<li><p>Very old systems without zstd support</p></li>
+</ul>
+</section>
+<section id="vs-tar-xz">
+<h3>vs tar + xz<a class="headerlink" href="#vs-tar-xz" title="Link to this heading"></a></h3>
+<p><strong>tzst Advantages:</strong></p>
+<ul class="simple">
+<li><p><strong>Significantly faster compression</strong>: 3-10x faster creation</p></li>
+<li><p><strong>Faster decompression</strong>: 2-4x faster extraction</p></li>
+<li><p><strong>Better speed/compression trade-off</strong>: Similar compression with much better speed</p></li>
+<li><p><strong>More compression levels</strong>: Fine-grained control (22 levels vs 9)</p></li>
+</ul>
+<p><strong>When to use tar + xz:</strong></p>
+<ul class="simple">
+<li><p>Maximum compression is critical and time is not a factor</p></li>
+<li><p>Systems that don’t support zstd</p></li>
+</ul>
+</section>
+<section id="vs-zip">
+<h3>vs zip<a class="headerlink" href="#vs-zip" title="Link to this heading"></a></h3>
+<p><strong>tzst Advantages:</strong></p>
+<ul class="simple">
+<li><p><strong>Better compression</strong>: 15-30% smaller archives</p></li>
+<li><p><strong>Preserves Unix permissions and metadata</strong>: Full POSIX compatibility</p></li>
+<li><p><strong>Better streaming support</strong>: Memory-efficient for large archives</p></li>
+<li><p><strong>Better directory handling</strong>: Preserves directory structure and timestamps</p></li>
+</ul>
+<p><strong>When to use zip:</strong></p>
+<ul class="simple">
+<li><p>Cross-platform compatibility with very old systems</p></li>
+<li><p>Individual file access without full extraction is required</p></li>
+<li><p>Windows-centric environments with no command-line tools</p></li>
+</ul>
+</section>
+</section>
+<section id="benchmarking-examples">
+<h2>Benchmarking Examples<a class="headerlink" href="#benchmarking-examples" title="Link to this heading"></a></h2>
+<section id="compression-level-benchmark">
+<h3>Compression Level Benchmark<a class="headerlink" href="#compression-level-benchmark" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tzst</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_archive</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">benchmark_compression_levels</span><span class="p">(</span><span class="n">files</span><span class="p">,</span> <span class="n">output_prefix</span><span class="o">=</span><span class="s2">&quot;benchmark&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compare different compression levels.&quot;&quot;&quot;</span>
+    <span class="n">levels_to_test</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">22</span><span class="p">]</span>
+    
+    <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">level</span> <span class="ow">in</span> <span class="n">levels_to_test</span><span class="p">:</span>
+        <span class="n">output_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">output_prefix</span><span class="si">}</span><span class="s2">_level_</span><span class="si">{</span><span class="n">level</span><span class="si">}</span><span class="s2">.tzst&quot;</span>
+        
+        <span class="c1"># Measure compression time</span>
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">create_archive</span><span class="p">(</span><span class="n">output_file</span><span class="p">,</span> <span class="n">files</span><span class="p">,</span> <span class="n">compression_level</span><span class="o">=</span><span class="n">level</span><span class="p">)</span>
+        <span class="n">compress_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+        
+        <span class="c1"># Get file size</span>
+        <span class="n">file_size</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output_file</span><span class="p">)</span><span class="o">.</span><span class="n">stat</span><span class="p">()</span><span class="o">.</span><span class="n">st_size</span>
+        
+        <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+            <span class="s1">&#39;level&#39;</span><span class="p">:</span> <span class="n">level</span><span class="p">,</span>
+            <span class="s1">&#39;time&#39;</span><span class="p">:</span> <span class="n">compress_time</span><span class="p">,</span>
+            <span class="s1">&#39;size&#39;</span><span class="p">:</span> <span class="n">file_size</span><span class="p">,</span>
+            <span class="s1">&#39;size_mb&#39;</span><span class="p">:</span> <span class="n">file_size</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">)</span>
+        <span class="p">})</span>
+        
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Level </span><span class="si">{</span><span class="n">level</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">compress_time</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">s, </span><span class="si">{</span><span class="n">file_size</span><span class="o">/</span><span class="mi">1024</span><span class="o">/</span><span class="mi">1024</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> MB&quot;</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">results</span>
+
+<span class="c1"># Example usage</span>
+<span class="n">files</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;documents/&quot;</span><span class="p">,</span> <span class="s2">&quot;projects/&quot;</span><span class="p">]</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">benchmark_compression_levels</span><span class="p">(</span><span class="n">files</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="memory-usage-comparison">
+<h3>Memory Usage Comparison<a class="headerlink" href="#memory-usage-comparison" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">psutil</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tzst</span><span class="w"> </span><span class="kn">import</span> <span class="n">extract_archive</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">monitor_memory_usage</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Monitor memory usage during function execution.&quot;&quot;&quot;</span>
+    <span class="n">process</span> <span class="o">=</span> <span class="n">psutil</span><span class="o">.</span><span class="n">Process</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getpid</span><span class="p">())</span>
+    <span class="n">initial_memory</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">memory_info</span><span class="p">()</span><span class="o">.</span><span class="n">rss</span> <span class="o">/</span> <span class="mi">1024</span> <span class="o">/</span> <span class="mi">1024</span>  <span class="c1"># MB</span>
+    
+    <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    
+    <span class="n">peak_memory</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">memory_info</span><span class="p">()</span><span class="o">.</span><span class="n">rss</span> <span class="o">/</span> <span class="mi">1024</span> <span class="o">/</span> <span class="mi">1024</span>  <span class="c1"># MB</span>
+    <span class="k">return</span> <span class="n">peak_memory</span> <span class="o">-</span> <span class="n">initial_memory</span>
+
+<span class="c1"># Compare streaming vs non-streaming extraction</span>
+<span class="n">large_archive</span> <span class="o">=</span> <span class="s2">&quot;large-dataset.tzst&quot;</span>
+
+<span class="n">memory_normal</span> <span class="o">=</span> <span class="n">monitor_memory_usage</span><span class="p">(</span><span class="n">extract_archive</span><span class="p">,</span> <span class="n">large_archive</span><span class="p">,</span> <span class="s2">&quot;output1/&quot;</span><span class="p">)</span>
+<span class="n">memory_streaming</span> <span class="o">=</span> <span class="n">monitor_memory_usage</span><span class="p">(</span><span class="n">extract_archive</span><span class="p">,</span> <span class="n">large_archive</span><span class="p">,</span> <span class="s2">&quot;output2/&quot;</span><span class="p">,</span> <span class="n">streaming</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Normal extraction: </span><span class="si">{</span><span class="n">memory_normal</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> MB&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Streaming extraction: </span><span class="si">{</span><span class="n">memory_streaming</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> MB&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Memory savings: </span><span class="si">{</span><span class="n">memory_normal</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">memory_streaming</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> MB&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="best-practices">
+<h2>Best Practices<a class="headerlink" href="#best-practices" title="Link to this heading"></a></h2>
+<section id="for-development">
+<h3>For Development<a class="headerlink" href="#for-development" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Fast compression for frequent builds</span>
+<span class="n">create_archive</span><span class="p">(</span><span class="s2">&quot;build-artifacts.tzst&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;build/&quot;</span><span class="p">],</span> <span class="n">compression_level</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="for-backups">
+<h3>For Backups<a class="headerlink" href="#for-backups" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Balanced compression for regular backups</span>
+<span class="n">create_archive</span><span class="p">(</span><span class="s2">&quot;daily-backup.tzst&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;data/&quot;</span><span class="p">],</span> <span class="n">compression_level</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="for-distribution">
+<h3>For Distribution<a class="headerlink" href="#for-distribution" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Higher compression for software distribution</span>
+<span class="n">create_archive</span><span class="p">(</span><span class="s2">&quot;software-package.tzst&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;app/&quot;</span><span class="p">],</span> <span class="n">compression_level</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="for-archival-storage">
+<h3>For Archival Storage<a class="headerlink" href="#for-archival-storage" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Maximum compression for long-term storage</span>
+<span class="n">create_archive</span><span class="p">(</span><span class="s2">&quot;archive-2024.tzst&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;historical-data/&quot;</span><span class="p">],</span> <span class="n">compression_level</span><span class="o">=</span><span class="mi">22</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="hardware-considerations">
+<h2>Hardware Considerations<a class="headerlink" href="#hardware-considerations" title="Link to this heading"></a></h2>
+<section id="cpu-usage">
+<h3>CPU Usage<a class="headerlink" href="#cpu-usage" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Higher compression levels use more CPU but for shorter time periods</p></li>
+<li><p>Modern multi-core systems handle zstd compression very efficiently</p></li>
+<li><p>Consider system load when choosing compression levels</p></li>
+</ul>
+</section>
+<section id="memory-usage">
+<h3>Memory Usage<a class="headerlink" href="#memory-usage" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Streaming mode: ~16-32 MB memory usage regardless of archive size</p></li>
+<li><p>Normal mode: Memory usage proportional to archive size</p></li>
+<li><p>Use streaming for archives &gt;100 MB or on memory-constrained systems</p></li>
+</ul>
+</section>
+<section id="storage">
+<h3>Storage<a class="headerlink" href="#storage" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>SSDs benefit from higher compression (less I/O)</p></li>
+<li><p>HDDs may prefer lower compression levels (CPU vs I/O trade-off)</p></li>
+<li><p>Network storage benefits from higher compression (bandwidth savings)</p></li>
+</ul>
+</section>
+</section>
+<section id="integration-with-build-systems">
+<h2>Integration with Build Systems<a class="headerlink" href="#integration-with-build-systems" title="Link to this heading"></a></h2>
+<section id="makefile-example">
+<h3>Makefile Example<a class="headerlink" href="#makefile-example" title="Link to this heading"></a></h3>
+<div class="highlight-makefile notranslate"><div class="highlight"><pre><span></span><span class="c"># Fast compression for development</span>
+<span class="nf">build-dev</span><span class="o">:</span><span class="w"> </span>
+<span class="w"> </span>tzst<span class="w"> </span>a<span class="w"> </span>build-dev.tzst<span class="w"> </span>build/<span class="w"> </span>-l<span class="w"> </span><span class="m">1</span>
+
+<span class="c"># Production compression</span>
+<span class="nf">build-prod</span><span class="o">:</span>
+<span class="w"> </span>tzst<span class="w"> </span>a<span class="w"> </span>build-prod.tzst<span class="w"> </span>build/<span class="w"> </span>-l<span class="w"> </span><span class="m">9</span>
+
+<span class="c"># CI/CD artifacts</span>
+<span class="nf">artifacts</span><span class="o">:</span>
+<span class="w"> </span>tzst<span class="w"> </span>a<span class="w"> </span>artifacts.tzst<span class="w"> </span>dist/<span class="w"> </span>logs/<span class="w"> </span>-l<span class="w"> </span><span class="m">6</span>
+</pre></div>
+</div>
+</section>
+<section id="github-actions-example">
+<h3>GitHub Actions Example<a class="headerlink" href="#github-actions-example" title="Link to this heading"></a></h3>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Create release archive</span>
+<span class="w">  </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">    </span><span class="no">tzst a release-${{ github.ref_name }}.tzst \</span>
+<span class="w">      </span><span class="no">build/ docs/ \</span>
+<span class="w">      </span><span class="no">--compression-level 9</span>
+</pre></div>
+</div>
+<p>This performance guide helps you choose the right settings for your specific use case and understand how tzst compares to alternative archive tools.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="quickstart.html" class="btn btn-neutral float-left" title="Quick Start Guide" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="examples.html" class="btn btn-neutral float-right" title="Examples" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Xi Xu.</p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

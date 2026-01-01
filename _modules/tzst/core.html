@@ -1,0 +1,1270 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>tzst.core &mdash; tzst 1.2.8 Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="canonical" href="https://tzst.xi-xu.me/_modules/tzst/core.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=143ec3a1"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="search" type="application/opensearchdescription+xml"
+          title="Search within tzst 1.2.8 Documentation"
+          href="../../_static/opensearch.xml"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+ 
+<!-- Additional SEO and social meta tags -->
+<meta name="application-name" content="tzst" />
+<meta name="generator" content="Sphinx 8.2.3" />
+<meta name="rating" content="General" />
+<meta name="revisit-after" content="7 days" />
+
+<!-- Schema.org markup for search engines -->
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "tzst",
+    "description": "A Python library for creating and extracting tar.zst archives with high performance and comprehensive features",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Cross-platform",
+    "programmingLanguage": "Python",
+    "license": "https://opensource.org/licenses/BSD-3-Clause",
+    "url": "https://tzst.xi-xu.me/",
+    "downloadUrl": "https://pypi.org/project/tzst/",
+    "codeRepository": "https://github.com/xixu-me/tzst",
+    "softwareVersion": "1.2.8",
+    "author": {
+      "@type": "Person",
+      "name": "Xi Xu",
+      "url": "https://xi-xu.me"
+    },
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "5",
+      "reviewCount": "1"
+    },
+    "keywords": "tzst, tar, zstandard, compression, archive, python, extraction, backup"
+  }
+</script>
+
+<!-- Breadcrumb Schema -->
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://tzst.xi-xu.me/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "tzst.core",
+        "item": "https://tzst.xi-xu.me/_modules/tzst/core.html"
+      }
+    ]
+  }
+</script>
+
+
+<!-- Article/TechArticle Schema for documentation pages -->
+
+
+<!-- FAQ Schema for pages with common questions -->
+
+
+<!-- HowTo Schema for examples page -->
+
+
+<!-- Canonical URL for better SEO -->
+
+<link rel="canonical" href="https://tzst.xi-xu.me/_modules/tzst/core.html" />
+
+
+<!-- Preconnect to external domains for performance -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" />
+<link rel="dns-prefetch" href="https://pypi.org" />
+<link rel="dns-prefetch" href="https://github.com" />
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            tzst
+              <img src="../../_static/tzst-logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../quickstart.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../performance.html">Performance Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../development.html">Development Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../genindex.html">Index</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">tzst</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">tzst.core</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for tzst.core</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Core functionality for tzst archives.&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">io</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tarfile</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Sequence</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">BinaryIO</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">zstandard</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">zstd</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">TzstArchiveError</span><span class="p">,</span> <span class="n">TzstDecompressionError</span>
+
+
+<div class="viewcode-block" id="ConflictResolution">
+<a class="viewcode-back" href="../../api/core.html#tzst.core.ConflictResolution">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ConflictResolution</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Enum for conflict resolution strategies.&quot;&quot;&quot;</span>
+
+    <span class="n">REPLACE</span> <span class="o">=</span> <span class="s2">&quot;replace&quot;</span>
+    <span class="n">SKIP</span> <span class="o">=</span> <span class="s2">&quot;skip&quot;</span>
+    <span class="n">REPLACE_ALL</span> <span class="o">=</span> <span class="s2">&quot;replace_all&quot;</span>
+    <span class="n">SKIP_ALL</span> <span class="o">=</span> <span class="s2">&quot;skip_all&quot;</span>
+    <span class="n">AUTO_RENAME</span> <span class="o">=</span> <span class="s2">&quot;auto_rename&quot;</span>
+    <span class="n">AUTO_RENAME_ALL</span> <span class="o">=</span> <span class="s2">&quot;auto_rename_all&quot;</span>
+    <span class="n">EXIT</span> <span class="o">=</span> <span class="s2">&quot;exit&quot;</span>
+    <span class="n">ASK</span> <span class="o">=</span> <span class="s2">&quot;ask&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="ConflictResolutionState">
+<a class="viewcode-back" href="../../api/core.html#tzst.core.ConflictResolutionState">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ConflictResolutionState</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;State management for conflict resolution during extraction.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ConflictResolutionState.__init__">
+<a class="viewcode-back" href="../../api/core.html#tzst.core.ConflictResolutionState.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">initial_resolution</span><span class="p">:</span> <span class="n">ConflictResolution</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">continue_extraction</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">global_resolution</span> <span class="o">=</span> <span class="n">initial_resolution</span>
+        <span class="c1"># If initial resolution is EXIT, set continue_extraction to False</span>
+        <span class="k">if</span> <span class="n">initial_resolution</span> <span class="o">==</span> <span class="n">ConflictResolution</span><span class="o">.</span><span class="n">EXIT</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">continue_extraction</span> <span class="o">=</span> <span class="kc">False</span></div>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">current_resolution</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ConflictResolution</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the current resolution state.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">global_resolution</span>
+
+<div class="viewcode-block" id="ConflictResolutionState.should_continue">
+<a class="viewcode-back" href="../../api/core.html#tzst.core.ConflictResolutionState.should_continue">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">should_continue</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if extraction should continue.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">continue_extraction</span></div>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">apply_to_all</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if the current resolution applies to all future conflicts.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">global_resolution</span> <span class="ow">in</span> <span class="p">(</span>
+            <span class="n">ConflictResolution</span><span class="o">.</span><span class="n">REPLACE_ALL</span><span class="p">,</span>
+            <span class="n">ConflictResolution</span><span class="o">.</span><span class="n">SKIP_ALL</span><span class="p">,</span>
+            <span class="n">ConflictResolution</span><span class="o">.</span><span class="n">AUTO_RENAME_ALL</span><span class="p">,</span>
+        <span class="p">)</span>
+
+<div class="viewcode-block" id="ConflictResolutionState.update_resolution">
+<a class="viewcode-back" href="../../api/core.html#tzst.core.ConflictResolutionState.update_resolution">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_resolution</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolution</span><span class="p">:</span> <span class="n">ConflictResolution</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update the global resolution state.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">resolution</span> <span class="o">==</span> <span class="n">ConflictResolution</span><span class="o">.</span><span class="n">EXIT</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">continue_extraction</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">global_resolution</span> <span class="o">=</span> <span class="n">resolution</span>
+        <span class="k">elif</span> <span class="n">resolution</span> <span class="ow">in</span> <span class="p">(</span>
+            <span class="n">ConflictResolution</span><span class="o">.</span><span class="n">REPLACE_ALL</span><span class="p">,</span>
+            <span class="n">ConflictResolution</span><span class="o">.</span><span class="n">SKIP_ALL</span><span class="p">,</span>
+            <span class="n">ConflictResolution</span><span class="o">.</span><span class="n">AUTO_RENAME_ALL</span><span class="p">,</span>
+        <span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">global_resolution</span> <span class="o">=</span> <span class="n">resolution</span></div>
+</div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_unique_filename</span><span class="p">(</span><span class="n">file_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate a unique filename by appending a number if the file exists.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">file_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+        <span class="k">return</span> <span class="n">file_path</span>
+
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">file_path</span><span class="o">.</span><span class="n">parent</span>
+    <span class="n">stem</span> <span class="o">=</span> <span class="n">file_path</span><span class="o">.</span><span class="n">stem</span>
+    <span class="n">suffix</span> <span class="o">=</span> <span class="n">file_path</span><span class="o">.</span><span class="n">suffix</span>
+
+    <span class="n">counter</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">new_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">stem</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">counter</span><span class="si">}{</span><span class="n">suffix</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">new_path</span> <span class="o">=</span> <span class="n">parent</span> <span class="o">/</span> <span class="n">new_name</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">new_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="k">return</span> <span class="n">new_path</span>
+        <span class="n">counter</span> <span class="o">+=</span> <span class="mi">1</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_move_file_cross_platform</span><span class="p">(</span><span class="n">src</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">dst</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Move a file from src to dst, handling cross-drive moves on Windows.&quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># Try the fast rename operation first</span>
+        <span class="n">src</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">dst</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="c1"># On Windows, rename fails across drives with error 17</span>
+        <span class="c1"># Fall back to copy + delete for cross-drive moves</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">shutil</span><span class="o">.</span><span class="n">copy2</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">)</span>
+            <span class="n">src</span><span class="o">.</span><span class="n">unlink</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="c1"># If copy also fails, re-raise the original rename error</span>
+            <span class="k">raise</span> <span class="n">e</span> <span class="kn">from</span><span class="w"> </span><span class="kc">None</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_handle_file_conflict</span><span class="p">(</span>
+    <span class="n">target_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
+    <span class="n">resolution</span><span class="p">:</span> <span class="n">ConflictResolution</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">interactive_callback</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Path</span><span class="p">],</span> <span class="n">ConflictResolution</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">ConflictResolution</span><span class="p">,</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Handle file conflicts during extraction.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        target_path: The path where a conflict occurred</span>
+<span class="sd">        resolution: The conflict resolution strategy</span>
+<span class="sd">        interactive_callback: Optional callback for interactive resolution</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Tuple of (actual_resolution, final_path)&quot;&quot;&quot;</span>
+    <span class="c1"># Convert string resolution to enum if needed</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">resolution</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">resolution</span> <span class="o">=</span> <span class="n">ConflictResolution</span><span class="p">(</span><span class="n">resolution</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="c1"># Invalid string, fallback to ASK for interactive handling</span>
+            <span class="n">resolution</span> <span class="o">=</span> <span class="n">ConflictResolution</span><span class="o">.</span><span class="n">ASK</span>
+
+    <span class="k">if</span> <span class="n">resolution</span> <span class="o">==</span> <span class="n">ConflictResolution</span><span class="o">.</span><span class="n">ASK</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">interactive_callback</span><span class="p">:</span>
+            <span class="n">resolution</span> <span class="o">=</span> <span class="n">interactive_callback</span><span class="p">(</span><span class="n">target_path</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># No callback provided, default to REPLACE for consistency with tests</span>
+            <span class="n">resolution</span> <span class="o">=</span> <span class="n">ConflictResolution</span><span class="o">.</span><span class="n">REPLACE</span>
+
+    <span class="k">if</span> <span class="n">resolution</span> <span class="ow">in</span> <span class="p">(</span><span class="n">ConflictResolution</span><span class="o">.</span><span class="n">REPLACE</span><span class="p">,</span> <span class="n">ConflictResolution</span><span class="o">.</span><span class="n">REPLACE_ALL</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">target_path</span>
+    <span class="k">elif</span> <span class="n">resolution</span> <span class="ow">in</span> <span class="p">(</span><span class="n">ConflictResolution</span><span class="o">.</span><span class="n">SKIP</span><span class="p">,</span> <span class="n">ConflictResolution</span><span class="o">.</span><span class="n">SKIP_ALL</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">resolution</span><span class="p">,</span> <span class="kc">None</span>
+    <span class="k">elif</span> <span class="n">resolution</span> <span class="ow">in</span> <span class="p">(</span>
+        <span class="n">ConflictResolution</span><span class="o">.</span><span class="n">AUTO_RENAME</span><span class="p">,</span>
+        <span class="n">ConflictResolution</span><span class="o">.</span><span class="n">AUTO_RENAME_ALL</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="n">unique_path</span> <span class="o">=</span> <span class="n">_get_unique_filename</span><span class="p">(</span><span class="n">target_path</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">unique_path</span>
+    <span class="k">elif</span> <span class="n">resolution</span> <span class="o">==</span> <span class="n">ConflictResolution</span><span class="o">.</span><span class="n">EXIT</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">resolution</span><span class="p">,</span> <span class="kc">None</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Unknown resolution, default to REPLACE for robustness</span>
+        <span class="k">return</span> <span class="n">ConflictResolution</span><span class="o">.</span><span class="n">REPLACE</span><span class="p">,</span> <span class="n">target_path</span>
+
+
+<div class="viewcode-block" id="TzstArchive">
+<a class="viewcode-back" href="../../api/core.html#tzst.core.TzstArchive">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">TzstArchive</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A class for handling .tzst/.tar.zst archives.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="TzstArchive.__init__">
+<a class="viewcode-back" href="../../api/core.html#tzst.core.TzstArchive.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">,</span>
+        <span class="n">mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span>
+        <span class="n">compression_level</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+        <span class="n">streaming</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize a TzstArchive.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            filename: Path to the archive file</span>
+<span class="sd">            mode: Open mode (&#39;r&#39;, &#39;w&#39;, &#39;a&#39;)</span>
+<span class="sd">            compression_level: Zstandard compression level (1-22)</span>
+<span class="sd">            streaming: If True, use streaming mode for reading (reduces memory usage</span>
+<span class="sd">                      for very large archives but may limit some tarfile operations</span>
+<span class="sd">                      that require seeking. Recommended for archives &gt; 100MB)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">filename</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="n">mode</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">compression_level</span> <span class="o">=</span> <span class="n">compression_level</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">streaming</span> <span class="o">=</span> <span class="n">streaming</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_tarfile</span><span class="p">:</span> <span class="n">tarfile</span><span class="o">.</span><span class="n">TarFile</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_fileobj</span><span class="p">:</span> <span class="n">BinaryIO</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_compressed_stream</span><span class="p">:</span> <span class="p">(</span>
+            <span class="n">zstd</span><span class="o">.</span><span class="n">ZstdCompressionWriter</span>
+            <span class="o">|</span> <span class="n">zstd</span><span class="o">.</span><span class="n">ZstdDecompressionReader</span>
+            <span class="o">|</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span>
+            <span class="o">|</span> <span class="kc">None</span>
+        <span class="p">)</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="c1"># Validate mode</span>
+        <span class="n">valid_modes</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">mode</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">valid_modes</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Invalid mode &#39;</span><span class="si">{</span><span class="n">mode</span><span class="si">}</span><span class="s2">&#39;. Must be one of: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">valid_modes</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+
+        <span class="c1"># Validate compression level</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">compression_level</span> <span class="o">&lt;=</span> <span class="mi">22</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Invalid compression level &#39;</span><span class="si">{</span><span class="n">compression_level</span><span class="si">}</span><span class="s2">&#39;. Must be between 1 and 22.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="c1"># Check for unsupported modes immediately - provide clear documentation</span>
+        <span class="k">if</span> <span class="n">mode</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+                <span class="s2">&quot;Append mode is not currently supported for .tzst/.tar.zst archives. &quot;</span>
+                <span class="s2">&quot;This would require decompressing the entire archive, adding new files, &quot;</span>
+                <span class="s2">&quot;and recompressing, which is complex and potentially slow for large archives. &quot;</span>
+                <span class="s2">&quot;Alternatives: 1) Create multiple archives, 2) Recreate the archive with all files, &quot;</span>
+                <span class="s2">&quot;3) Use standard tar format for append operations, then compress separately.&quot;</span>
+            <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TzstArchive.__enter__">
+<a class="viewcode-back" href="../../api/core.html#tzst.core.TzstArchive.__enter__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Enter context manager.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">open</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+
+<div class="viewcode-block" id="TzstArchive.__exit__">
+<a class="viewcode-back" href="../../api/core.html#tzst.core.TzstArchive.__exit__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_val</span><span class="p">,</span> <span class="n">exc_tb</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Exit context manager.&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="c1"># Suppress exceptions during cleanup to avoid masking original exceptions</span>
+            <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="TzstArchive.open">
+<a class="viewcode-back" href="../../api/core.html#tzst.core.TzstArchive.open">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">open</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Open the archive.</span>
+
+<span class="sd">        See Also:</span>
+<span class="sd">            :meth:`close`: Method to close the archive</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;r&quot;</span><span class="p">):</span>
+                <span class="c1"># Read mode</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_fileobj</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span>
+                <span class="n">dctx</span> <span class="o">=</span> <span class="n">zstd</span><span class="o">.</span><span class="n">ZstdDecompressor</span><span class="p">()</span>
+
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">streaming</span><span class="p">:</span>
+                    <span class="c1"># Streaming mode - use stream reader directly (memory efficient)</span>
+                    <span class="c1"># Note: This may limit some tarfile operations that require seeking</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_compressed_stream</span> <span class="o">=</span> <span class="n">dctx</span><span class="o">.</span><span class="n">stream_reader</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_fileobj</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_tarfile</span> <span class="o">=</span> <span class="n">tarfile</span><span class="o">.</span><span class="n">open</span><span class="p">(</span>
+                        <span class="n">fileobj</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_compressed_stream</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;r|&quot;</span>
+                    <span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># Buffer mode - decompress to memory buffer for random access</span>
+                    <span class="c1"># Better compatibility but higher memory usage for large archives</span>
+                    <span class="n">decompressed_chunks</span> <span class="o">=</span> <span class="p">[]</span>
+                    <span class="k">with</span> <span class="n">dctx</span><span class="o">.</span><span class="n">stream_reader</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_fileobj</span><span class="p">)</span> <span class="k">as</span> <span class="n">reader</span><span class="p">:</span>
+                        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+                            <span class="n">chunk</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">8192</span><span class="p">)</span>
+                            <span class="k">if</span> <span class="ow">not</span> <span class="n">chunk</span><span class="p">:</span>
+                                <span class="k">break</span>
+                            <span class="n">decompressed_chunks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
+                    <span class="n">decompressed_data</span> <span class="o">=</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">decompressed_chunks</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_compressed_stream</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">(</span><span class="n">decompressed_data</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_tarfile</span> <span class="o">=</span> <span class="n">tarfile</span><span class="o">.</span><span class="n">open</span><span class="p">(</span>
+                        <span class="n">fileobj</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_compressed_stream</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;r&quot;</span>
+                    <span class="p">)</span>
+
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;w&quot;</span><span class="p">):</span>
+                <span class="c1"># Write mode - use streaming compression</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_fileobj</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span>
+                <span class="n">cctx</span> <span class="o">=</span> <span class="n">zstd</span><span class="o">.</span><span class="n">ZstdCompressor</span><span class="p">(</span>
+                    <span class="n">level</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">compression_level</span><span class="p">,</span> <span class="n">write_content_size</span><span class="o">=</span><span class="kc">True</span>
+                <span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_compressed_stream</span> <span class="o">=</span> <span class="n">cctx</span><span class="o">.</span><span class="n">stream_writer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_fileobj</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_tarfile</span> <span class="o">=</span> <span class="n">tarfile</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">fileobj</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_compressed_stream</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;w|&quot;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">):</span>
+                <span class="c1"># Append mode - for tar.zst, this is complex as we need to decompress,</span>
+                <span class="c1"># add files, and recompress. For simplicity, we&#39;ll raise an error for now.</span>
+                <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+                    <span class="s2">&quot;Append mode is not currently supported for .tzst/.tar.zst archives. &quot;</span>
+                    <span class="s2">&quot;This would require decompressing the entire archive, adding new files, &quot;</span>
+                    <span class="s2">&quot;and recompressing, which is complex and potentially slow for large archives. &quot;</span>
+                    <span class="s2">&quot;Alternatives: 1) Create multiple archives, 2) Recreate the archive with all files, &quot;</span>
+                    <span class="s2">&quot;3) Use standard tar format for append operations, then compress separately.&quot;</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid mode: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">mode</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="k">if</span> <span class="s2">&quot;zstd&quot;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
+                <span class="k">raise</span> <span class="n">TzstDecompressionError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to open archive: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">TzstArchiveError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to open archive: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span></div>
+
+
+<div class="viewcode-block" id="TzstArchive.close">
+<a class="viewcode-back" href="../../api/core.html#tzst.core.TzstArchive.close">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Close the archive.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tarfile</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_tarfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_tarfile</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compressed_stream</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_compressed_stream</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_compressed_stream</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fileobj</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_fileobj</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_fileobj</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="TzstArchive.add">
+<a class="viewcode-back" href="../../api/core.html#tzst.core.TzstArchive.add">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">,</span>
+        <span class="n">arcname</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add a file or directory to the archive.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name: Path to file or directory to add</span>
+<span class="sd">            arcname: Alternative name for the file in the archive</span>
+<span class="sd">            recursive: If True, add directories recursively</span>
+
+<span class="sd">        See Also:</span>
+<span class="sd">            :func:`create_archive`: Convenience function for creating archives</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tarfile</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Archive not open&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;w&quot;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Archive not open for writing&quot;</span><span class="p">)</span>
+
+        <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;File not found: </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_tarfile</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="p">),</span> <span class="n">arcname</span><span class="o">=</span><span class="n">arcname</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="n">recursive</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">PermissionError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">TzstArchiveError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to add </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span></div>
+
+
+<div class="viewcode-block" id="TzstArchive.extract">
+<a class="viewcode-back" href="../../api/core.html#tzst.core.TzstArchive.extract">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">extract</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">member</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span> <span class="o">=</span> <span class="s2">&quot;.&quot;</span><span class="p">,</span>
+        <span class="n">set_attrs</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">numeric_owner</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="nb">filter</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Callable</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="s2">&quot;data&quot;</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Extract files from the archive.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            member: Specific member to extract (None for all)</span>
+<span class="sd">            path: Destination directory</span>
+<span class="sd">            set_attrs: Whether to set file attributes</span>
+<span class="sd">            numeric_owner: Whether to use numeric owner</span>
+<span class="sd">            filter: Extraction filter for security. Can be:</span>
+<span class="sd">                   - &#39;data&#39;: Safe filter for cross-platform data archives (default, recommended)</span>
+<span class="sd">                   - &#39;tar&#39;: Honor most tar features but block dangerous ones</span>
+<span class="sd">                   - &#39;fully_trusted&#39;: Honor all metadata (use only for trusted archives)</span>
+<span class="sd">                   - None: Use default behavior (may show deprecation warning in Python 3.12+)</span>
+<span class="sd">                   - callable: Custom filter function</span>
+
+<span class="sd">        Warning:</span>
+<span class="sd">            Never extract archives from untrusted sources without proper filtering.</span>
+<span class="sd">            The &#39;data&#39; filter is recommended for most use cases as it prevents</span>
+<span class="sd">            dangerous security issues like path traversal attacks.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            In streaming mode, extracting specific members is not supported.</span>
+<span class="sd">            Some extraction operations may be limited due to the sequential</span>
+<span class="sd">            nature of streaming mode.</span>
+
+<span class="sd">        See Also:</span>
+<span class="sd">            :func:`extract_archive`: Convenience function for extracting archives</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tarfile</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Archive not open&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;r&quot;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Archive not open for reading&quot;</span><span class="p">)</span>
+
+        <span class="n">extract_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="n">extract_path</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">streaming</span> <span class="ow">and</span> <span class="n">member</span><span class="p">:</span>
+            <span class="c1"># Specific member extraction not supported in streaming mode</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                <span class="s2">&quot;Extracting specific members is not supported in streaming mode. &quot;</span>
+                <span class="s2">&quot;Please use non-streaming mode for selective extraction, or extract all files.&quot;</span>
+            <span class="p">)</span>  <span class="c1"># Prepare extraction arguments - different parameters for extract vs extractall</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">member</span><span class="p">:</span>
+                <span class="c1"># extract() accepts set_attrs, numeric_owner, and filter</span>
+                <span class="n">extract_kwargs</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">&quot;set_attrs&quot;</span><span class="p">:</span> <span class="n">set_attrs</span><span class="p">,</span>
+                    <span class="s2">&quot;numeric_owner&quot;</span><span class="p">:</span> <span class="n">numeric_owner</span><span class="p">,</span>
+                    <span class="s2">&quot;filter&quot;</span><span class="p">:</span> <span class="nb">filter</span><span class="p">,</span>
+                <span class="p">}</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_tarfile</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="n">member</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="n">extract_path</span><span class="p">,</span> <span class="o">**</span><span class="n">extract_kwargs</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># extractall() only accepts numeric_owner and filter (no set_attrs)</span>
+                <span class="n">extractall_kwargs</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">&quot;numeric_owner&quot;</span><span class="p">:</span> <span class="n">numeric_owner</span><span class="p">,</span>
+                    <span class="s2">&quot;filter&quot;</span><span class="p">:</span> <span class="nb">filter</span><span class="p">,</span>
+                <span class="p">}</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_tarfile</span><span class="o">.</span><span class="n">extractall</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">extract_path</span><span class="p">,</span> <span class="o">**</span><span class="n">extractall_kwargs</span><span class="p">)</span>
+        <span class="k">except</span> <span class="p">(</span><span class="n">tarfile</span><span class="o">.</span><span class="n">StreamError</span><span class="p">,</span> <span class="ne">OSError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">streaming</span> <span class="ow">and</span> <span class="p">(</span>
+                <span class="s2">&quot;seeking&quot;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">or</span> <span class="s2">&quot;stream&quot;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+            <span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                    <span class="s2">&quot;Extraction failed in streaming mode due to archive structure limitations. &quot;</span>
+                    <span class="s2">&quot;This archive may require non-streaming mode for extraction. &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;Original error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span></div>
+
+
+<div class="viewcode-block" id="TzstArchive.extractfile">
+<a class="viewcode-back" href="../../api/core.html#tzst.core.TzstArchive.extractfile">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">extractfile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">member</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">tarfile</span><span class="o">.</span><span class="n">TarInfo</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Extract a file-like object from the archive.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            member: Member name or TarInfo object</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            File-like object or None if member is not a file</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tarfile</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Archive not open&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;r&quot;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Archive not open for reading&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tarfile</span><span class="o">.</span><span class="n">extractfile</span><span class="p">(</span><span class="n">member</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TzstArchive.extractall">
+<a class="viewcode-back" href="../../api/core.html#tzst.core.TzstArchive.extractall">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">extractall</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span> <span class="o">=</span> <span class="s2">&quot;.&quot;</span><span class="p">,</span>
+        <span class="n">members</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">tarfile</span><span class="o">.</span><span class="n">TarInfo</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">numeric_owner</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="nb">filter</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Callable</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="s2">&quot;data&quot;</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Extract all members from the archive.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            path: Destination directory (default: current directory)</span>
+<span class="sd">            members: Specific members to extract (None for all)</span>
+<span class="sd">            numeric_owner: Whether to use numeric owner IDs</span>
+<span class="sd">            filter: Extraction filter for security. Can be:</span>
+<span class="sd">                   - &#39;data&#39;: Safe filter for cross-platform data archives</span>
+<span class="sd">                   - &#39;tar&#39;: Honor most tar features but block dangerous ones</span>
+<span class="sd">                   - &#39;fully_trusted&#39;: Honor all metadata (trusted archives only)</span>
+<span class="sd">                   - None: Use default behavior (may show deprecation warning)</span>
+<span class="sd">                   - callable: Custom filter function</span>
+
+<span class="sd">        Warning:</span>
+<span class="sd">            Never extract archives from untrusted sources without proper filtering.</span>
+<span class="sd">            The &#39;data&#39; filter is recommended for most use cases as it prevents</span>
+<span class="sd">            dangerous security issues like path traversal attacks.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            In streaming mode, extracting specific members is not supported.</span>
+<span class="sd">            Some extraction operations may be limited due to the sequential</span>
+<span class="sd">            nature of streaming mode.</span>
+
+<span class="sd">        See Also:</span>
+<span class="sd">            :meth:`extract`: Extract a single member from the archive</span>
+<span class="sd">            :func:`extract_archive`: Convenience function for extracting archives</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tarfile</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Archive not open&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;r&quot;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Archive not open for reading&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">streaming</span> <span class="ow">and</span> <span class="n">members</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Specific member extraction not supported in streaming mode</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                <span class="s2">&quot;Extracting specific members is not supported in streaming mode. &quot;</span>
+                <span class="s2">&quot;Please use non-streaming mode for selective extraction, &quot;</span>
+                <span class="s2">&quot;or extract all files.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="n">extract_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="n">extract_path</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># extractall() accepts numeric_owner, filter, and members parameters</span>
+            <span class="n">extractall_kwargs</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;numeric_owner&quot;</span><span class="p">:</span> <span class="n">numeric_owner</span><span class="p">,</span>
+                <span class="s2">&quot;filter&quot;</span><span class="p">:</span> <span class="nb">filter</span><span class="p">,</span>
+            <span class="p">}</span>
+            <span class="k">if</span> <span class="n">members</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">extractall_kwargs</span><span class="p">[</span><span class="s2">&quot;members&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">members</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_tarfile</span><span class="o">.</span><span class="n">extractall</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">extract_path</span><span class="p">,</span> <span class="o">**</span><span class="n">extractall_kwargs</span><span class="p">)</span>
+        <span class="k">except</span> <span class="p">(</span><span class="n">tarfile</span><span class="o">.</span><span class="n">StreamError</span><span class="p">,</span> <span class="ne">OSError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">streaming</span> <span class="ow">and</span> <span class="p">(</span>
+                <span class="s2">&quot;seeking&quot;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">or</span> <span class="s2">&quot;stream&quot;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+            <span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                    <span class="s2">&quot;Extraction failed in streaming mode due to archive &quot;</span>
+                    <span class="s2">&quot;structure limitations. This archive may require &quot;</span>
+                    <span class="s2">&quot;non-streaming mode for extraction. &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;Original error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span></div>
+
+
+<div class="viewcode-block" id="TzstArchive.getmembers">
+<a class="viewcode-back" href="../../api/core.html#tzst.core.TzstArchive.getmembers">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getmembers</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">tarfile</span><span class="o">.</span><span class="n">TarInfo</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get list of all members in the archive.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tarfile</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Archive not open&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;r&quot;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Archive not open for reading&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tarfile</span><span class="o">.</span><span class="n">getmembers</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="TzstArchive.getnames">
+<a class="viewcode-back" href="../../api/core.html#tzst.core.TzstArchive.getnames">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getnames</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get list of all member names in the archive.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tarfile</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Archive not open&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;r&quot;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Archive not open for reading&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tarfile</span><span class="o">.</span><span class="n">getnames</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="TzstArchive.list">
+<a class="viewcode-back" href="../../api/core.html#tzst.core.TzstArchive.list">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        List contents of the archive.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            verbose: Include detailed information</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            List of file information dictionaries</span>
+
+<span class="sd">        See Also:</span>
+<span class="sd">            :meth:`getmembers`: Get TarInfo objects for all archive members</span>
+<span class="sd">            :meth:`getnames`: Get names of all archive members</span>
+<span class="sd">            :func:`list_archive`: Convenience function for listing archives</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tarfile</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Archive not open&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;r&quot;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Archive not open for reading&quot;</span><span class="p">)</span>
+
+        <span class="n">members</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getmembers</span><span class="p">()</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">member</span> <span class="ow">in</span> <span class="n">members</span><span class="p">:</span>
+            <span class="n">info</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">member</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                <span class="s2">&quot;size&quot;</span><span class="p">:</span> <span class="n">member</span><span class="o">.</span><span class="n">size</span><span class="p">,</span>
+                <span class="s2">&quot;is_file&quot;</span><span class="p">:</span> <span class="n">member</span><span class="o">.</span><span class="n">isfile</span><span class="p">(),</span>
+                <span class="s2">&quot;is_dir&quot;</span><span class="p">:</span> <span class="n">member</span><span class="o">.</span><span class="n">isdir</span><span class="p">(),</span>
+                <span class="s2">&quot;is_link&quot;</span><span class="p">:</span> <span class="n">member</span><span class="o">.</span><span class="n">islnk</span><span class="p">(),</span>
+                <span class="s2">&quot;is_symlink&quot;</span><span class="p">:</span> <span class="n">member</span><span class="o">.</span><span class="n">issym</span><span class="p">(),</span>
+            <span class="p">}</span>
+
+            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                <span class="n">info</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+                    <span class="p">{</span>
+                        <span class="s2">&quot;mode&quot;</span><span class="p">:</span> <span class="n">member</span><span class="o">.</span><span class="n">mode</span><span class="p">,</span>
+                        <span class="s2">&quot;uid&quot;</span><span class="p">:</span> <span class="n">member</span><span class="o">.</span><span class="n">uid</span><span class="p">,</span>
+                        <span class="s2">&quot;gid&quot;</span><span class="p">:</span> <span class="n">member</span><span class="o">.</span><span class="n">gid</span><span class="p">,</span>
+                        <span class="s2">&quot;mtime&quot;</span><span class="p">:</span> <span class="n">member</span><span class="o">.</span><span class="n">mtime</span><span class="p">,</span>
+                        <span class="s2">&quot;mtime_str&quot;</span><span class="p">:</span> <span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span>
+                            <span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">localtime</span><span class="p">(</span><span class="n">member</span><span class="o">.</span><span class="n">mtime</span><span class="p">)</span>
+                        <span class="p">),</span>
+                        <span class="s2">&quot;linkname&quot;</span><span class="p">:</span> <span class="n">member</span><span class="o">.</span><span class="n">linkname</span><span class="p">,</span>
+                        <span class="s2">&quot;uname&quot;</span><span class="p">:</span> <span class="n">member</span><span class="o">.</span><span class="n">uname</span><span class="p">,</span>
+                        <span class="s2">&quot;gname&quot;</span><span class="p">:</span> <span class="n">member</span><span class="o">.</span><span class="n">gname</span><span class="p">,</span>
+                    <span class="p">}</span>
+                <span class="p">)</span>
+
+            <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="TzstArchive.test">
+<a class="viewcode-back" href="../../api/core.html#tzst.core.TzstArchive.test">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Test the integrity of the archive.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            True if archive is valid, False otherwise</span>
+
+<span class="sd">        See Also:</span>
+<span class="sd">            :func:`test_archive`: Convenience function for testing archive integrity</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tarfile</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Archive not open&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;r&quot;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Archive not open for reading&quot;</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Try to iterate through all members and read file contents</span>
+            <span class="k">for</span> <span class="n">member</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">getmembers</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">member</span><span class="o">.</span><span class="n">isfile</span><span class="p">():</span>
+                    <span class="c1"># Try to extract each file to verify integrity</span>
+                    <span class="n">fileobj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extractfile</span><span class="p">(</span><span class="n">member</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">fileobj</span><span class="p">:</span>
+                        <span class="c1"># Read the entire file to verify decompression</span>
+                        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+                            <span class="n">chunk</span> <span class="o">=</span> <span class="n">fileobj</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">8192</span><span class="p">)</span>
+                            <span class="k">if</span> <span class="ow">not</span> <span class="n">chunk</span><span class="p">:</span>
+                                <span class="k">break</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+</div>
+
+
+
+<span class="c1"># Convenience functions</span>
+
+
+<div class="viewcode-block" id="create_archive">
+<a class="viewcode-back" href="../../api/core.html#tzst.core.create_archive">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_archive</span><span class="p">(</span>
+    <span class="n">archive_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">,</span>
+    <span class="n">files</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">],</span>
+    <span class="n">compression_level</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="n">use_temp_file</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create a new .tzst archive with atomic file operations.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        archive_path: Path for the new archive</span>
+<span class="sd">        files: List of files/directories to add</span>
+<span class="sd">        compression_level: Zstandard compression level (1-22)</span>
+<span class="sd">        use_temp_file: If True, create archive in temporary file first, then move</span>
+<span class="sd">                      to final location for atomic operation</span>
+
+<span class="sd">    See Also:</span>
+<span class="sd">        :meth:`TzstArchive.add`: Method for adding files to an open archive</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Validate compression level</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">compression_level</span> <span class="o">&lt;=</span> <span class="mi">22</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Invalid compression level &#39;</span><span class="si">{</span><span class="n">compression_level</span><span class="si">}</span><span class="s2">&#39;. Must be between 1 and 22.&quot;</span>
+        <span class="p">)</span>
+
+    <span class="n">archive_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">archive_path</span><span class="p">)</span>
+
+    <span class="c1"># Ensure archive has correct extension</span>
+    <span class="k">if</span> <span class="n">archive_path</span><span class="o">.</span><span class="n">suffix</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;.tzst&quot;</span><span class="p">,</span> <span class="s2">&quot;.zst&quot;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">archive_path</span><span class="o">.</span><span class="n">suffix</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;.tar&quot;</span><span class="p">:</span>
+            <span class="n">archive_path</span> <span class="o">=</span> <span class="n">archive_path</span><span class="o">.</span><span class="n">with_suffix</span><span class="p">(</span><span class="s2">&quot;.tar.zst&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">archive_path</span> <span class="o">=</span> <span class="n">archive_path</span><span class="o">.</span><span class="n">with_suffix</span><span class="p">(</span><span class="n">archive_path</span><span class="o">.</span><span class="n">suffix</span> <span class="o">+</span> <span class="s2">&quot;.tzst&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Use temporary file for atomic operation if requested</span>
+    <span class="k">if</span> <span class="n">use_temp_file</span><span class="p">:</span>
+        <span class="n">temp_fd</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">temp_path</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Create temporary file in same directory as target for atomic move</span>
+            <span class="n">temp_fd</span><span class="p">,</span> <span class="n">temp_path_str</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">mkstemp</span><span class="p">(</span>
+                <span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;.tmp&quot;</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;.</span><span class="si">{</span><span class="n">archive_path</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">,</span> <span class="nb">dir</span><span class="o">=</span><span class="n">archive_path</span><span class="o">.</span><span class="n">parent</span>
+            <span class="p">)</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">temp_fd</span><span class="p">)</span>  <span class="c1"># Close file descriptor, we&#39;ll open with TzstArchive</span>
+            <span class="n">temp_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">temp_path_str</span><span class="p">)</span>
+
+            <span class="c1"># Create archive in temporary location</span>
+            <span class="n">_create_archive_impl</span><span class="p">(</span><span class="n">temp_path</span><span class="p">,</span> <span class="n">files</span><span class="p">,</span> <span class="n">compression_level</span><span class="p">)</span>
+
+            <span class="c1"># Atomic move to final location</span>
+            <span class="n">temp_path</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">archive_path</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="c1"># Clean up temporary file on error</span>
+            <span class="k">if</span> <span class="n">temp_path</span> <span class="ow">and</span> <span class="n">temp_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">temp_path</span><span class="o">.</span><span class="n">unlink</span><span class="p">()</span>
+                <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                    <span class="k">pass</span>
+            <span class="k">raise</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Direct creation (non-atomic)</span>
+        <span class="n">_create_archive_impl</span><span class="p">(</span><span class="n">archive_path</span><span class="p">,</span> <span class="n">files</span><span class="p">,</span> <span class="n">compression_level</span><span class="p">)</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_create_archive_impl</span><span class="p">(</span>
+    <span class="n">archive_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
+    <span class="n">files</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">],</span>
+    <span class="n">compression_level</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Internal implementation for creating archives.&quot;&quot;&quot;</span>
+    <span class="c1"># Find common parent directory for relative paths</span>
+    <span class="k">if</span> <span class="n">files</span><span class="p">:</span>
+        <span class="n">file_paths</span> <span class="o">=</span> <span class="p">[</span><span class="n">Path</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">files</span> <span class="k">if</span> <span class="n">Path</span><span class="p">(</span><span class="n">f</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">()]</span>
+        <span class="k">if</span> <span class="n">file_paths</span><span class="p">:</span>  <span class="c1"># Special handling for current directory &quot;.&quot;</span>
+            <span class="n">current_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">file_paths</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="p">(</span>
+                <span class="nb">str</span><span class="p">(</span><span class="n">file_paths</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="s2">&quot;.&quot;</span> <span class="ow">or</span> <span class="n">file_paths</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span> <span class="o">==</span> <span class="n">current_dir</span>
+            <span class="p">):</span>  <span class="c1"># When adding current directory, add its contents without &quot;./&quot; prefix</span>
+                <span class="k">with</span> <span class="n">TzstArchive</span><span class="p">(</span><span class="n">archive_path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">compression_level</span><span class="p">)</span> <span class="k">as</span> <span class="n">archive</span><span class="p">:</span>
+                    <span class="c1"># Add all items in current directory, excluding archive and temp files</span>
+                    <span class="n">archive_abs_path</span> <span class="o">=</span> <span class="n">archive_path</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+                    <span class="n">archive_name</span> <span class="o">=</span> <span class="n">archive_path</span><span class="o">.</span><span class="n">name</span>
+                    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">iterdir</span><span class="p">():</span>
+                        <span class="n">item_abs_path</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+                        <span class="c1"># Skip archives and temp files for consistency</span>
+                        <span class="k">if</span> <span class="p">(</span>
+                            <span class="n">item_abs_path</span> <span class="o">==</span> <span class="n">archive_abs_path</span>
+                            <span class="ow">or</span> <span class="n">item</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">archive_name</span>
+                            <span class="ow">or</span> <span class="p">(</span>
+                                <span class="n">item</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">item</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.tmp&quot;</span><span class="p">)</span>
+                            <span class="p">)</span>
+                            <span class="ow">or</span> <span class="n">item</span><span class="o">.</span><span class="n">suffix</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;.tzst&quot;</span><span class="p">,</span> <span class="s2">&quot;.zst&quot;</span><span class="p">]</span>
+                            <span class="ow">or</span> <span class="n">item</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.tar.zst&quot;</span><span class="p">)</span>
+                        <span class="p">):</span>
+                            <span class="k">continue</span>
+                        <span class="c1"># Use item name as archive name to avoid &quot;./&quot; prefix</span>
+                        <span class="n">item_name</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;/&quot;</span><span class="p">)</span>
+                        <span class="n">archive</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">item</span><span class="p">),</span> <span class="n">arcname</span><span class="o">=</span><span class="n">item_name</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Find the common parent directory</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">common_parent</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span>
+                        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">commonpath</span><span class="p">([</span><span class="n">p</span><span class="o">.</span><span class="n">parent</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">file_paths</span><span class="p">])</span>
+                    <span class="p">)</span>
+                <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                    <span class="c1"># No common path, use parent of first file</span>
+                    <span class="n">common_parent</span> <span class="o">=</span> <span class="n">file_paths</span><span class="p">[</span>
+                        <span class="mi">0</span>
+                    <span class="p">]</span><span class="o">.</span><span class="n">parent</span>  <span class="c1"># Change to common parent directory to get relative paths</span>
+                <span class="n">original_cwd</span> <span class="o">=</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span>
+                <span class="c1"># Convert archive path to absolute to avoid issues when changing working directory</span>
+                <span class="n">absolute_archive_path</span> <span class="o">=</span> <span class="n">archive_path</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">common_parent</span><span class="p">)</span>
+                    <span class="k">with</span> <span class="n">TzstArchive</span><span class="p">(</span>
+                        <span class="n">absolute_archive_path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">compression_level</span>
+                    <span class="p">)</span> <span class="k">as</span> <span class="n">archive</span><span class="p">:</span>
+                        <span class="k">for</span> <span class="n">file_path</span> <span class="ow">in</span> <span class="n">file_paths</span><span class="p">:</span>
+                            <span class="c1"># Calculate relative path from common parent</span>
+                            <span class="n">relative_path</span> <span class="o">=</span> <span class="n">file_path</span><span class="o">.</span><span class="n">relative_to</span><span class="p">(</span><span class="n">common_parent</span><span class="p">)</span>
+                            <span class="c1"># Normalize path separators and remove Windows prefixes</span>
+                            <span class="n">path_str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">relative_path</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;/&quot;</span><span class="p">)</span>
+                            <span class="k">if</span> <span class="n">path_str</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;./&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">path_str</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;.</span><span class="se">\\</span><span class="s2">&quot;</span><span class="p">):</span>
+                                <span class="n">path_str</span> <span class="o">=</span> <span class="n">path_str</span><span class="p">[</span><span class="mi">2</span><span class="p">:]</span>
+                            <span class="c1"># Use arcname to control the name in the archive</span>
+                            <span class="n">archive</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">relative_path</span><span class="p">),</span> <span class="n">arcname</span><span class="o">=</span><span class="n">path_str</span><span class="p">)</span>
+                <span class="k">finally</span><span class="p">:</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">original_cwd</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="s2">&quot;No valid files found&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Empty archive</span>
+        <span class="k">with</span> <span class="n">TzstArchive</span><span class="p">(</span><span class="n">archive_path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">compression_level</span><span class="p">)</span> <span class="k">as</span> <span class="n">archive</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+
+<div class="viewcode-block" id="extract_archive">
+<a class="viewcode-back" href="../../api/core.html#tzst.core.extract_archive">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">extract_archive</span><span class="p">(</span>
+    <span class="n">archive_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">,</span>
+    <span class="n">extract_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span> <span class="o">=</span> <span class="s2">&quot;.&quot;</span><span class="p">,</span>
+    <span class="n">members</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">flatten</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">streaming</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="nb">filter</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Callable</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="s2">&quot;data&quot;</span><span class="p">,</span>
+    <span class="n">conflict_resolution</span><span class="p">:</span> <span class="n">ConflictResolution</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">ConflictResolution</span><span class="o">.</span><span class="n">REPLACE</span><span class="p">,</span>
+    <span class="n">interactive_callback</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Path</span><span class="p">],</span> <span class="n">ConflictResolution</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Extract files from a .tzst archive.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        archive_path: Path to the archive</span>
+<span class="sd">        extract_path: Destination directory</span>
+<span class="sd">        members: Specific members to extract (None for all)</span>
+<span class="sd">        flatten: If True, extract without directory structure</span>
+<span class="sd">        streaming: If True, use streaming mode (memory efficient for large archives)</span>
+<span class="sd">        filter: Extraction filter for security. Can be:</span>
+<span class="sd">               - &#39;data&#39;: Safe filter for cross-platform data archives (default)</span>
+<span class="sd">               - &#39;tar&#39;: Honor most tar features but block dangerous ones</span>
+<span class="sd">               - &#39;fully_trusted&#39;: Honor all metadata (use only for trusted archives)</span>
+<span class="sd">               - None: Use default behavior (may show deprecation warning)</span>
+<span class="sd">               - callable: Custom filter function</span>
+<span class="sd">        conflict_resolution: How to handle file conflicts during extraction</span>
+<span class="sd">        interactive_callback: Function to call for interactive conflict resolution</span>
+
+<span class="sd">    Warning:</span>
+<span class="sd">        Never extract archives from untrusted sources without proper filtering.        The &#39;data&#39; filter is recommended for most use cases as it prevents</span>
+<span class="sd">        dangerous security issues like path traversal attacks.</span>
+
+<span class="sd">        See Also:</span>
+<span class="sd">        :meth:`TzstArchive.extract`: Method for extracting from an open archive</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="n">TzstArchive</span><span class="p">(</span><span class="n">archive_path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">streaming</span><span class="o">=</span><span class="n">streaming</span><span class="p">)</span> <span class="k">as</span> <span class="n">archive</span><span class="p">:</span>
+        <span class="c1"># Convert string resolution to enum if needed</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">conflict_resolution</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">conflict_resolution</span> <span class="o">=</span> <span class="n">ConflictResolution</span><span class="p">(</span><span class="n">conflict_resolution</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="n">conflict_resolution</span> <span class="o">=</span> <span class="n">ConflictResolution</span><span class="o">.</span><span class="n">REPLACE</span>
+
+        <span class="n">state</span> <span class="o">=</span> <span class="n">ConflictResolutionState</span><span class="p">(</span><span class="n">conflict_resolution</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">flatten</span><span class="p">:</span>
+            <span class="c1"># Extract files without directory structure</span>
+            <span class="n">extract_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">extract_path</span><span class="p">)</span>
+            <span class="n">extract_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">members</span><span class="p">:</span>
+                <span class="n">member_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">m</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">archive</span><span class="o">.</span><span class="n">getmembers</span><span class="p">()</span> <span class="k">if</span> <span class="n">m</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="n">members</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">member_list</span> <span class="o">=</span> <span class="n">archive</span><span class="o">.</span><span class="n">getmembers</span><span class="p">()</span>
+
+            <span class="k">for</span> <span class="n">member</span> <span class="ow">in</span> <span class="n">member_list</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">state</span><span class="o">.</span><span class="n">should_continue</span><span class="p">():</span>
+                    <span class="k">break</span>
+
+                <span class="k">if</span> <span class="n">member</span><span class="o">.</span><span class="n">isfile</span><span class="p">():</span>
+                    <span class="c1"># Extract to flat directory</span>
+                    <span class="n">filename</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">member</span><span class="o">.</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">name</span>
+                    <span class="n">target_path</span> <span class="o">=</span> <span class="n">extract_dir</span> <span class="o">/</span> <span class="n">filename</span>
+
+                    <span class="c1"># Handle conflicts</span>
+                    <span class="k">if</span> <span class="n">target_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+                        <span class="n">current_resolution</span> <span class="o">=</span> <span class="p">(</span>
+                            <span class="n">state</span><span class="o">.</span><span class="n">global_resolution</span> <span class="ow">or</span> <span class="n">conflict_resolution</span>
+                        <span class="p">)</span>
+                        <span class="n">actual_resolution</span><span class="p">,</span> <span class="n">final_path</span> <span class="o">=</span> <span class="n">_handle_file_conflict</span><span class="p">(</span>
+                            <span class="n">target_path</span><span class="p">,</span> <span class="n">current_resolution</span><span class="p">,</span> <span class="n">interactive_callback</span>
+                        <span class="p">)</span>
+                        <span class="n">state</span><span class="o">.</span><span class="n">update_resolution</span><span class="p">(</span><span class="n">actual_resolution</span><span class="p">)</span>
+
+                        <span class="k">if</span> <span class="n">actual_resolution</span> <span class="ow">in</span> <span class="p">(</span>
+                            <span class="n">ConflictResolution</span><span class="o">.</span><span class="n">SKIP</span><span class="p">,</span>
+                            <span class="n">ConflictResolution</span><span class="o">.</span><span class="n">SKIP_ALL</span><span class="p">,</span>
+                        <span class="p">):</span>
+                            <span class="k">continue</span>
+                        <span class="k">elif</span> <span class="n">actual_resolution</span> <span class="o">==</span> <span class="n">ConflictResolution</span><span class="o">.</span><span class="n">EXIT</span><span class="p">:</span>
+                            <span class="k">break</span>
+                        <span class="n">target_path</span> <span class="o">=</span> <span class="n">final_path</span>
+
+                    <span class="n">fileobj</span> <span class="o">=</span> <span class="n">archive</span><span class="o">.</span><span class="n">extractfile</span><span class="p">(</span><span class="n">member</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">fileobj</span><span class="p">:</span>
+                        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">target_path</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">fileobj</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Extract with full directory structure</span>
+            <span class="k">if</span> <span class="n">members</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">member</span> <span class="ow">in</span> <span class="n">members</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">state</span><span class="o">.</span><span class="n">should_continue</span><span class="p">():</span>
+                        <span class="k">break</span>
+
+                    <span class="n">target_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">extract_path</span><span class="p">)</span> <span class="o">/</span> <span class="n">member</span>
+
+                    <span class="c1"># Handle conflicts</span>
+                    <span class="k">if</span> <span class="n">target_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+                        <span class="n">current_resolution</span> <span class="o">=</span> <span class="p">(</span>
+                            <span class="n">state</span><span class="o">.</span><span class="n">global_resolution</span> <span class="ow">or</span> <span class="n">conflict_resolution</span>
+                        <span class="p">)</span>
+                        <span class="n">actual_resolution</span><span class="p">,</span> <span class="n">final_path</span> <span class="o">=</span> <span class="n">_handle_file_conflict</span><span class="p">(</span>
+                            <span class="n">target_path</span><span class="p">,</span> <span class="n">current_resolution</span><span class="p">,</span> <span class="n">interactive_callback</span>
+                        <span class="p">)</span>
+                        <span class="n">state</span><span class="o">.</span><span class="n">update_resolution</span><span class="p">(</span><span class="n">actual_resolution</span><span class="p">)</span>
+
+                        <span class="k">if</span> <span class="n">actual_resolution</span> <span class="ow">in</span> <span class="p">(</span>
+                            <span class="n">ConflictResolution</span><span class="o">.</span><span class="n">SKIP</span><span class="p">,</span>
+                            <span class="n">ConflictResolution</span><span class="o">.</span><span class="n">SKIP_ALL</span><span class="p">,</span>
+                        <span class="p">):</span>
+                            <span class="k">continue</span>
+                        <span class="k">elif</span> <span class="n">actual_resolution</span> <span class="o">==</span> <span class="n">ConflictResolution</span><span class="o">.</span><span class="n">EXIT</span><span class="p">:</span>
+                            <span class="k">break</span>  <span class="c1"># For AUTO_RENAME, we need to adjust the member path</span>
+                        <span class="k">if</span> <span class="n">actual_resolution</span> <span class="ow">in</span> <span class="p">(</span>
+                            <span class="n">ConflictResolution</span><span class="o">.</span><span class="n">AUTO_RENAME</span><span class="p">,</span>
+                            <span class="n">ConflictResolution</span><span class="o">.</span><span class="n">AUTO_RENAME_ALL</span><span class="p">,</span>
+                        <span class="p">):</span>
+                            <span class="c1"># Create parent directories for renamed file</span>
+                            <span class="k">if</span> <span class="n">final_path</span><span class="p">:</span>
+                                <span class="n">final_path</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                            <span class="c1"># Extract to temporary location, then move</span>
+                            <span class="n">temp_extract_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">tempfile</span><span class="o">.</span><span class="n">mkdtemp</span><span class="p">())</span>
+                            <span class="k">try</span><span class="p">:</span>
+                                <span class="n">archive</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span>
+                                    <span class="n">member</span><span class="p">,</span> <span class="n">temp_extract_path</span><span class="p">,</span> <span class="nb">filter</span><span class="o">=</span><span class="nb">filter</span>
+                                <span class="p">)</span>
+                                <span class="n">temp_file</span> <span class="o">=</span> <span class="n">temp_extract_path</span> <span class="o">/</span> <span class="n">member</span>
+                                <span class="k">if</span> <span class="n">final_path</span><span class="p">:</span>
+                                    <span class="n">_move_file_cross_platform</span><span class="p">(</span><span class="n">temp_file</span><span class="p">,</span> <span class="n">final_path</span><span class="p">)</span>
+                            <span class="k">finally</span><span class="p">:</span>
+                                <span class="c1"># Clean up temp directory</span>
+                                <span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
+
+                                <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">temp_extract_path</span><span class="p">,</span> <span class="n">ignore_errors</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">archive</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="n">member</span><span class="p">,</span> <span class="n">extract_path</span><span class="p">,</span> <span class="nb">filter</span><span class="o">=</span><span class="nb">filter</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">archive</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="n">member</span><span class="p">,</span> <span class="n">extract_path</span><span class="p">,</span> <span class="nb">filter</span><span class="o">=</span><span class="nb">filter</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># For extractall, we need a different approach</span>
+                <span class="c1"># We&#39;ll extract to a temp location and handle conflicts file by file</span>
+                <span class="n">temp_extract_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">tempfile</span><span class="o">.</span><span class="n">mkdtemp</span><span class="p">())</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">archive</span><span class="o">.</span><span class="n">extractall</span><span class="p">(</span><span class="n">temp_extract_path</span><span class="p">,</span> <span class="nb">filter</span><span class="o">=</span><span class="nb">filter</span><span class="p">)</span>
+
+                    <span class="c1"># Move files with conflict resolution</span>
+                    <span class="k">for</span> <span class="n">temp_file</span> <span class="ow">in</span> <span class="n">temp_extract_path</span><span class="o">.</span><span class="n">rglob</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">):</span>
+                        <span class="k">if</span> <span class="ow">not</span> <span class="n">state</span><span class="o">.</span><span class="n">should_continue</span><span class="p">():</span>
+                            <span class="k">break</span>
+
+                        <span class="k">if</span> <span class="n">temp_file</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+                            <span class="n">rel_path</span> <span class="o">=</span> <span class="n">temp_file</span><span class="o">.</span><span class="n">relative_to</span><span class="p">(</span><span class="n">temp_extract_path</span><span class="p">)</span>
+                            <span class="n">target_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">extract_path</span><span class="p">)</span> <span class="o">/</span> <span class="n">rel_path</span>
+
+                            <span class="c1"># Create parent directories</span>
+                            <span class="n">target_path</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span>
+                                <span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span>
+                            <span class="p">)</span>  <span class="c1"># Handle conflicts</span>
+                            <span class="k">if</span> <span class="n">target_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+                                <span class="n">current_resolution</span> <span class="o">=</span> <span class="p">(</span>
+                                    <span class="n">state</span><span class="o">.</span><span class="n">global_resolution</span> <span class="ow">or</span> <span class="n">conflict_resolution</span>
+                                <span class="p">)</span>
+                                <span class="n">actual_resolution</span><span class="p">,</span> <span class="n">final_path</span> <span class="o">=</span> <span class="n">_handle_file_conflict</span><span class="p">(</span>
+                                    <span class="n">target_path</span><span class="p">,</span>
+                                    <span class="n">current_resolution</span><span class="p">,</span>
+                                    <span class="n">interactive_callback</span><span class="p">,</span>
+                                <span class="p">)</span>
+                                <span class="n">state</span><span class="o">.</span><span class="n">update_resolution</span><span class="p">(</span><span class="n">actual_resolution</span><span class="p">)</span>
+
+                                <span class="k">if</span> <span class="n">actual_resolution</span> <span class="ow">in</span> <span class="p">(</span>
+                                    <span class="n">ConflictResolution</span><span class="o">.</span><span class="n">SKIP</span><span class="p">,</span>
+                                    <span class="n">ConflictResolution</span><span class="o">.</span><span class="n">SKIP_ALL</span><span class="p">,</span>
+                                <span class="p">):</span>
+                                    <span class="k">continue</span>
+                                <span class="k">elif</span> <span class="n">actual_resolution</span> <span class="o">==</span> <span class="n">ConflictResolution</span><span class="o">.</span><span class="n">EXIT</span><span class="p">:</span>
+                                    <span class="k">break</span>
+                                <span class="n">target_path</span> <span class="o">=</span> <span class="n">final_path</span>
+
+                                <span class="c1"># Handle file replacement on Windows</span>
+                                <span class="k">if</span> <span class="n">target_path</span> <span class="ow">and</span> <span class="n">target_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+                                    <span class="k">if</span> <span class="n">actual_resolution</span> <span class="ow">in</span> <span class="p">(</span>
+                                        <span class="n">ConflictResolution</span><span class="o">.</span><span class="n">REPLACE</span><span class="p">,</span>
+                                        <span class="n">ConflictResolution</span><span class="o">.</span><span class="n">REPLACE_ALL</span><span class="p">,</span>
+                                    <span class="p">):</span>
+                                        <span class="n">target_path</span><span class="o">.</span><span class="n">unlink</span><span class="p">()</span>  <span class="c1"># Remove existing file</span>
+
+                            <span class="k">if</span> <span class="n">target_path</span><span class="p">:</span>
+                                <span class="n">_move_file_cross_platform</span><span class="p">(</span><span class="n">temp_file</span><span class="p">,</span> <span class="n">target_path</span><span class="p">)</span>
+                <span class="k">finally</span><span class="p">:</span>
+                    <span class="c1"># Clean up temp directory</span>
+                    <span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
+
+                    <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">temp_extract_path</span><span class="p">,</span> <span class="n">ignore_errors</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="list_archive">
+<a class="viewcode-back" href="../../api/core.html#tzst.core.list_archive">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">list_archive</span><span class="p">(</span>
+    <span class="n">archive_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">streaming</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    List contents of a .tzst archive.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        archive_path: Path to the archive</span>
+<span class="sd">        verbose: Include detailed information</span>
+<span class="sd">        streaming: If True, use streaming mode (memory efficient for large archives)</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        List of file information dictionaries</span>
+
+<span class="sd">    See Also:</span>
+<span class="sd">        :meth:`TzstArchive.list`: Method for listing an open archive</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="n">TzstArchive</span><span class="p">(</span><span class="n">archive_path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">streaming</span><span class="o">=</span><span class="n">streaming</span><span class="p">)</span> <span class="k">as</span> <span class="n">archive</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">archive</span><span class="o">.</span><span class="n">list</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="test_archive">
+<a class="viewcode-back" href="../../api/core.html#tzst.core.test_archive">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_archive</span><span class="p">(</span><span class="n">archive_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">,</span> <span class="n">streaming</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Test the integrity of a .tzst archive.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        archive_path: Path to the archive</span>
+<span class="sd">        streaming: If True, use streaming mode (memory efficient for large archives)</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        True if archive is valid, False otherwise</span>
+
+<span class="sd">    See Also:</span>
+<span class="sd">        :meth:`TzstArchive.test`: Method for testing an open archive</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># Open a fresh archive instance for testing</span>
+        <span class="k">with</span> <span class="n">TzstArchive</span><span class="p">(</span><span class="n">archive_path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">streaming</span><span class="o">=</span><span class="n">streaming</span><span class="p">)</span> <span class="k">as</span> <span class="n">archive</span><span class="p">:</span>
+            <span class="c1"># Try to iterate through all members and read file contents</span>
+            <span class="k">for</span> <span class="n">member</span> <span class="ow">in</span> <span class="n">archive</span><span class="o">.</span><span class="n">getmembers</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">member</span><span class="o">.</span><span class="n">isfile</span><span class="p">():</span>
+                    <span class="c1"># In streaming mode, extractfile may not work properly with r| mode</span>
+                    <span class="c1"># So we&#39;ll just check that we can iterate through members</span>
+                    <span class="k">if</span> <span class="n">streaming</span><span class="p">:</span>
+                        <span class="c1"># For streaming mode, just verify we can read the member info</span>
+                        <span class="c1"># This tests that the archive structure is valid</span>
+                        <span class="k">continue</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="c1"># Try to extract each file to verify integrity</span>
+                        <span class="n">fileobj</span> <span class="o">=</span> <span class="n">archive</span><span class="o">.</span><span class="n">extractfile</span><span class="p">(</span><span class="n">member</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">fileobj</span><span class="p">:</span>
+                            <span class="c1"># Read the entire file to verify decompression</span>
+                            <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+                                <span class="n">chunk</span> <span class="o">=</span> <span class="n">fileobj</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">8192</span><span class="p">)</span>
+                                <span class="k">if</span> <span class="ow">not</span> <span class="n">chunk</span><span class="p">:</span>
+                                    <span class="k">break</span>
+            <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Xi Xu.</p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

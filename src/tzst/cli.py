@@ -92,7 +92,7 @@ def print_banner() -> None:
         None
     """
     print()
-    print(f"tzst {__version__} : Copyright (c) 2025 Xi Xu")
+    print(f"tzst {__version__} : Copyright (c) Xi Xu")
     print()
 
 

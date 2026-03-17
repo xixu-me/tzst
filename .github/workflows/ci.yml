@@ -1,5 +1,8 @@
 name: CI/CD
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+
 on:
   push:
     branches: [main, develop]
@@ -141,11 +144,11 @@ jobs:
             python-version: "3.12"
             cross_compile: true
           # macOS architectures
-          - os: macos-13 # Intel-based runner
+          - os: macos-15-intel # Intel-based runner
             os_name: darwin
             arch: amd64
             python-version: "3.12"
-          - os: macos-14 # ARM-based runner (M1/M2)
+          - os: macos-15 # ARM-based runner (M1/M2)
             os_name: darwin
             arch: arm64
             python-version: "3.12"
@@ -194,7 +197,7 @@ jobs:
           }
 
       - name: Build binary for ARM64 on macOS
-        if: matrix.os == 'macos-14' && matrix.arch == 'arm64'
+        if: matrix.os_name == 'darwin' && matrix.arch == 'arm64'
         run: |
           python -m PyInstaller --onefile --name tzst --console --target-arch arm64 --icon docs/_static/favicon.ico src/main.py
 
@@ -314,6 +317,7 @@ jobs:
       - uses: actions/checkout@v6
         with:
           fetch-depth: 0
+          ref: main
 
       - name: Set up Python
         uses: actions/setup-python@v6

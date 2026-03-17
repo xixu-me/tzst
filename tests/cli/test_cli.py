@@ -5,6 +5,7 @@ and provide a single source of truth for CLI testing.
 """
 
 import argparse
+import json
 
 import pytest
 
@@ -146,6 +147,15 @@ class TestCLIParser:
         assert args.command == "t"
         assert args.archive == "test.tzst"
 
+    def test_global_machine_readable_flags(self):
+        """Test parsing of machine-readable output flags."""
+        parser = create_parser()
+        args = parser.parse_args(["--json", "--no-banner", "l", "test.tzst"])
+
+        assert args.json_output is True
+        assert args.no_banner is True
+        assert args.command == "l"
+
 
 class TestCLICommands:
     """Test CLI command execution."""
@@ -201,6 +211,58 @@ class TestCLICommands:
         result = main(["t", str(archive_path)])
 
         assert result == 0
+
+    def test_add_command_json_output(self, sample_files, temp_dir, capsys):
+        """Test add command JSON output for sidecar integrations."""
+        archive_path = temp_dir / "json-add.tzst"
+        file_paths = [str(f) for f in sample_files if f.is_file()]
+
+        result = main(["--json", "a", str(archive_path), *file_paths])
+
+        assert result == 0
+        payload = json.loads(capsys.readouterr().out)
+        assert payload["ok"] is True
+        assert payload["command"] == "add"
+        assert payload["normalized_archive"] == str(archive_path)
+        assert payload["added"] == file_paths
+
+    def test_list_command_json_output(self, sample_files, temp_dir, capsys):
+        """Test list command JSON output for the desktop app."""
+        archive_path = temp_dir / "json-list.tzst"
+        file_paths = [str(f) for f in sample_files if f.is_file()]
+
+        create_result = main(["--no-banner", "a", str(archive_path), *file_paths])
+        assert create_result == 0
+        capsys.readouterr()
+
+        result = main(["--json", "l", str(archive_path)])
+
+        assert result == 0
+        payload = json.loads(capsys.readouterr().out)
+        assert payload["ok"] is True
+        assert payload["command"] == "list"
+        assert payload["summary"]["files"] >= 1
+        assert isinstance(payload["contents"], list)
+
+    def test_missing_archive_json_error(self, temp_dir, capsys):
+        """Test JSON-formatted error output."""
+        fake_archive = temp_dir / "missing.tzst"
+
+        result = main(["--json", "l", str(fake_archive)])
+
+        assert result == 1
+        payload = json.loads(capsys.readouterr().err)
+        assert payload["ok"] is False
+        assert payload["error"]["type"] == "archive_not_found"
+
+    def test_version_json_output(self, capsys):
+        """Test JSON version output without the startup banner."""
+        result = main(["--json", "--version"])
+
+        assert result == 0
+        payload = json.loads(capsys.readouterr().out)
+        assert payload["ok"] is True
+        assert payload["command"] == "version"
 
 
 class TestCLIErrorHandling:

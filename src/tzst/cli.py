@@ -1,9 +1,10 @@
 """Command-line interface for tzst."""
 
 import argparse
+import json
 import sys
 from pathlib import Path
-from typing import Literal, cast
+from typing import Any, Literal, cast
 
 from . import __version__
 from .core import (
@@ -94,6 +95,66 @@ def print_banner() -> None:
     print()
     print(f"tzst {__version__} : Copyright (c) Xi Xu")
     print()
+
+
+def _wants_json_output(args) -> bool:
+    """Return True when the caller requested machine-readable output."""
+    return bool(getattr(args, "json_output", False))
+
+
+def _emit_json(payload: dict[str, Any], *, to_stderr: bool = False) -> None:
+    """Emit a JSON payload to stdout or stderr."""
+    stream = sys.stderr if to_stderr else sys.stdout
+    print(json.dumps(payload, ensure_ascii=True), file=stream)
+
+
+def _emit_error(
+    args,
+    message: str,
+    *,
+    error_type: str,
+    exit_code: int = 1,
+    details: dict[str, Any] | None = None,
+) -> int:
+    """Emit an error in text or JSON format and return the exit code."""
+    if _wants_json_output(args):
+        payload: dict[str, Any] = {
+            "ok": False,
+            "error": {"type": error_type, "message": message},
+        }
+        if details:
+            payload["error"]["details"] = details
+        _emit_json(payload, to_stderr=True)
+    else:
+        print(message, file=sys.stderr)
+    return exit_code
+
+
+def _summarize_listing(contents: list[dict[str, Any]]) -> dict[str, int | str]:
+    """Build the summary block used by list output."""
+    total_files = 0
+    total_dirs = 0
+    total_size = 0
+
+    for item in contents:
+        if item["is_file"]:
+            total_files += 1
+            total_size += item["size"]
+        elif item["is_dir"]:
+            total_dirs += 1
+
+    return {
+        "files": total_files,
+        "directories": total_dirs,
+        "total_size_bytes": total_size,
+        "total_size_human": format_size(total_size),
+    }
+
+
+def _should_print_banner(argv: list[str] | None) -> bool:
+    """Determine whether the human-facing banner should be displayed."""
+    cli_args = argv if argv is not None else sys.argv[1:]
+    return "--json" not in cli_args and "--no-banner" not in cli_args
 
 
 def format_size(size: int) -> str:
@@ -220,18 +281,23 @@ def _prepare_archive_creation(args) -> tuple[Path, list[Path], int, bool] | int:
     # Validate files
     missing_files = _validate_files(files)
     if missing_files:
-        print(
+        return _emit_error(
+            args,
             f"Error: Files not found - {', '.join(map(str, missing_files))}",
-            file=sys.stderr,
+            error_type="files_not_found",
+            details={"missing_files": [str(path) for path in missing_files]},
         )
-        return 1
 
     compression_level, use_temp_file = _extract_add_params(args)
     return archive_path, files, compression_level, use_temp_file
 
 
 def _execute_archive_creation(
-    archive_path: Path, files: list[Path], compression_level: int, use_temp_file: bool
+    args,
+    archive_path: Path,
+    files: list[Path],
+    compression_level: int,
+    use_temp_file: bool,
 ) -> int:
     """Execute the archive creation process.
 
@@ -247,18 +313,34 @@ def _execute_archive_creation(
     # Normalize archive path to show the correct final filename
     normalized_archive_path = _normalize_archive_path(archive_path)
 
-    print(f"Creating archive: {normalized_archive_path}")
-    for file_path in files:
-        print(f"  Adding: {file_path}")
+    if not _wants_json_output(args):
+        print(f"Creating archive: {normalized_archive_path}")
+        for file_path in files:
+            print(f"  Adding: {file_path}")
 
     # Use atomic file operations by default for better reliability
     # This creates the archive in a temporary file first, then moves it
     create_archive(archive_path, files, compression_level, use_temp_file=use_temp_file)
-    print(f"Archive created successfully - {normalized_archive_path}")
+
+    if _wants_json_output(args):
+        _emit_json(
+            {
+                "ok": True,
+                "command": "add",
+                "archive": str(archive_path),
+                "normalized_archive": str(normalized_archive_path),
+                "added": [str(file_path) for file_path in files],
+                "compression_level": compression_level,
+                "atomic": use_temp_file,
+            }
+        )
+    else:
+        print(f"Archive created successfully - {normalized_archive_path}")
+
     return 0
 
 
-def _handle_archive_creation_exceptions(func, *args, **kwargs) -> int:
+def _handle_archive_creation_exceptions(command_args, func, *args, **kwargs) -> int:
     """Handle exceptions during archive creation.
 
     Args:
@@ -274,19 +356,32 @@ def _handle_archive_creation_exceptions(func, *args, **kwargs) -> int:
     except OSError:
         return 1  # Error already printed in _validate_files
     except ValueError as e:
-        print(f"Error: Invalid parameter - {e}", file=sys.stderr)
-        return 1
+        return _emit_error(
+            command_args,
+            f"Error: Invalid parameter - {e}",
+            error_type="invalid_parameter",
+        )
     except TzstArchiveError as e:
-        print(f"Error: Archive operation failed - {e}", file=sys.stderr)
-        return 1
+        return _emit_error(
+            command_args,
+            f"Error: Archive operation failed - {e}",
+            error_type="archive_operation_failed",
+        )
     except KeyboardInterrupt:
-        print("\nOperation interrupted by user", file=sys.stderr)
+        return _emit_error(
+            command_args,
+            "Operation interrupted by user",
+            error_type="interrupted",
+            exit_code=130,
+        )
         # Clean up any partial files - the atomic operations in create_archive
         # handle this
-        return 130  # Standard exit code for SIGINT
     except Exception as e:
-        print(f"Error: Failed to create archive - {e}", file=sys.stderr)
-        return 1
+        return _emit_error(
+            command_args,
+            f"Error: Failed to create archive - {e}",
+            error_type="create_failed",
+        )
 
 
 def cmd_add(args) -> int:
@@ -326,10 +421,10 @@ def cmd_add(args) -> int:
 
         archive_path, files, compression_level, use_temp_file = preparation_result
         return _execute_archive_creation(
-            archive_path, files, compression_level, use_temp_file
+            args, archive_path, files, compression_level, use_temp_file
         )
 
-    return _handle_archive_creation_exceptions(_create_archive_workflow)
+    return _handle_archive_creation_exceptions(args, _create_archive_workflow)
 
 
 def cmd_extract_full(args) -> int:
@@ -364,8 +459,12 @@ def cmd_extract_full(args) -> int:
     try:
         archive_path = Path(args.archive)
         if not archive_path.exists():
-            print(f"Error: Archive not found - {archive_path}", file=sys.stderr)
-            return 1
+            return _emit_error(
+                args,
+                f"Error: Archive not found - {archive_path}",
+                error_type="archive_not_found",
+                details={"archive": str(archive_path)},
+            )
 
         output_dir = Path(args.output) if args.output else Path.cwd()
         members = args.files if hasattr(args, "files") and args.files else None
@@ -385,19 +484,27 @@ def cmd_extract_full(args) -> int:
         # Convert string to ConflictResolution enum
         conflict_resolution = ConflictResolution(conflict_resolution_str)
 
+        if _wants_json_output(args) and conflict_resolution == ConflictResolution.ASK:
+            return _emit_error(
+                args,
+                "Error: JSON mode does not support interactive conflict prompts",
+                error_type="interactive_conflict_not_supported",
+            )
+
         # Set up interactive callback if needed
         interactive_callback = None
         if conflict_resolution == ConflictResolution.ASK:
             interactive_callback = _interactive_conflict_callback
 
-        print(f"Extracting from: {archive_path}")
-        print(f"Output directory: {output_dir}")
-        if streaming:
-            print("Using streaming mode (memory efficient)")
-        if filter_type != "data":
-            print(f"Using security filter: {filter_type}")
-        if conflict_resolution != ConflictResolution.REPLACE:
-            print(f"Conflict resolution: {conflict_resolution.value}")
+        if not _wants_json_output(args):
+            print(f"Extracting from: {archive_path}")
+            print(f"Output directory: {output_dir}")
+            if streaming:
+                print("Using streaming mode (memory efficient)")
+            if filter_type != "data":
+                print(f"Using security filter: {filter_type}")
+            if conflict_resolution != ConflictResolution.REPLACE:
+                print(f"Conflict resolution: {conflict_resolution.value}")
 
         extract_archive(
             archive_path,
@@ -409,24 +516,56 @@ def cmd_extract_full(args) -> int:
             conflict_resolution=conflict_resolution,
             interactive_callback=interactive_callback,
         )
-        print("Extraction completed successfully")
+
+        if _wants_json_output(args):
+            _emit_json(
+                {
+                    "ok": True,
+                    "command": "extract",
+                    "archive": str(archive_path),
+                    "output_dir": str(output_dir),
+                    "members": members or [],
+                    "flatten": False,
+                    "streaming": streaming,
+                    "filter": filter_type,
+                    "conflict_resolution": conflict_resolution.value,
+                }
+            )
+        else:
+            print("Extraction completed successfully")
         return 0
 
     except FileNotFoundError as e:
-        print(f"Error: File not found - {e}", file=sys.stderr)
-        return 1
+        return _emit_error(
+            args,
+            f"Error: File not found - {e}",
+            error_type="file_not_found",
+        )
     except TzstDecompressionError as e:
-        print(f"Error: Archive decompression failed - {e}", file=sys.stderr)
-        return 1
+        return _emit_error(
+            args,
+            f"Error: Archive decompression failed - {e}",
+            error_type="decompression_failed",
+        )
     except TzstArchiveError as e:
-        print(f"Error: Archive operation failed - {e}", file=sys.stderr)
-        return 1
+        return _emit_error(
+            args,
+            f"Error: Archive operation failed - {e}",
+            error_type="archive_operation_failed",
+        )
     except KeyboardInterrupt:
-        print("\nOperation interrupted by user", file=sys.stderr)
-        return 130
+        return _emit_error(
+            args,
+            "Operation interrupted by user",
+            error_type="interrupted",
+            exit_code=130,
+        )
     except Exception as e:
-        print(f"Error: Failed to extract archive - {e}", file=sys.stderr)
-        return 1
+        return _emit_error(
+            args,
+            f"Error: Failed to extract archive - {e}",
+            error_type="extract_failed",
+        )
 
 
 def cmd_extract_flat(args) -> int:
@@ -462,8 +601,12 @@ def cmd_extract_flat(args) -> int:
     try:
         archive_path = Path(args.archive)
         if not archive_path.exists():
-            print(f"Error: Archive not found - {archive_path}", file=sys.stderr)
-            return 1
+            return _emit_error(
+                args,
+                f"Error: Archive not found - {archive_path}",
+                error_type="archive_not_found",
+                details={"archive": str(archive_path)},
+            )
 
         output_dir = Path(args.output) if args.output else Path.cwd()
         members = args.files if hasattr(args, "files") and args.files else None
@@ -483,17 +626,25 @@ def cmd_extract_flat(args) -> int:
         # Convert string to ConflictResolution enum
         conflict_resolution = ConflictResolution(conflict_resolution_str)
 
+        if _wants_json_output(args) and conflict_resolution == ConflictResolution.ASK:
+            return _emit_error(
+                args,
+                "Error: JSON mode does not support interactive conflict prompts",
+                error_type="interactive_conflict_not_supported",
+            )
+
         # Set up interactive callback if needed
         interactive_callback = None
         if conflict_resolution == ConflictResolution.ASK:
             interactive_callback = _interactive_conflict_callback
 
-        print(f"Extracting from: {archive_path}")
-        print(f"Output directory: {output_dir}")
-        if filter_type != "data":
-            print(f"Using security filter: {filter_type}")
-        if conflict_resolution != ConflictResolution.REPLACE:
-            print(f"Conflict resolution: {conflict_resolution.value}")
+        if not _wants_json_output(args):
+            print(f"Extracting from: {archive_path}")
+            print(f"Output directory: {output_dir}")
+            if filter_type != "data":
+                print(f"Using security filter: {filter_type}")
+            if conflict_resolution != ConflictResolution.REPLACE:
+                print(f"Conflict resolution: {conflict_resolution.value}")
 
         extract_archive(
             archive_path,
@@ -505,21 +656,49 @@ def cmd_extract_flat(args) -> int:
             conflict_resolution=conflict_resolution,
             interactive_callback=interactive_callback,
         )
-        print("Extraction completed successfully")
+
+        if _wants_json_output(args):
+            _emit_json(
+                {
+                    "ok": True,
+                    "command": "extract-flat",
+                    "archive": str(archive_path),
+                    "output_dir": str(output_dir),
+                    "members": members or [],
+                    "flatten": True,
+                    "streaming": streaming,
+                    "filter": filter_type,
+                    "conflict_resolution": conflict_resolution.value,
+                }
+            )
+        else:
+            print("Extraction completed successfully")
         return 0
 
     except FileNotFoundError as e:
-        print(f"Error: File not found - {e}", file=sys.stderr)
-        return 1
+        return _emit_error(
+            args,
+            f"Error: File not found - {e}",
+            error_type="file_not_found",
+        )
     except TzstDecompressionError as e:
-        print(f"Error: Archive decompression failed - {e}", file=sys.stderr)
-        return 1
+        return _emit_error(
+            args,
+            f"Error: Archive decompression failed - {e}",
+            error_type="decompression_failed",
+        )
     except TzstArchiveError as e:
-        print(f"Error: Archive operation failed - {e}", file=sys.stderr)
-        return 1
+        return _emit_error(
+            args,
+            f"Error: Archive operation failed - {e}",
+            error_type="archive_operation_failed",
+        )
     except Exception as e:
-        print(f"Error: Failed to extract archive - {e}", file=sys.stderr)
-        return 1
+        return _emit_error(
+            args,
+            f"Error: Failed to extract archive - {e}",
+            error_type="extract_failed",
+        )
 
 
 def _print_verbose_listing(contents: list) -> None:
@@ -543,22 +722,14 @@ def _print_simple_listing(contents: list) -> None:
     Args:
         contents: List of archive items
     """
-    total_files = 0
-    total_dirs = 0
-    total_size = 0
-
     for item in contents:
-        if item["is_file"]:
-            total_files += 1
-            total_size += item["size"]
-        elif item["is_dir"]:
-            total_dirs += 1
         print(item["name"])
 
     print()
+    summary = _summarize_listing(contents)
     total_msg = (
-        f"Total: {total_files} files, {total_dirs} directories, "
-        f"{format_size(total_size)}"
+        f"Total: {summary['files']} files, {summary['directories']} directories, "
+        f"{summary['total_size_human']}"
     )
     print(total_msg)
 
@@ -592,20 +763,37 @@ def cmd_list(args) -> int:
     try:
         archive_path = Path(args.archive)
         if not archive_path.exists():
-            print(f"Error: Archive not found - {archive_path}", file=sys.stderr)
-            return 1
+            return _emit_error(
+                args,
+                f"Error: Archive not found - {archive_path}",
+                error_type="archive_not_found",
+                details={"archive": str(archive_path)},
+            )
 
         verbose = getattr(args, "verbose", False)
         streaming = getattr(args, "streaming", False)
 
-        print(f"Listing contents of: {archive_path}")
-        if streaming:
-            print("Using streaming mode (memory efficient)")
-        print()
+        if not _wants_json_output(args):
+            print(f"Listing contents of: {archive_path}")
+            if streaming:
+                print("Using streaming mode (memory efficient)")
+            print()
 
         contents = list_archive(archive_path, verbose=verbose, streaming=streaming)
 
-        if verbose:
+        if _wants_json_output(args):
+            _emit_json(
+                {
+                    "ok": True,
+                    "command": "list",
+                    "archive": str(archive_path),
+                    "verbose": verbose,
+                    "streaming": streaming,
+                    "contents": contents,
+                    "summary": _summarize_listing(contents),
+                }
+            )
+        elif verbose:
             _print_verbose_listing(contents)
         else:
             _print_simple_listing(contents)
@@ -613,20 +801,36 @@ def cmd_list(args) -> int:
         return 0
 
     except FileNotFoundError as e:
-        print(f"Error: File not found - {e}", file=sys.stderr)
-        return 1
+        return _emit_error(
+            args,
+            f"Error: File not found - {e}",
+            error_type="file_not_found",
+        )
     except TzstDecompressionError as e:
-        print(f"Error: Archive decompression failed - {e}", file=sys.stderr)
-        return 1
+        return _emit_error(
+            args,
+            f"Error: Archive decompression failed - {e}",
+            error_type="decompression_failed",
+        )
     except TzstArchiveError as e:
-        print(f"Error: Archive operation failed - {e}", file=sys.stderr)
-        return 1
+        return _emit_error(
+            args,
+            f"Error: Archive operation failed - {e}",
+            error_type="archive_operation_failed",
+        )
     except KeyboardInterrupt:
-        print("\nOperation interrupted by user", file=sys.stderr)
-        return 130
+        return _emit_error(
+            args,
+            "Operation interrupted by user",
+            error_type="interrupted",
+            exit_code=130,
+        )
     except Exception as e:
-        print(f"Error: Failed to list archive - {e}", file=sys.stderr)
-        return 1
+        return _emit_error(
+            args,
+            f"Error: Failed to list archive - {e}",
+            error_type="list_failed",
+        )
 
 
 def cmd_test(args) -> int:
@@ -658,37 +862,79 @@ def cmd_test(args) -> int:
     try:
         archive_path = Path(args.archive)
         if not archive_path.exists():
-            print(f"Error: Archive not found - {archive_path}", file=sys.stderr)
-            return 1
+            return _emit_error(
+                args,
+                f"Error: Archive not found - {archive_path}",
+                error_type="archive_not_found",
+                details={"archive": str(archive_path)},
+            )
 
         streaming = getattr(args, "streaming", False)
 
-        print(f"Testing archive: {archive_path}")
-        if streaming:
-            print("Using streaming mode (memory efficient)")
+        if not _wants_json_output(args):
+            print(f"Testing archive: {archive_path}")
+            if streaming:
+                print("Using streaming mode (memory efficient)")
 
-        if test_archive(archive_path, streaming=streaming):
-            print("Archive test passed - no errors detected")
+        healthy = test_archive(archive_path, streaming=streaming)
+        if healthy:
+            if _wants_json_output(args):
+                _emit_json(
+                    {
+                        "ok": True,
+                        "command": "test",
+                        "archive": str(archive_path),
+                        "streaming": streaming,
+                        "healthy": True,
+                    }
+                )
+            else:
+                print("Archive test passed - no errors detected")
             return 0
         else:
-            print("Archive test failed - errors detected", file=sys.stderr)
-            return 1
+            return _emit_error(
+                args,
+                "Archive test failed - errors detected",
+                error_type="integrity_check_failed",
+                details={
+                    "command": "test",
+                    "archive": str(archive_path),
+                    "streaming": streaming,
+                    "healthy": False,
+                },
+            )
 
     except FileNotFoundError as e:
-        print(f"Error: File not found - {e}", file=sys.stderr)
-        return 1
+        return _emit_error(
+            args,
+            f"Error: File not found - {e}",
+            error_type="file_not_found",
+        )
     except TzstDecompressionError as e:
-        print(f"Error: Archive decompression failed - {e}", file=sys.stderr)
-        return 1
+        return _emit_error(
+            args,
+            f"Error: Archive decompression failed - {e}",
+            error_type="decompression_failed",
+        )
     except TzstArchiveError as e:
-        print(f"Error: Archive operation failed - {e}", file=sys.stderr)
-        return 1
+        return _emit_error(
+            args,
+            f"Error: Archive operation failed - {e}",
+            error_type="archive_operation_failed",
+        )
     except KeyboardInterrupt:
-        print("\nOperation interrupted by user", file=sys.stderr)
-        return 130
+        return _emit_error(
+            args,
+            "Operation interrupted by user",
+            error_type="interrupted",
+            exit_code=130,
+        )
     except Exception as e:
-        print(f"Error: Failed to test archive - {e}", file=sys.stderr)
-        return 1
+        return _emit_error(
+            args,
+            f"Error: Failed to test archive - {e}",
+            error_type="test_failed",
+        )
 
 
 def cmd_version(args) -> int:
@@ -697,7 +943,11 @@ def cmd_version(args) -> int:
     Returns:
         int: Exit code (always 0)
     """
-    # Version is already printed in print_banner(), so just exit
+    if _wants_json_output(args):
+        _emit_json({"ok": True, "command": "version", "version": __version__})
+    elif getattr(args, "no_banner", False):
+        print(f"tzst {__version__}")
+
     return 0
 
 
@@ -762,6 +1012,17 @@ documentation:
     )
     parser.add_argument(
         "--version", action="store_true", help="show version information and exit"
+    )
+    parser.add_argument(
+        "--json",
+        dest="json_output",
+        action="store_true",
+        help="emit machine-readable JSON output",
+    )
+    parser.add_argument(
+        "--no-banner",
+        action="store_true",
+        help="suppress the startup banner",
     )
 
     # Add global arguments
@@ -1151,7 +1412,8 @@ def main(argv: list[str] | None = None) -> int:
     See Also:
         :func:`create_parser`: Creates the argument parser used by this function
     """
-    print_banner()
+    if _should_print_banner(argv):
+        print_banner()
 
     parser = create_parser()
     args, error_code = _parse_arguments(parser, argv)

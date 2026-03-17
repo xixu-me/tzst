@@ -6,6 +6,7 @@ and provide a single source of truth for CLI testing.
 
 import argparse
 import json
+from pathlib import Path
 
 import pytest
 
@@ -216,6 +217,7 @@ class TestCLICommands:
         """Test add command JSON output for sidecar integrations."""
         archive_path = temp_dir / "json-add.tzst"
         file_paths = [str(f) for f in sample_files if f.is_file()]
+        expected_added = [str(Path(path).resolve()) for path in file_paths]
 
         result = main(["--json", "a", str(archive_path), *file_paths])
 
@@ -224,7 +226,7 @@ class TestCLICommands:
         assert payload["ok"] is True
         assert payload["command"] == "add"
         assert payload["normalized_archive"] == str(archive_path)
-        assert payload["added"] == file_paths
+        assert payload["added"] == expected_added
 
     def test_list_command_json_output(self, sample_files, temp_dir, capsys):
         """Test list command JSON output for the desktop app."""

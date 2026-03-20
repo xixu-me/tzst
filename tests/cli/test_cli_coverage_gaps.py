@@ -28,7 +28,9 @@ class TestCliCoverageGaps:
 
     def test_normalize_archive_path_handles_tar_and_custom_extensions(self):
         assert _normalize_archive_path(Path("bundle.tar")) == Path("bundle.tar.zst")
-        assert _normalize_archive_path(Path("bundle.backup")) == Path("bundle.backup.tzst")
+        assert _normalize_archive_path(Path("bundle.backup")) == Path(
+            "bundle.backup.tzst"
+        )
 
     @pytest.mark.parametrize(
         ("choice", "expected"),
@@ -214,9 +216,7 @@ class TestCliCoverageGaps:
     def test_validate_filter_in_argv_handles_missing_value(self):
         assert _validate_filter_in_argv(["--filter"]) is False
 
-    def test_validate_command_in_argv_handles_empty_and_invalid_input(
-        self, capsys
-    ):
+    def test_validate_command_in_argv_handles_empty_and_invalid_input(self, capsys):
         assert _validate_command_in_argv([]) is False
         assert _validate_command_in_argv(["bogus"]) is True
         assert "Invalid command: 'bogus'" in capsys.readouterr().err

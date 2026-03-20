@@ -108,7 +108,9 @@ class TestCoreCoverageGaps:
         archive = TzstArchive("dummy.tzst", "w")
         archive.mode = "a"
 
-        with pytest.raises(TzstArchiveError, match="Append mode is not currently supported"):
+        with pytest.raises(
+            TzstArchiveError, match="Append mode is not currently supported"
+        ):
             archive.open()
 
     def test_open_wraps_invalid_mode_when_mode_changes_after_init(self):
@@ -187,7 +189,9 @@ class TestCoreCoverageGaps:
     def test_extract_wraps_streaming_structure_errors(self, temp_dir):
         archive = _make_read_archive()
         archive.streaming = True
-        archive._tarfile.extractall.side_effect = tarfile.StreamError("stream seeking failed")
+        archive._tarfile.extractall.side_effect = tarfile.StreamError(
+            "stream seeking failed"
+        )
 
         with pytest.raises(RuntimeError, match="Extraction failed in streaming mode"):
             archive.extract(path=temp_dir / "extract")
@@ -218,7 +222,9 @@ class TestCoreCoverageGaps:
         members = [SimpleNamespace(name="file.txt")]
         output_dir = temp_dir / "extract"
 
-        archive.extractall(output_dir, members=members, numeric_owner=True, filter="tar")
+        archive.extractall(
+            output_dir, members=members, numeric_owner=True, filter="tar"
+        )
 
         archive._tarfile.extractall.assert_called_once_with(
             path=output_dir,
@@ -257,7 +263,9 @@ class TestCoreCoverageGaps:
 
         assert (temp_dir / "bundle.tar.zst").exists()
 
-    def test_create_archive_ignores_unlink_cleanup_failures(self, temp_dir, monkeypatch):
+    def test_create_archive_ignores_unlink_cleanup_failures(
+        self, temp_dir, monkeypatch
+    ):
         source_file = temp_dir / "source.txt"
         source_file.write_text("archive me")
         archive_path = temp_dir / "broken.tzst"
@@ -271,7 +279,9 @@ class TestCoreCoverageGaps:
             raise OSError("locked")
 
         monkeypatch.setattr(core_module.tempfile, "mkstemp", fake_mkstemp)
-        monkeypatch.setattr(core_module, "_create_archive_impl", Mock(side_effect=RuntimeError("boom")))
+        monkeypatch.setattr(
+            core_module, "_create_archive_impl", Mock(side_effect=RuntimeError("boom"))
+        )
         monkeypatch.setattr(Path, "unlink", fail_unlink)
 
         with pytest.raises(RuntimeError, match="boom"):
@@ -314,9 +324,7 @@ class TestCoreCoverageGaps:
 
         assert not (output_dir / "source.txt").exists()
 
-    def test_extract_archive_flatten_conflict_skip_exit_and_auto_rename(
-        self, temp_dir
-    ):
+    def test_extract_archive_flatten_conflict_skip_exit_and_auto_rename(self, temp_dir):
         first = temp_dir / "first.txt"
         second = temp_dir / "second.txt"
         first.write_text("first")
@@ -391,7 +399,9 @@ class TestCoreCoverageGaps:
         )
 
         assert target_conflict.read_text() == "existing"
-        assert (output_dir / "nested" / "conflict_1.txt").read_text() == "conflict-content"
+        assert (
+            output_dir / "nested" / "conflict_1.txt"
+        ).read_text() == "conflict-content"
         assert (output_dir / "plain.txt").read_text() == "plain-content"
 
     def test_extract_archive_members_honor_initial_exit_state(self, temp_dir):

@@ -8,20 +8,23 @@ on:
     branches: [main, develop]
     tags:
       - "v*.*.*"
-    paths-ignore:
-      - "*.md"
-      - "LICENSE"
-      - "docs/**"
-      - ".gitignore"
+    paths:
+      - "src/**"
+      - "tests/**"
+      - ".github/workflows/ci.yml"
+      - "pyproject.toml"
+      - "src/main.py"
   pull_request:
     branches: [main]
-    paths-ignore:
-      - "*.md"
-      - "LICENSE"
-      - "docs/**"
-      - ".gitignore"
+    paths:
+      - "src/**"
+      - "tests/**"
+      - ".github/workflows/ci.yml"
+      - "pyproject.toml"
+      - "src/main.py"
   release:
     types: [published]
+  workflow_dispatch:
 
 jobs:
   test:

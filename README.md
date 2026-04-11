@@ -16,24 +16,25 @@
 
 **🇺🇸 English** | [🇨🇳 汉语](./README.zh.md) | [🇪🇸 español](./README.es.md) | [🇯🇵 日本語](./README.ja.md) | [🇦🇪 العربية](./README.ar.md) | [🇷🇺 русский](./README.ru.md) | [🇩🇪 Deutsch](./README.de.md) | [🇫🇷 français](./README.fr.md) | [🇰🇷 한국어](./README.ko.md) | [🇧🇷 português](./README.pt.md)
 
-**tzst** is a next-generation Python library engineered for modern archive management, leveraging cutting-edge Zstandard compression to deliver superior performance, security, and reliability. Built exclusively for Python 3.12+, this enterprise-grade solution combines atomic operations, streaming efficiency, and a meticulously crafted API to redefine how developers handle `.tzst`/`.tar.zst` archives in production environments. 🚀
+**tzst** is a Python 3.12+ library and CLI for creating, extracting, listing, and testing `.tzst` and `.tar.zst` archives. It combines tar compatibility, Zstandard compression, streaming support, atomic writes, and safe-by-default extraction in a compact, production-ready interface.
 
-In-depth technical analysis article published: **[Deep Dive into tzst: A Modern Python Archiving Library Based on Zstandard](https://blog.xi-xu.me/2025/11/01/deep-dive-into-tzst-en.html)**.
+> [!NOTE]
+> In-depth technical article: **[Deep Dive into tzst: A Modern Python Archiving Library Based on Zstandard](https://blog.xi-xu.me/2025/11/01/deep-dive-into-tzst-en.html)**.
 
-## ✨ Features
+## Features
 
-- **🗜️ High Compression**: Zstandard compression for excellent compression ratios and speed
-- **📁 Tar Compatibility**: Creates standard tar archives compressed with Zstandard
-- **💻 Command Line Interface**: Intuitive CLI with streaming support and comprehensive options
-- **🐍 Python API**: Clean, Pythonic API for programmatic use
-- **🌍 Cross-Platform**: Works on Windows, macOS, and Linux
-- **📂 Multiple Extensions**: Supports both `.tzst` and `.tar.zst` extensions
-- **💾 Memory Efficient**: Streaming mode for handling large archives with minimal memory usage
-- **⚡ Atomic Operations**: Safe file operations with automatic cleanup on interruption
-- **🔒 Secure by Default**: Uses the 'data' filter for maximum security during extraction
-- **🚨 Enhanced Error Handling**: Clear error messages with helpful alternatives
+- **High Compression**: Zstandard compression for excellent compression ratios and speed
+- **Tar Compatibility**: Creates standard tar archives compressed with Zstandard
+- **Command Line Interface**: Intuitive CLI with streaming support and comprehensive options
+- **Python API**: Clean, Pythonic API for programmatic use
+- **Cross-Platform**: Works on Windows, macOS, and Linux
+- **Multiple Extensions**: Supports both `.tzst` and `.tar.zst` extensions
+- **Memory Efficient**: Streaming mode for handling large archives with minimal memory usage
+- **Atomic Operations**: Safe file operations with automatic cleanup on interruption
+- **Secure by Default**: Uses the 'data' filter for maximum security during extraction
+- **Enhanced Error Handling**: Clear error messages with helpful alternatives
 
-## 📥 Installation
+## Installation
 
 ### From GitHub Releases
 
@@ -43,30 +44,30 @@ Download standalone executables that don't require Python installation:
 
 | Platform | Architecture | File |
 |----------|-------------|------|
-| **🐧 Linux** | x86_64 | `tzst-{version}-linux-amd64.zip` |
-| **🐧 Linux** | ARM64 | `tzst-{version}-linux-arm64.zip` |
-| **🪟 Windows** | x64 | `tzst-{version}-windows-amd64.zip` |
-| **🪟 Windows** | ARM64 | `tzst-{version}-windows-arm64.zip` |
-| **🍎 macOS** | Intel | `tzst-{version}-darwin-amd64.zip` |
-| **🍎 macOS** | Apple Silicon | `tzst-{version}-darwin-arm64.zip` |
+| **Linux** | x86_64 | `tzst-{version}-linux-amd64.zip` |
+| **Linux** | ARM64 | `tzst-{version}-linux-arm64.zip` |
+| **Windows** | x64 | `tzst-{version}-windows-amd64.zip` |
+| **Windows** | ARM64 | `tzst-{version}-windows-arm64.zip` |
+| **macOS** | Intel | `tzst-{version}-darwin-amd64.zip` |
+| **macOS** | Apple Silicon | `tzst-{version}-darwin-arm64.zip` |
 
-#### 🛠️ Installation Steps
+#### Installation Steps
 
-1. **📥 Download** the appropriate archive for your platform from the [latest releases page](https://github.com/xixu-me/tzst/releases/latest)
-2. **📦 Extract** the archive to get the `tzst` executable (or `tzst.exe` on Windows)
-3. **📂 Move** the executable to a directory in your PATH:
-   - **🐧 Linux/macOS**: `sudo mv tzst /usr/local/bin/`
-   - **🪟 Windows**: Add the directory containing `tzst.exe` to your PATH environment variable
-4. **✅ Verify** installation: `tzst --help`
+1. **Download** the appropriate archive for your platform from the [latest releases page](https://github.com/xixu-me/tzst/releases/latest)
+2. **Extract** the archive to get the `tzst` executable (or `tzst.exe` on Windows)
+3. **Move** the executable to a directory in your PATH:
+   - **Linux/macOS**: `sudo mv tzst /usr/local/bin/`
+   - **Windows**: Add the directory containing `tzst.exe` to your PATH environment variable
+4. **Verify** installation: `tzst --help`
 
-#### 🎯 Benefits of Binary Installation
+#### Benefits of Binary Installation
 
-- ✅ **No Python required** - Standalone executable
-- ✅ **Faster startup** - No Python interpreter overhead
-- ✅ **Easy deployment** - Single file distribution
-- ✅ **Consistent behavior** - Bundled dependencies
+- **No Python required** - Standalone executable
+- **Faster startup** - No Python interpreter overhead
+- **Easy deployment** - Single file distribution
+- **Consistent behavior** - Bundled dependencies
 
-### 📦 From PyPI
+### From PyPI
 
 Using pip:
 
@@ -80,7 +81,7 @@ Or using uv (recommended):
 uv tool install tzst
 ```
 
-### 🔧 From Source
+### From Source
 
 ```bash
 git clone https://github.com/xixu-me/tzst.git
@@ -88,7 +89,7 @@ cd tzst
 pip install .
 ```
 
-### 🚀 Development Installation
+### Development Installation
 
 This project uses modern Python packaging standards:
 
@@ -98,25 +99,25 @@ cd tzst
 pip install -e .[dev]
 ```
 
-## 🚀 Quick Start
+## Quick Start
 
-### 💻 Command Line Usage
+### Command Line Usage
 
 ```bash
-# 📁 Create an archive
+# Create an archive
 tzst a archive.tzst file1.txt file2.txt directory/
 
-# 📤 Extract an archive
+# Extract an archive
 tzst x archive.tzst
 
-# 📋 List archive contents
+# List archive contents
 tzst l archive.tzst
 
-# 🧪 Test archive integrity
+# Test archive integrity
 tzst t archive.tzst
 ```
 
-### 🐍 Python API Usage
+### Python API Usage
 
 ```python
 from tzst import create_archive, extract_archive, list_archive
@@ -133,11 +134,11 @@ for item in contents:
     print(f"{item['name']}: {item['size']} bytes")
 ```
 
-## 💻 Command Line Interface
+## Command Line Interface
 
-### 📁 Archive Operations
+### Archive Operations
 
-#### ➕ Create Archive
+#### Create Archive
 
 ```bash
 # Basic usage
@@ -151,7 +152,7 @@ tzst add archive.tzst files/
 tzst create archive.tzst files/
 ```
 
-#### 📤 Extract Archive
+#### Extract Archive
 
 ```bash
 # Extract with full directory structure
@@ -170,7 +171,7 @@ tzst e archive.tzst -o output/
 tzst x archive.tzst --streaming -o output/
 ```
 
-#### 📋 List Contents
+#### List Contents
 
 ```bash
 # Simple listing
@@ -183,7 +184,7 @@ tzst l archive.tzst -v
 tzst l archive.tzst --streaming -v
 ```
 
-#### 🧪 Test Integrity
+#### Test Integrity
 
 ```bash
 # Test archive integrity
@@ -193,7 +194,7 @@ tzst t archive.tzst
 tzst t archive.tzst --streaming
 ```
 
-### 📊 Command Reference
+### Command Reference
 
 | Command | Aliases | Description | Streaming Support |
 |---------|---------|-------------|-------------------|
@@ -203,7 +204,7 @@ tzst t archive.tzst --streaming
 | `l` | `list` | List archive contents | ✓ `--streaming` |
 | `t` | `test` | Test archive integrity | ✓ `--streaming` |
 
-### ⚙️ CLI Options
+### CLI Options
 
 - `-v, --verbose`: Enable verbose output
 - `-o, --output DIR`: Specify output directory (extract commands)
@@ -212,7 +213,7 @@ tzst t archive.tzst --streaming
 - `--filter FILTER`: Security filter for extraction (data/tar/fully_trusted)
 - `--no-atomic`: Disable atomic file operations (not recommended)
 
-### 🔒 Security Filters
+### Security Filters
 
 ```bash
 # Extract with maximum security (default)
@@ -225,15 +226,15 @@ tzst x archive.tzst --filter tar
 tzst x archive.tzst --filter fully_trusted
 ```
 
-**🔐 Security Filter Options:**
+**Security Filter Options:**
 
 - `data` (default): Most secure. Blocks dangerous files, absolute paths, and paths outside extraction directory
 - `tar`: Standard tar compatibility. Blocks absolute paths and directory traversal
 - `fully_trusted`: No security restrictions. Only use with completely trusted archives
 
-## 🐍 Python API
+## Python API
 
-### 📦 TzstArchive Class
+### TzstArchive Class
 
 ```python
 from tzst import TzstArchive
@@ -259,13 +260,13 @@ with TzstArchive("large_archive.tzst", "r", streaming=True) as archive:
     archive.extract(path="output/")
 ```
 
-**⚠️ Important Limitations:**
+**Important Limitations:**
 
-- **❌ Append Mode Not Supported**: Create multiple archives or recreate the entire archive instead
+- **Append Mode Not Supported**: Create multiple archives or recreate the entire archive instead
 
-### 🎯 Convenience Functions
+### Convenience Functions
 
-#### 📁 create_archive()
+#### create_archive()
 
 ```python
 from tzst import create_archive
@@ -278,7 +279,7 @@ create_archive(
 )
 ```
 
-#### 📤 extract_archive()
+#### extract_archive()
 
 ```python
 from tzst import extract_archive
@@ -296,7 +297,7 @@ extract_archive("backup.tzst", "restore/", flatten=True)
 extract_archive("large_backup.tzst", "restore/", streaming=True)
 ```
 
-#### 📋 list_archive()
+#### list_archive()
 
 ```python
 from tzst import list_archive
@@ -311,7 +312,7 @@ files = list_archive("backup.tzst", verbose=True)
 files = list_archive("large_backup.tzst", streaming=True)
 ```
 
-#### 🧪 test_archive()
+#### test_archive()
 
 ```python
 from tzst import test_archive
@@ -325,9 +326,9 @@ if test_archive("large_backup.tzst", streaming=True):
     print("Large archive is valid")
 ```
 
-## 🔧 Advanced Features
+## Advanced Features
 
-### 📂 File Extensions
+### File Extensions
 
 The library automatically handles file extensions with intelligent normalization:
 
@@ -344,7 +345,7 @@ create_archive("backup", files)          # Creates backup.tzst
 create_archive("backup.txt", files)      # Creates backup.tzst (normalized)
 ```
 
-### 🗜️ Compression Levels
+### Compression Levels
 
 Zstandard compression levels range from 1 (fastest) to 22 (best compression):
 
@@ -353,17 +354,17 @@ Zstandard compression levels range from 1 (fastest) to 22 (best compression):
 - **Level 10-15**: Better compression, slower
 - **Level 20-22**: Maximum compression, much slower
 
-### 🌊 Streaming Mode
+### Streaming Mode
 
 Use streaming mode for memory-efficient processing of large archives:
 
-**✅ Benefits:**
+**Benefits:**
 
 - Significantly reduced memory usage
 - Better performance for archives that don't fit in memory
 - Automatic cleanup of resources
 
-**🎯 When to Use:**
+**When to Use:**
 
 - Archives larger than 100MB
 - Limited memory environments
@@ -381,7 +382,7 @@ contents = list_archive(large_archive, streaming=True, verbose=True)
 extract_archive(large_archive, "restore/", streaming=True)
 ```
 
-### ⚡ Atomic Operations
+### Atomic Operations
 
 All file creation operations use atomic file operations by default:
 
@@ -398,7 +399,7 @@ create_archive("important.tzst", files)  # Safe from interruption
 create_archive("test.tzst", files, use_temp_file=False)
 ```
 
-### 🚨 Error Handling
+### Error Handling
 
 ```python
 from tzst import TzstArchive
@@ -422,43 +423,43 @@ except KeyboardInterrupt:
     # Cleanup handled automatically
 ```
 
-## 🚀 Performance and Comparison
+## Performance and Comparison
 
-### 💡 Performance Tips
+### Performance Tips
 
-1. **🗜️ Compression levels**: Level 3 is optimal for most use cases
-2. **🌊 Streaming**: Use for archives larger than 100MB
-3. **📦 Batch operations**: Add multiple files in single session
-4. **📄 File types**: Already compressed files won't compress much further
+1. **Compression levels**: Level 3 is optimal for most use cases
+2. **Streaming**: Use for archives larger than 100MB
+3. **Batch operations**: Add multiple files in single session
+4. **File types**: Already compressed files won't compress much further
 
-### 🆚 vs Other Tools
+### vs Other Tools
 
 **vs tar + gzip:**
 
-- ✅ Better compression ratios
-- ⚡ Faster decompression
-- 🔄 Modern algorithm
+- Better compression ratios
+- Faster decompression
+- Modern algorithm
 
 **vs tar + xz:**
 
-- 🚀 Significantly faster compression
-- 📊 Similar compression ratios
-- ⚖️ Better speed/compression trade-off
+- Significantly faster compression
+- Similar compression ratios
+- Better speed/compression trade-off
 
 **vs zip:**
 
-- 🗜️ Better compression
-- 🔐 Preserves Unix permissions and metadata
-- 🌊 Better streaming support
+- Better compression
+- Preserves Unix permissions and metadata
+- Better streaming support
 
-## 📋 Requirements
+## Requirements
 
-- 🐍 Python 3.12 or higher (tested on 3.12-3.14)
-- 📦 zstandard >= 0.19.0
+- Python 3.12 or higher (tested on 3.12-3.14)
+- zstandard >= 0.19.0
 
-## 🛠️ Development
+## Development
 
-### 🚀 Setting up Development Environment
+### Setting up Development Environment
 
 This project uses modern Python packaging standards:
 
@@ -468,7 +469,7 @@ cd tzst
 pip install -e .[dev]
 ```
 
-### 🧪 Running Tests
+### Running Tests
 
 ```bash
 # Run tests with coverage
@@ -478,7 +479,7 @@ pytest --cov=tzst --cov-report=html
 pytest
 ```
 
-### ✨ Code Quality
+### Code Quality
 
 ```bash
 # Check code quality
@@ -488,16 +489,16 @@ ruff check src tests
 ruff format src tests
 ```
 
-## 🤝 Contributing
+## Contributing
 
 We welcome contributions! Please read our [Contributing Guide](CONTRIBUTING.md) for:
 
 - Development setup and project structure
-- Code style guidelines and best practices  
+- Code style guidelines and best practices
 - Testing requirements and writing tests
 - Pull request process and review workflow
 
-### 🚀 Quick Start for Contributors
+### Quick Start for Contributors
 
 ```bash
 git clone https://github.com/xixu-me/tzst.git
@@ -506,22 +507,22 @@ pip install -e .[dev]
 python -m pytest tests/
 ```
 
-### 🎯 Types of Contributions Welcome
+### Types of Contributions Welcome
 
-- 🐛 **Bug fixes** - Fix issues in existing functionality
-- ✨ **Features** - Add new capabilities to the library
-- 📚 **Documentation** - Improve or add documentation
-- 🧪 **Tests** - Add or improve test coverage
-- ⚡ **Performance** - Optimize existing code
-- 🔒 **Security** - Address security vulnerabilities
+- **Bug fixes** - Fix issues in existing functionality
+- **Features** - Add new capabilities to the library
+- **Documentation** - Improve or add documentation
+- **Tests** - Add or improve test coverage
+- **Performance** - Optimize existing code
+- **Security** - Address security vulnerabilities
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - [Meta Zstandard](https://github.com/facebook/zstd) for the excellent compression algorithm
 - [python-zstandard](https://github.com/indygreg/python-zstandard) for Python bindings
 - The Python community for inspiration and feedback
 
-## 📄 License
+## License
 
 Copyright &copy; [Xi Xu](https://xi-xu.me). All rights reserved.
 

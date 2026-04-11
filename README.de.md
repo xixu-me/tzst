@@ -13,24 +13,25 @@
 
 [🇺🇸 English](./README.md) | [🇨🇳 汉语](./README.zh.md) | [🇪🇸 español](./README.es.md) | [🇯🇵 日本語](./README.ja.md) | [🇦🇪 العربية](./README.ar.md) | [🇷🇺 русский](./README.ru.md) | **🇩🇪 Deutsch** | [🇫🇷 français](./README.fr.md) | [🇰🇷 한국어](./README.ko.md) | [🇧🇷 português](./README.pt.md)
 
-**tzst** ist eine Python-Bibliothek der nächsten Generation, die für modernes Archivmanagement entwickelt wurde und hochmoderne Zstandard-Komprimierung nutzt, um überlegene Leistung, Sicherheit und Zuverlässigkeit zu bieten. Ausschließlich für Python 3.12+ entwickelt, kombiniert diese Unternehmenslösung atomare Operationen, Streaming-Effizienz und eine sorgfältig erstellte API, um die Art und Weise neu zu definieren, wie Entwickler mit `.tzst`/`.tar.zst`-Archiven in Produktionsumgebungen umgehen. 🚀
+**tzst** ist eine Python-3.12+-Bibliothek mit CLI zum Erstellen, Extrahieren, Auflisten und Prüfen von `.tzst`- und `.tar.zst`-Archiven. Sie bündelt tar-Kompatibilität, Zstandard-Komprimierung, Streaming, atomare Schreibvorgänge und standardmäßig sicheres Extrahieren in einer kompakten, produktionsreifen Oberfläche.
 
-Veröffentlichter ausführlicher technischer Analyseartikel: **[Deep Dive into tzst: A Modern Python Archiving Library Based on Zstandard](https://blog.xi-xu.me/2025/11/01/deep-dive-into-tzst-en.html)**.
+> [!NOTE]
+> Ausführlicher technischer Artikel: **[Deep Dive into tzst: A Modern Python Archiving Library Based on Zstandard](https://blog.xi-xu.me/2025/11/01/deep-dive-into-tzst-en.html)**.
 
-## ✨ Funktionen
+## Funktionen
 
-- **🗜️ Hohe Komprimierung**: Zstandard-Komprimierung für ausgezeichnete Komprimierungsraten und Geschwindigkeit
-- **📁 Tar-Kompatibilität**: Erstellt Standard-Tar-Archive, komprimiert mit Zstandard
-- **💻 Kommandozeilenschnittstelle**: Intuitive CLI mit Streaming-Unterstützung und umfassenden Optionen
-- **🐍 Python API**: Saubere, pythonische API für programmatische Nutzung
-- **🌍 Plattformübergreifend**: Funktioniert auf Windows, macOS und Linux
-- **📂 Mehrere Erweiterungen**: Unterstützt sowohl `.tzst` als auch `.tar.zst` Erweiterungen
-- **💾 Speichereffizient**: Streaming-Modus für die Behandlung großer Archive mit minimalem Speicherverbrauch
-- **⚡ Atomare Operationen**: Sichere Dateioperationen mit automatischer Bereinigung bei Unterbrechung
-- **🔒 Standardmäßig sicher**: Verwendet den 'data' Filter für maximale Sicherheit beim Extrahieren
-- **🚨 Verbesserte Fehlerbehandlung**: Klare Fehlermeldungen mit hilfreichen Alternativen
+- **Hohe Komprimierung**: Zstandard-Komprimierung für ausgezeichnete Komprimierungsraten und Geschwindigkeit
+- **Tar-Kompatibilität**: Erstellt Standard-Tar-Archive, komprimiert mit Zstandard
+- **Kommandozeilenschnittstelle**: Intuitive CLI mit Streaming-Unterstützung und umfassenden Optionen
+- **Python API**: Saubere, pythonische API für programmatische Nutzung
+- **Plattformübergreifend**: Funktioniert auf Windows, macOS und Linux
+- **Mehrere Erweiterungen**: Unterstützt sowohl `.tzst` als auch `.tar.zst` Erweiterungen
+- **Speichereffizient**: Streaming-Modus für die Behandlung großer Archive mit minimalem Speicherverbrauch
+- **Atomare Operationen**: Sichere Dateioperationen mit automatischer Bereinigung bei Unterbrechung
+- **Standardmäßig sicher**: Verwendet den 'data' Filter für maximale Sicherheit beim Extrahieren
+- **Verbesserte Fehlerbehandlung**: Klare Fehlermeldungen mit hilfreichen Alternativen
 
-## 📥 Installation
+## Installation
 
 ### Von GitHub Releases
 
@@ -40,30 +41,30 @@ Lade eigenständige ausführbare Dateien herunter, die keine Python-Installation
 
 | Plattform | Architektur | Datei |
 |----------|-------------|------|
-| **🐧 Linux** | x86_64 | `tzst-{version}-linux-amd64.zip` |
-| **🐧 Linux** | ARM64 | `tzst-{version}-linux-arm64.zip` |
-| **🪟 Windows** | x64 | `tzst-{version}-windows-amd64.zip` |
-| **🪟 Windows** | ARM64 | `tzst-{version}-windows-arm64.zip` |
-| **🍎 macOS** | Intel | `tzst-{version}-darwin-amd64.zip` |
-| **🍎 macOS** | Apple Silicon | `tzst-{version}-darwin-arm64.zip` |
+| **Linux** | x86_64 | `tzst-{version}-linux-amd64.zip` |
+| **Linux** | ARM64 | `tzst-{version}-linux-arm64.zip` |
+| **Windows** | x64 | `tzst-{version}-windows-amd64.zip` |
+| **Windows** | ARM64 | `tzst-{version}-windows-arm64.zip` |
+| **macOS** | Intel | `tzst-{version}-darwin-amd64.zip` |
+| **macOS** | Apple Silicon | `tzst-{version}-darwin-arm64.zip` |
 
-#### 🛠️ Installationsschritte
+#### Installationsschritte
 
-1. **📥 Lade** das entsprechende Archiv für deine Plattform von der [Seite der neuesten Releases](https://github.com/xixu-me/tzst/releases/latest) herunter
-2. **📦 Extrahiere** das Archiv, um die ausführbare Datei `tzst` (oder `tzst.exe` unter Windows) zu erhalten
-3. **📂 Verschiebe** die ausführbare Datei in ein Verzeichnis in deinem PATH:
-   - **🐧 Linux/macOS**: `sudo mv tzst /usr/local/bin/`
-   - **🪟 Windows**: Füge das Verzeichnis mit `tzst.exe` zu deiner PATH-Umgebungsvariable hinzu
-4. **✅ Überprüfe** die Installation: `tzst --help`
+1. **Lade** das entsprechende Archiv für deine Plattform von der [Seite der neuesten Releases](https://github.com/xixu-me/tzst/releases/latest) herunter
+2. **Extrahiere** das Archiv, um die ausführbare Datei `tzst` (oder `tzst.exe` unter Windows) zu erhalten
+3. **Verschiebe** die ausführbare Datei in ein Verzeichnis in deinem PATH:
+   - **Linux/macOS**: `sudo mv tzst /usr/local/bin/`
+   - **Windows**: Füge das Verzeichnis mit `tzst.exe` zu deiner PATH-Umgebungsvariable hinzu
+4. **Überprüfe** die Installation: `tzst --help`
 
-#### 🎯 Vorteile der Binärinstallation
+#### Vorteile der Binärinstallation
 
-- ✅ **Kein Python erforderlich** - Eigenständige ausführbare Datei
-- ✅ **Schnellerer Start** - Kein Python-Interpreter-Overhead
-- ✅ **Einfache Bereitstellung** - Einzeldatei-Distribution
-- ✅ **Konsistentes Verhalten** - Gebündelte Abhängigkeiten
+- **Kein Python erforderlich** - Eigenständige ausführbare Datei
+- **Schnellerer Start** - Kein Python-Interpreter-Overhead
+- **Einfache Bereitstellung** - Einzeldatei-Distribution
+- **Konsistentes Verhalten** - Gebündelte Abhängigkeiten
 
-### 📦 Von PyPI
+### Von PyPI
 
 Mit pip:
 
@@ -77,7 +78,7 @@ Oder mit uv (empfohlen):
 uv tool install tzst
 ```
 
-### 🔧 Aus dem Quellcode
+### Aus dem Quellcode
 
 ```bash
 git clone https://github.com/xixu-me/tzst.git
@@ -85,7 +86,7 @@ cd tzst
 pip install .
 ```
 
-### 🚀 Entwicklungsinstallation
+### Entwicklungsinstallation
 
 Dieses Projekt verwendet moderne Python-Packaging-Standards:
 
@@ -95,25 +96,25 @@ cd tzst
 pip install -e .[dev]
 ```
 
-## 🚀 Schnellstart
+## Schnellstart
 
-### 💻 Kommandozeilennutzung
+### Kommandozeilennutzung
 
 ```bash
-# 📁 Archiv erstellen
+# Archiv erstellen
 tzst a archive.tzst file1.txt file2.txt directory/
 
-# 📤 Archiv extrahieren
+# Archiv extrahieren
 tzst x archive.tzst
 
-# 📋 Archivinhalt auflisten
+# Archivinhalt auflisten
 tzst l archive.tzst
 
-# 🧪 Archivintegrität testen
+# Archivintegrität testen
 tzst t archive.tzst
 ```
 
-### 🐍 Python API Nutzung
+### Python API Nutzung
 
 ```python
 from tzst import create_archive, extract_archive, list_archive
@@ -130,11 +131,11 @@ for item in contents:
     print(f"{item['name']}: {item['size']} bytes")
 ```
 
-## 💻 Kommandozeilenschnittstelle
+## Kommandozeilenschnittstelle
 
-### 📁 Archivoperationen
+### Archivoperationen
 
-#### ➕ Archiv erstellen
+#### Archiv erstellen
 
 ```bash
 # Grundlegende Nutzung
@@ -148,7 +149,7 @@ tzst add archive.tzst files/
 tzst create archive.tzst files/
 ```
 
-#### 📤 Archiv extrahieren
+#### Archiv extrahieren
 
 ```bash
 # Mit vollständiger Verzeichnisstruktur extrahieren
@@ -167,7 +168,7 @@ tzst e archive.tzst -o output/
 tzst x archive.tzst --streaming -o output/
 ```
 
-#### 📋 Inhalt auflisten
+#### Inhalt auflisten
 
 ```bash
 # Einfache Auflistung
@@ -180,7 +181,7 @@ tzst l archive.tzst -v
 tzst l archive.tzst --streaming -v
 ```
 
-#### 🧪 Integrität testen
+#### Integrität testen
 
 ```bash
 # Archivintegrität testen
@@ -190,7 +191,7 @@ tzst t archive.tzst
 tzst t archive.tzst --streaming
 ```
 
-### 📊 Befehlsreferenz
+### Befehlsreferenz
 
 | Befehl | Aliase | Beschreibung | Streaming-Unterstützung |
 |---------|---------|-------------|-------------------|
@@ -200,7 +201,7 @@ tzst t archive.tzst --streaming
 | `l` | `list` | Archivinhalt auflisten | ✓ `--streaming` |
 | `t` | `test` | Archivintegrität testen | ✓ `--streaming` |
 
-### ⚙️ CLI-Optionen
+### CLI-Optionen
 
 - `-v, --verbose`: Ausführliche Ausgabe aktivieren
 - `-o, --output DIR`: Ausgabeverzeichnis spezifizieren (Extraktionsbefehle)
@@ -209,7 +210,7 @@ tzst t archive.tzst --streaming
 - `--filter FILTER`: Sicherheitsfilter für Extraktion (data/tar/fully_trusted)
 - `--no-atomic`: Atomare Dateioperationen deaktivieren (nicht empfohlen)
 
-### 🔒 Sicherheitsfilter
+### Sicherheitsfilter
 
 ```bash
 # Mit maximaler Sicherheit extrahieren (Standard)
@@ -222,15 +223,15 @@ tzst x archive.tzst --filter tar
 tzst x archive.tzst --filter fully_trusted
 ```
 
-**🔐 Sicherheitsfilter-Optionen:**
+**Sicherheitsfilter-Optionen:**
 
 - `data` (Standard): Am sichersten. Blockiert gefährliche Dateien, absolute Pfade und Pfade außerhalb des Extraktionsverzeichnisses
 - `tar`: Standard-Tar-Kompatibilität. Blockiert absolute Pfade und Verzeichnisdurchquerung
 - `fully_trusted`: Keine Sicherheitsbeschränkungen. Nur bei vollständig vertrauenswürdigen Archiven verwenden
 
-## 🐍 Python API
+## Python API
 
-### 📦 TzstArchive Klasse
+### TzstArchive Klasse
 
 ```python
 from tzst import TzstArchive
@@ -256,13 +257,13 @@ with TzstArchive("large_archive.tzst", "r", streaming=True) as archive:
     archive.extract(path="output/")
 ```
 
-**⚠️ Wichtige Einschränkungen:**
+**Wichtige Einschränkungen:**
 
-- **❌ Anhängemodus nicht unterstützt**: Erstelle mehrere Archive oder erstelle das gesamte Archiv neu
+- **Anhängemodus nicht unterstützt**: Erstelle mehrere Archive oder erstelle das gesamte Archiv neu
 
-### 🎯 Convenience-Funktionen
+### Convenience-Funktionen
 
-#### 📁 create_archive()
+#### create_archive()
 
 ```python
 from tzst import create_archive
@@ -275,7 +276,7 @@ create_archive(
 )
 ```
 
-#### 📤 extract_archive()
+#### extract_archive()
 
 ```python
 from tzst import extract_archive
@@ -293,7 +294,7 @@ extract_archive("backup.tzst", "restore/", flatten=True)
 extract_archive("large_backup.tzst", "restore/", streaming=True)
 ```
 
-#### 📋 list_archive()
+#### list_archive()
 
 ```python
 from tzst import list_archive
@@ -308,7 +309,7 @@ files = list_archive("backup.tzst", verbose=True)
 files = list_archive("large_backup.tzst", streaming=True)
 ```
 
-#### 🧪 test_archive()
+#### test_archive()
 
 ```python
 from tzst import test_archive
@@ -322,9 +323,9 @@ if test_archive("large_backup.tzst", streaming=True):
     print("Großes Archiv ist gültig")
 ```
 
-## 🔧 Erweiterte Funktionen
+## Erweiterte Funktionen
 
-### 📂 Dateierweiterungen
+### Dateierweiterungen
 
 Die Bibliothek behandelt Dateierweiterungen automatisch mit intelligenter Normalisierung:
 
@@ -341,7 +342,7 @@ create_archive("backup", files)          # Erstellt backup.tzst
 create_archive("backup.txt", files)      # Erstellt backup.tzst (normalisiert)
 ```
 
-### 🗜️ Komprimierungsstufen
+### Komprimierungsstufen
 
 Zstandard-Komprimierungsstufen reichen von 1 (schnellste) bis 22 (beste Komprimierung):
 
@@ -350,17 +351,17 @@ Zstandard-Komprimierungsstufen reichen von 1 (schnellste) bis 22 (beste Komprimi
 - **Stufe 10-15**: Bessere Komprimierung, langsamer
 - **Stufe 20-22**: Maximale Komprimierung, viel langsamer
 
-### 🌊 Streaming-Modus
+### Streaming-Modus
 
 Verwende den Streaming-Modus für speichereffiziente Verarbeitung großer Archive:
 
-**✅ Vorteile:**
+**Vorteile:**
 
 - Deutlich reduzierter Speicherverbrauch
 - Bessere Leistung für Archive, die nicht in den Speicher passen
 - Automatische Bereinigung von Ressourcen
 
-**🎯 Wann verwenden:**
+**Wann verwenden:**
 
 - Archive größer als 100MB
 - Umgebungen mit begrenztem Speicher
@@ -378,7 +379,7 @@ contents = list_archive(large_archive, streaming=True, verbose=True)
 extract_archive(large_archive, "restore/", streaming=True)
 ```
 
-### ⚡ Atomare Operationen
+### Atomare Operationen
 
 Alle Dateierstellungsoperationen verwenden standardmäßig atomare Dateioperationen:
 
@@ -395,7 +396,7 @@ create_archive("important.tzst", files)  # Sicher vor Unterbrechung
 create_archive("test.tzst", files, use_temp_file=False)
 ```
 
-### 🚨 Fehlerbehandlung
+### Fehlerbehandlung
 
 ```python
 from tzst import TzstArchive
@@ -419,43 +420,43 @@ except KeyboardInterrupt:
     # Bereinigung wird automatisch durchgeführt
 ```
 
-## 🚀 Leistung und Vergleich
+## Leistung und Vergleich
 
-### 💡 Leistungstipps
+### Leistungstipps
 
-1. **🗜️ Komprimierungsstufen**: Stufe 3 ist optimal für die meisten Anwendungsfälle
-2. **🌊 Streaming**: Verwende für Archive größer als 100MB
-3. **📦 Batch-Operationen**: Füge mehrere Dateien in einer Sitzung hinzu
-4. **📄 Dateitypen**: Bereits komprimierte Dateien werden nicht viel weiter komprimiert
+1. **Komprimierungsstufen**: Stufe 3 ist optimal für die meisten Anwendungsfälle
+2. **Streaming**: Verwende für Archive größer als 100MB
+3. **Batch-Operationen**: Füge mehrere Dateien in einer Sitzung hinzu
+4. **Dateitypen**: Bereits komprimierte Dateien werden nicht viel weiter komprimiert
 
-### 🆚 vs Andere Tools
+### vs Andere Tools
 
 **vs tar + gzip:**
 
-- ✅ Bessere Komprimierungsraten
-- ⚡ Schnellere Dekomprimierung
-- 🔄 Moderner Algorithmus
+- Bessere Komprimierungsraten
+- Schnellere Dekomprimierung
+- Moderner Algorithmus
 
 **vs tar + xz:**
 
-- 🚀 Deutlich schnellere Komprimierung
-- 📊 Ähnliche Komprimierungsraten
-- ⚖️ Besserer Geschwindigkeit/Komprimierung-Kompromiss
+- Deutlich schnellere Komprimierung
+- Ähnliche Komprimierungsraten
+- Besserer Geschwindigkeit/Komprimierung-Kompromiss
 
 **vs zip:**
 
-- 🗜️ Bessere Komprimierung
-- 🔐 Bewahrt Unix-Berechtigungen und Metadaten
-- 🌊 Bessere Streaming-Unterstützung
+- Bessere Komprimierung
+- Bewahrt Unix-Berechtigungen und Metadaten
+- Bessere Streaming-Unterstützung
 
-## 📋 Anforderungen
+## Anforderungen
 
-- 🐍 Python 3.12 oder höher
-- 📦 zstandard >= 0.19.0
+- Python 3.12 oder höher
+- zstandard >= 0.19.0
 
-## 🛠️ Entwicklung
+## Entwicklung
 
-### 🚀 Entwicklungsumgebung einrichten
+### Entwicklungsumgebung einrichten
 
 Dieses Projekt verwendet moderne Python-Packaging-Standards:
 
@@ -465,7 +466,7 @@ cd tzst
 pip install -e .[dev]
 ```
 
-### 🧪 Tests ausführen
+### Tests ausführen
 
 ```bash
 # Tests mit Coverage ausführen
@@ -475,7 +476,7 @@ pytest --cov=tzst --cov-report=html
 pytest
 ```
 
-### ✨ Code-Qualität
+### Code-Qualität
 
 ```bash
 # Code-Qualität prüfen
@@ -485,16 +486,16 @@ ruff check src tests
 ruff format src tests
 ```
 
-## 🤝 Beitragen
+## Beitragen
 
 Wir begrüßen Beiträge! Bitte lies unseren [Beitragsleitfaden](CONTRIBUTING.md) für:
 
 - Entwicklungssetup und Projektstruktur
-- Code-Stil-Richtlinien und bewährte Praktiken  
+- Code-Stil-Richtlinien und bewährte Praktiken
 - Testanforderungen und Schreibtests
 - Pull-Request-Prozess und Review-Workflow
 
-### 🚀 Schnellstart für Mitwirkende
+### Schnellstart für Mitwirkende
 
 ```bash
 git clone https://github.com/xixu-me/tzst.git
@@ -503,22 +504,22 @@ pip install -e .[dev]
 python -m pytest tests/
 ```
 
-### 🎯 Arten willkommener Beiträge
+### Arten willkommener Beiträge
 
-- 🐛 **Fehlerbehebungen** - Probleme in vorhandener Funktionalität beheben
-- ✨ **Funktionen** - Neue Fähigkeiten zur Bibliothek hinzufügen
-- 📚 **Dokumentation** - Dokumentation verbessern oder hinzufügen
-- 🧪 **Tests** - Testabdeckung hinzufügen oder verbessern
-- ⚡ **Leistung** - Vorhandenen Code optimieren
-- 🔒 **Sicherheit** - Sicherheitsschwachstellen beheben
+- **Fehlerbehebungen** - Probleme in vorhandener Funktionalität beheben
+- **Funktionen** - Neue Fähigkeiten zur Bibliothek hinzufügen
+- **Dokumentation** - Dokumentation verbessern oder hinzufügen
+- **Tests** - Testabdeckung hinzufügen oder verbessern
+- **Leistung** - Vorhandenen Code optimieren
+- **Sicherheit** - Sicherheitsschwachstellen beheben
 
-## 🙏 Danksagungen
+## Danksagungen
 
 - [Meta Zstandard](https://github.com/facebook/zstd) für den exzellenten Komprimierungsalgorithmus
 - [python-zstandard](https://github.com/indygreg/python-zstandard) für Python-Bindings
 - Der Python-Community für Inspiration und Feedback
 
-## 📄 Lizenz
+## Lizenz
 
 Urheberrecht &copy; [Xi Xu](https://xi-xu.me). Alle Rechte vorbehalten.
 

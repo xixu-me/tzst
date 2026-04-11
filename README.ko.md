@@ -13,24 +13,25 @@
 
 [🇺🇸 English](./README.md) | [🇨🇳 汉语](./README.zh.md) | [🇪🇸 español](./README.es.md) | [🇯🇵 日本語](./README.ja.md) | [🇦🇪 العربية](./README.ar.md) | [🇷🇺 русский](./README.ru.md) | [🇩🇪 Deutsch](./README.de.md) | [🇫🇷 français](./README.fr.md) | **🇰🇷 한국어** | [🇧🇷 português](./README.pt.md)
 
-**tzst**는 최신 Zstandard 압축 기술을 활용하여 우수한 성능, 보안 및 신뢰성을 제공하는 차세대 Python 라이브러리입니다. Python 3.12+ 전용으로 제작된 이 엔터프라이즈급 솔루션은 원자적 작업, 스트리밍 효율성 및 정교하게 설계된 API를 결합하여 `.tzst`/`.tar.zst` 아카이브를 프로덕션 환경에서 처리하는 방식을 재정의합니다. 🚀
+**tzst**는 Python 3.12+에서 `.tzst` 및 `.tar.zst` 아카이브를 생성, 추출, 나열, 검사하기 위한 라이브러리이자 CLI입니다. tar 호환성, Zstandard 압축, 스트리밍 처리, 원자적 쓰기, 기본 안전 추출을 운영 환경에 적합한 간결한 인터페이스로 제공합니다.
 
-심층 기술 분석 기사가 게시되었습니다: **[Deep Dive into tzst: A Modern Python Archiving Library Based on Zstandard](https://blog.xi-xu.me/2025/11/01/deep-dive-into-tzst-en.html)**.
+> [!NOTE]
+> 상세 기술 문서: **[Deep Dive into tzst: A Modern Python Archiving Library Based on Zstandard](https://blog.xi-xu.me/2025/11/01/deep-dive-into-tzst-en.html)**.
 
-## ✨ 기능
+## 기능
 
-- **🗜️ 고압축률**: 우수한 압축률과 속도를 위한 Zstandard 압축
-- **📁 Tar 호환성**: Zstandard로 압축된 표준 tar 아카이브 생성
-- **💻 명령줄 인터페이스**: 스트리밍 지원과 포괄적인 옵션을 갖춘 직관적인 CLI
-- **🐍 Python API**: 프로그램적 사용을 위한 깔끔하고 Python 스타일의 API
-- **🌍 크로스 플랫폼**: Windows, macOS, Linux에서 작동
-- **📂 다중 확장자**: `.tzst` 및 `.tar.zst` 확장자 모두 지원
-- **💾 메모리 효율적**: 최소 메모리 사용으로 대용량 아카이브 처리 가능한 스트리밍 모드
-- **⚡ 원자적 작업**: 중단 시 자동 정리 기능을 통한 안전한 파일 작업
-- **🔒 기본 보안**: 추출 시 최대 보안을 위해 'data' 필터 사용
-- **🚨 향상된 오류 처리**: 유용한 대안 제시와 함께 명확한 오류 메시지
+- **고압축률**: 우수한 압축률과 속도를 위한 Zstandard 압축
+- **Tar 호환성**: Zstandard로 압축된 표준 tar 아카이브 생성
+- **명령줄 인터페이스**: 스트리밍 지원과 포괄적인 옵션을 갖춘 직관적인 CLI
+- **Python API**: 프로그램적 사용을 위한 깔끔하고 Python 스타일의 API
+- **크로스 플랫폼**: Windows, macOS, Linux에서 작동
+- **다중 확장자**: `.tzst` 및 `.tar.zst` 확장자 모두 지원
+- **메모리 효율적**: 최소 메모리 사용으로 대용량 아카이브 처리 가능한 스트리밍 모드
+- **원자적 작업**: 중단 시 자동 정리 기능을 통한 안전한 파일 작업
+- **기본 보안**: 추출 시 최대 보안을 위해 'data' 필터 사용
+- **향상된 오류 처리**: 유용한 대안 제시와 함께 명확한 오류 메시지
 
-## 📥 설치
+## 설치
 
 ### GitHub 릴리스에서
 
@@ -40,30 +41,30 @@ Python 설치가 필요 없는 독립형 실행 파일 다운로드:
 
 | 플랫폼 | 아키텍처 | 파일 |
 |----------|-------------|------|
-| **🐧 Linux** | x86_64 | `tzst-{버전}-linux-amd64.zip` |
-| **🐧 Linux** | ARM64 | `tzst-{버전}-linux-arm64.zip` |
-| **🪟 Windows** | x64 | `tzst-{버전}-windows-amd64.zip` |
-| **🪟 Windows** | ARM64 | `tzst-{버전}-windows-arm64.zip` |
-| **🍎 macOS** | Intel | `tzst-{버전}-darwin-amd64.zip` |
-| **🍎 macOS** | Apple Silicon | `tzst-{버전}-darwin-arm64.zip` |
+| **Linux** | x86_64 | `tzst-{버전}-linux-amd64.zip` |
+| **Linux** | ARM64 | `tzst-{버전}-linux-arm64.zip` |
+| **Windows** | x64 | `tzst-{버전}-windows-amd64.zip` |
+| **Windows** | ARM64 | `tzst-{버전}-windows-arm64.zip` |
+| **macOS** | Intel | `tzst-{버전}-darwin-amd64.zip` |
+| **macOS** | Apple Silicon | `tzst-{버전}-darwin-arm64.zip` |
 
-#### 🛠️ 설치 단계
+#### 설치 단계
 
-1. [최신 릴리스 페이지](https://github.com/xixu-me/tzst/releases/latest)에서 플랫폼에 맞는 아카이브 **📥 다운로드**
-2. 아카이브를 **📦 추출**하여 `tzst` 실행 파일 획득 (Windows는 `tzst.exe`)
-3. 실행 파일을 PATH 환경 변수 디렉터리로 **📂 이동**:
-   - **🐧 Linux/macOS**: `sudo mv tzst /usr/local/bin/`
-   - **🪟 Windows**: `tzst.exe`가 포함된 디렉터리를 PATH 환경 변수에 추가
-4. 설치 **✅ 확인**: `tzst --help`
+1. [최신 릴리스 페이지](https://github.com/xixu-me/tzst/releases/latest)에서 플랫폼에 맞는 아카이브 **다운로드**
+2. 아카이브를 **추출**하여 `tzst` 실행 파일 획득 (Windows는 `tzst.exe`)
+3. 실행 파일을 PATH 환경 변수 디렉터리로 **이동**:
+   - **Linux/macOS**: `sudo mv tzst /usr/local/bin/`
+   - **Windows**: `tzst.exe`가 포함된 디렉터리를 PATH 환경 변수에 추가
+4. 설치 **확인**: `tzst --help`
 
-#### 🎯 바이너리 설치의 장점
+#### 바이너리 설치의 장점
 
-- ✅ **Python 불필요** - 독립형 실행 파일
-- ✅ **빠른 시작** - Python 인터프리터 오버헤드 없음
-- ✅ **쉬운 배포** - 단일 파일 배포
-- ✅ **일관된 동작** - 번들링된 의존성
+- **Python 불필요** - 독립형 실행 파일
+- **빠른 시작** - Python 인터프리터 오버헤드 없음
+- **쉬운 배포** - 단일 파일 배포
+- **일관된 동작** - 번들링된 의존성
 
-### 📦 PyPI에서
+### PyPI에서
 
 pip 사용:
 
@@ -77,7 +78,7 @@ pip install tzst
 uv tool install tzst
 ```
 
-### 🔧 소스에서
+### 소스에서
 
 ```bash
 git clone https://github.com/xixu-me/tzst.git
@@ -85,7 +86,7 @@ cd tzst
 pip install .
 ```
 
-### 🚀 개발 설치
+### 개발 설치
 
 최신 Python 패키징 표준 사용:
 
@@ -95,25 +96,25 @@ cd tzst
 pip install -e .[dev]
 ```
 
-## 🚀 빠른 시작
+## 빠른 시작
 
-### 💻 명령줄 사용법
+### 명령줄 사용법
 
 ```bash
-# 📁 아카이브 생성
+# 아카이브 생성
 tzst a archive.tzst file1.txt file2.txt directory/
 
-# 📤 아카이브 추출
+# 아카이브 추출
 tzst x archive.tzst
 
-# 📋 아카이브 내용 목록
+# 아카이브 내용 목록
 tzst l archive.tzst
 
-# 🧪 아카이브 무결성 테스트
+# 아카이브 무결성 테스트
 tzst t archive.tzst
 ```
 
-### 🐍 Python API 사용법
+### Python API 사용법
 
 ```python
 from tzst import create_archive, extract_archive, list_archive
@@ -130,11 +131,11 @@ for item in contents:
     print(f"{item['name']}: {item['size']} bytes")
 ```
 
-## 💻 명령줄 인터페이스
+## 명령줄 인터페이스
 
-### 📁 아카이브 작업
+### 아카이브 작업
 
-#### ➕ 아카이브 생성
+#### 아카이브 생성
 
 ```bash
 # 기본 사용법
@@ -148,7 +149,7 @@ tzst add archive.tzst files/
 tzst create archive.tzst files/
 ```
 
-#### 📤 아카이브 추출
+#### 아카이브 추출
 
 ```bash
 # 전체 디렉터리 구조 유지하며 추출
@@ -167,7 +168,7 @@ tzst e archive.tzst -o output/
 tzst x archive.tzst --streaming -o output/
 ```
 
-#### 📋 내용 목록
+#### 내용 목록
 
 ```bash
 # 간단한 목록
@@ -180,7 +181,7 @@ tzst l archive.tzst -v
 tzst l archive.tzst --streaming -v
 ```
 
-#### 🧪 무결성 테스트
+#### 무결성 테스트
 
 ```bash
 # 아카이브 무결성 테스트
@@ -190,7 +191,7 @@ tzst t archive.tzst
 tzst t archive.tzst --streaming
 ```
 
-### 📊 명령어 참조
+### 명령어 참조
 
 | 명령어 | 별칭 | 설명 | 스트리밍 지원 |
 |---------|---------|-------------|-------------------|
@@ -200,7 +201,7 @@ tzst t archive.tzst --streaming
 | `l` | `list` | 아카이브 내용 목록 | ✓ `--streaming` |
 | `t` | `test` | 아카이브 무결성 테스트 | ✓ `--streaming` |
 
-### ⚙️ CLI 옵션
+### CLI 옵션
 
 - `-v, --verbose`: 상세 출력 활성화
 - `-o, --output DIR`: 출력 디렉터리 지정 (추출 명령어)
@@ -209,7 +210,7 @@ tzst t archive.tzst --streaming
 - `--filter FILTER`: 추출을 위한 보안 필터 (data/tar/fully_trusted)
 - `--no-atomic`: 원자적 파일 작업 비활성화 (권장하지 않음)
 
-### 🔒 보안 필터
+### 보안 필터
 
 ```bash
 # 최대 보안으로 추출 (기본값)
@@ -222,15 +223,15 @@ tzst x archive.tzst --filter tar
 tzst x archive.tzst --filter fully_trusted
 ```
 
-**🔐 보안 필터 옵션:**
+**보안 필터 옵션:**
 
 - `data` (기본값): 가장 안전. 위험한 파일, 절대 경로, 추출 디렉터리 외부 경로 차단
 - `tar`: 표준 tar 호환성. 절대 경로 및 디렉터리 순회 차단
 - `fully_trusted`: 보안 제한 없음. 완전히 신뢰할 수 있는 아카이브에서만 사용
 
-## 🐍 Python API
+## Python API
 
-### 📦 TzstArchive 클래스
+### TzstArchive 클래스
 
 ```python
 from tzst import TzstArchive
@@ -256,13 +257,13 @@ with TzstArchive("large_archive.tzst", "r", streaming=True) as archive:
     archive.extract(path="output/")
 ```
 
-**⚠️ 중요한 제한 사항:**
+**중요한 제한 사항:**
 
-- **❌ 추가 모드 미지원**: 여러 아카이브 생성 또는 전체 아카이브 재생성 필요
+- **추가 모드 미지원**: 여러 아카이브 생성 또는 전체 아카이브 재생성 필요
 
-### 🎯 편의 함수
+### 편의 함수
 
-#### 📁 create_archive()
+#### create_archive()
 
 ```python
 from tzst import create_archive
@@ -275,7 +276,7 @@ create_archive(
 )
 ```
 
-#### 📤 extract_archive()
+#### extract_archive()
 
 ```python
 from tzst import extract_archive
@@ -293,7 +294,7 @@ extract_archive("backup.tzst", "restore/", flatten=True)
 extract_archive("large_backup.tzst", "restore/", streaming=True)
 ```
 
-#### 📋 list_archive()
+#### list_archive()
 
 ```python
 from tzst import list_archive
@@ -308,7 +309,7 @@ files = list_archive("backup.tzst", verbose=True)
 files = list_archive("large_backup.tzst", streaming=True)
 ```
 
-#### 🧪 test_archive()
+#### test_archive()
 
 ```python
 from tzst import test_archive
@@ -322,9 +323,9 @@ if test_archive("large_backup.tzst", streaming=True):
     print("대용량 아카이브가 유효합니다")
 ```
 
-## 🔧 고급 기능
+## 고급 기능
 
-### 📂 파일 확장자
+### 파일 확장자
 
 라이브러리는 지능적인 정규화로 파일 확장자를 자동 처리합니다:
 
@@ -341,7 +342,7 @@ create_archive("backup", files)          # backup.tzst 생성
 create_archive("backup.txt", files)      # backup.tzst 생성 (정규화됨)
 ```
 
-### 🗜️ 압축 레벨
+### 압축 레벨
 
 Zstandard 압축 레벨 범위: 1 (가장 빠름) ~ 22 (최대 압축):
 
@@ -350,17 +351,17 @@ Zstandard 압축 레벨 범위: 1 (가장 빠름) ~ 22 (최대 압축):
 - **레벨 10-15**: 더 나은 압축, 느림
 - **레벨 20-22**: 최대 압축, 매우 느림
 
-### 🌊 스트리밍 모드
+### 스트리밍 모드
 
 대용량 아카이브의 메모리 효율적 처리를 위해 스트리밍 모드 사용:
 
-**✅ 장점:**
+**장점:**
 
 - 메모리 사용량 현저히 감소
 - 메모리에 맞지 않는 대용량 아카이브 처리 성능 향상
 - 리소스 자동 정리
 
-**🎯 사용 시기:**
+**사용 시기:**
 
 - 100MB 이상의 아카이브
 - 메모리가 제한된 환경
@@ -378,7 +379,7 @@ contents = list_archive(large_archive, streaming=True, verbose=True)
 extract_archive(large_archive, "restore/", streaming=True)
 ```
 
-### ⚡ 원자적 작업
+### 원자적 작업
 
 모든 파일 생성 작업은 기본적으로 원자적 파일 작업을 사용합니다:
 
@@ -395,7 +396,7 @@ create_archive("important.tzst", files)  # 중단으로부터 안전
 create_archive("test.tzst", files, use_temp_file=False)
 ```
 
-### 🚨 오류 처리
+### 오류 처리
 
 ```python
 from tzst import TzstArchive
@@ -419,43 +420,43 @@ except KeyboardInterrupt:
     # 자동으로 정리됨
 ```
 
-## 🚀 성능 및 비교
+## 성능 및 비교
 
-### 💡 성능 팁
+### 성능 팁
 
-1. **🗜️ 압축 레벨**: 대부분의 경우 레벨 3이 최적
-2. **🌊 스트리밍**: 100MB 이상 아카이브에 사용
-3. **📦 일괄 작업**: 단일 세션에서 여러 파일 추가
-4. **📄 파일 유형**: 이미 압축된 파일은 추가 압축이 거의 안됨
+1. **압축 레벨**: 대부분의 경우 레벨 3이 최적
+2. **스트리밍**: 100MB 이상 아카이브에 사용
+3. **일괄 작업**: 단일 세션에서 여러 파일 추가
+4. **파일 유형**: 이미 압축된 파일은 추가 압축이 거의 안됨
 
-### 🆚 다른 도구와 비교
+### 다른 도구와 비교
 
 **vs tar + gzip:**
 
-- ✅ 더 나은 압축률
-- ⚡ 더 빠른 압축 해제
-- 🔄 현대적인 알고리즘
+- 더 나은 압축률
+- 더 빠른 압축 해제
+- 현대적인 알고리즘
 
 **vs tar + xz:**
 
-- 🚀 현저히 빠른 압축
-- 📊 유사한 압축률
-- ⚖️ 더 나은 속도/압축률 균형
+- 현저히 빠른 압축
+- 유사한 압축률
+- 더 나은 속도/압축률 균형
 
 **vs zip:**
 
-- 🗜️ 더 나은 압축
-- 🔐 Unix 권한 및 메타데이터 보존
-- 🌊 더 나은 스트리밍 지원
+- 더 나은 압축
+- Unix 권한 및 메타데이터 보존
+- 더 나은 스트리밍 지원
 
-## 📋 요구 사항
+## 요구 사항
 
-- 🐍 Python 3.12 이상
-- 📦 zstandard >= 0.19.0
+- Python 3.12 이상
+- zstandard >= 0.19.0
 
-## 🛠️ 개발
+## 개발
 
-### 🚀 개발 환경 설정
+### 개발 환경 설정
 
 최신 Python 패키징 표준 사용:
 
@@ -465,7 +466,7 @@ cd tzst
 pip install -e .[dev]
 ```
 
-### 🧪 테스트 실행
+### 테스트 실행
 
 ```bash
 # 커버리지 포함 테스트 실행
@@ -475,7 +476,7 @@ pytest --cov=tzst --cov-report=html
 pytest
 ```
 
-### ✨ 코드 품질
+### 코드 품질
 
 ```bash
 # 코드 품질 확인
@@ -485,16 +486,16 @@ ruff check src tests
 ruff format src tests
 ```
 
-## 🤝 기여
+## 기여
 
 기여를 환영합니다! 다음 사항을 위해 [기여 가이드](CONTRIBUTING.md)를 읽어주세요:
 
 - 개발 설정 및 프로젝트 구조
-- 코드 스타일 가이드라인 및 모범 사례  
+- 코드 스타일 가이드라인 및 모범 사례
 - 테스트 요구 사항 및 테스트 작성 방법
 - 풀 리퀘스트 프로세스 및 리뷰 워크플로
 
-### 🚀 기여자 빠른 시작
+### 기여자 빠른 시작
 
 ```bash
 git clone https://github.com/xixu-me/tzst.git
@@ -503,22 +504,22 @@ pip install -e .[dev]
 python -m pytest tests/
 ```
 
-### 🎯 환영하는 기여 유형
+### 환영하는 기여 유형
 
-- 🐛 **버그 수정** - 기존 기능의 문제 해결
-- ✨ **기능** - 라이브러리에 새로운 기능 추가
-- 📚 **문서** - 문서 개선 또는 추가
-- 🧪 **테스트** - 테스트 커버리지 추가 또는 개선
-- ⚡ **성능** - 기존 코드 최적화
-- 🔒 **보안** - 보안 취약점 해결
+- **버그 수정** - 기존 기능의 문제 해결
+- **기능** - 라이브러리에 새로운 기능 추가
+- **문서** - 문서 개선 또는 추가
+- **테스트** - 테스트 커버리지 추가 또는 개선
+- **성능** - 기존 코드 최적화
+- **보안** - 보안 취약점 해결
 
-## 🙏 감사의 말
+## 감사의 말
 
 - 우수한 압축 알고리즘을 제공한 [Meta Zstandard](https://github.com/facebook/zstd)
 - Python 바인딩을 제공한 [python-zstandard](https://github.com/indygreg/python-zstandard)
 - 영감과 피드백을 준 Python 커뮤니티
 
-## 📄 라이선스
+## 라이선스
 
 저작권 &copy; [시 쉬](https://xi-xu.me). 모든 권리 보유.
 

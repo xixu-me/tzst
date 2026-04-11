@@ -183,5 +183,5 @@ Licensed under the [BSD 3-Clause](https://github.com/xixu-me/tzst/blob/main/LICE
 
 ## Requirements
 
-- Python 3.12 or higher
+- Python 3.12 or higher (tested on 3.12-3.14)
 - zstandard >= 0.19.0

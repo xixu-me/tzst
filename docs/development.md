@@ -116,7 +116,7 @@ ruff format --check src tests
 Settings are defined in `pyproject.toml`:
 
 - Line length: 88 characters
-- Target Python version: 3.12+
+- Target Python version: 3.12+ (tested on 3.12-3.14)
 - Import sorting with isort
 - Quote style: double quotes
 
@@ -315,7 +315,7 @@ docs(readme): update installation instructions
 
 ### Compatibility
 
-- Support Python 3.12+
+- Support Python 3.12+ with CI coverage for 3.12-3.14
 - Test on multiple platforms (Windows, macOS, Linux)
 - Consider different filesystem behaviors
 - Maintain backwards compatibility when possible

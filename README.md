@@ -453,7 +453,7 @@ except KeyboardInterrupt:
 
 ## 📋 Requirements
 
-- 🐍 Python 3.12 or higher
+- 🐍 Python 3.12 or higher (tested on 3.12-3.14)
 - 📦 zstandard >= 0.19.0
 
 ## 🛠️ Development

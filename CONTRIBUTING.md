@@ -23,7 +23,7 @@ This project follows the principles of respectful collaboration. Please be kind,
 
 ### Prerequisites
 
-- Python 3.12 or higher
+- Python 3.12 or higher (tested on 3.12-3.14)
 - Git
 - Basic knowledge of tar archives and compression
 
@@ -198,7 +198,7 @@ This project uses [Ruff](https://docs.astral.sh/ruff/) for linting and formattin
 Settings are defined in `pyproject.toml`:
 
 - Line length: 88 characters
-- Target Python version: 3.12+
+- Target Python version: 3.12+ (tested on 3.12-3.14)
 - Import sorting with isort
 - Quote style: double quotes
 
@@ -356,7 +356,7 @@ When suggesting features:
 
 ### Compatibility
 
-- Support Python 3.12+
+- Support Python 3.12+ with CI coverage for 3.12-3.14
 - Test on multiple platforms (Windows, macOS, Linux)
 - Consider different filesystem behaviors
 - Maintain backwards compatibility when possible

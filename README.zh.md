@@ -451,7 +451,7 @@ except KeyboardInterrupt:
 
 ## 📋 系统要求
 
-- 🐍 Python 3.12 或更高版本
+- 🐍 Python 3.12 或更高版本（已测试 3.12-3.14）
 - 📦 zstandard >= 0.19.0
 
 ## 🛠️ 开发指南

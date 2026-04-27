@@ -101,7 +101,7 @@ jobs:
               continue
             fi
 
-            if [[ "$merge_state" == "DIRTY" || "$merge_state" == "UNKNOWN" ]]; then
+            if [[ "$merge_state" == "DIRTY" ]]; then
               echo "Skipping PR #$pr because merge state is $merge_state."
               continue
             fi
@@ -127,5 +127,9 @@ jobs:
               continue
             fi
 
-            gh pr merge "$pr" --merge --delete-branch --match-head-commit "$head_sha"
+            if gh pr merge "$pr" --merge --delete-branch --match-head-commit "$head_sha"; then
+              echo "Merged PR #$pr."
+            else
+              echo "Could not merge PR #$pr; it will be retried on the next scheduled run."
+            fi
           done <<< "$PRS"

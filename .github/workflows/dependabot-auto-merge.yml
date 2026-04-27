@@ -18,6 +18,9 @@ permissions:
   checks: read
   statuses: read
 
+env:
+  GH_REPO: ${{ github.repository }}
+
 concurrency:
   group: dependabot-auto-merge
   cancel-in-progress: false

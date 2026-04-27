@@ -6,7 +6,7 @@ sphinxcontrib-napoleon>=0.7
 linkify-it-py>=2.1.0
 
 # Additional Sphinx extensions
-sphinx-autobuild>=2021.3.14
+sphinx-autobuild>=2025.8.25
 sphinx-copybutton>=0.5.2
 sphinxext-opengraph>=0.13.0
 sphinx-autodoc-typehints>=1.25.0

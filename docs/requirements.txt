@@ -8,7 +8,7 @@ linkify-it-py>=2.0.0
 # Additional Sphinx extensions
 sphinx-autobuild>=2021.3.14
 sphinx-copybutton>=0.5.2
-sphinxext-opengraph>=0.9.0
+sphinxext-opengraph>=0.13.0
 sphinx-autodoc-typehints>=1.25.0
 sphinx-sitemap>=2.6.0
 

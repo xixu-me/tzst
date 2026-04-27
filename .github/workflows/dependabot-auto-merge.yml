@@ -1,0 +1,128 @@
+name: Dependabot Auto Merge
+
+on:
+  pull_request_target:
+    types: [opened, reopened, synchronize, ready_for_review]
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+    inputs:
+      pr:
+        description: "Pull request number to evaluate, or all"
+        required: false
+        default: "all"
+
+permissions:
+  contents: write
+  pull-requests: write
+  checks: read
+  statuses: read
+
+concurrency:
+  group: dependabot-auto-merge
+  cancel-in-progress: false
+
+jobs:
+  merge:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Resolve pull requests
+        id: prs
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EVENT_NAME: ${{ github.event_name }}
+          INPUT_PR: ${{ inputs.pr || 'all' }}
+        run: |
+          set -euo pipefail
+
+          prs_file="${RUNNER_TEMP}/prs.txt"
+          : > "$prs_file"
+
+          if [[ "$EVENT_NAME" == "pull_request_target" ]]; then
+            jq -r '.pull_request.number' "$GITHUB_EVENT_PATH" > "$prs_file"
+          elif [[ "$INPUT_PR" != "all" ]]; then
+            if [[ "$INPUT_PR" =~ ^[0-9]+$ ]]; then
+              printf '%s\n' "$INPUT_PR" > "$prs_file"
+            else
+              echo "Invalid PR input: $INPUT_PR" >&2
+              exit 1
+            fi
+          else
+            gh pr list \
+              --state open \
+              --json number,author,isDraft \
+              --jq '.[] | select(.isDraft == false and .author.is_bot == true and (.author.login == "app/dependabot" or .author.login == "dependabot[bot]")) | .number' \
+              > "$prs_file"
+          fi
+
+          sort -nu "$prs_file" -o "$prs_file"
+
+          {
+            echo "prs<<EOF"
+            cat "$prs_file"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Merge green Dependabot pull requests
+        if: steps.prs.outputs.prs != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PRS: ${{ steps.prs.outputs.prs }}
+        run: |
+          set -euo pipefail
+
+          while IFS= read -r pr; do
+            [[ -n "$pr" ]] || continue
+            echo "Evaluating PR #$pr"
+
+            pr_json="$(gh pr view "$pr" --json author,isDraft,headRefOid,mergeStateStatus,state)"
+            author="$(jq -r '.author.login' <<< "$pr_json")"
+            is_bot="$(jq -r '.author.is_bot' <<< "$pr_json")"
+            is_draft="$(jq -r '.isDraft' <<< "$pr_json")"
+            head_sha="$(jq -r '.headRefOid' <<< "$pr_json")"
+            merge_state="$(jq -r '.mergeStateStatus' <<< "$pr_json")"
+            state="$(jq -r '.state' <<< "$pr_json")"
+
+            if [[ "$state" != "OPEN" ]]; then
+              echo "Skipping PR #$pr because it is $state."
+              continue
+            fi
+
+            if [[ "$is_draft" == "true" ]]; then
+              echo "Skipping PR #$pr because it is a draft."
+              continue
+            fi
+
+            if [[ "$is_bot" != "true" || ( "$author" != "app/dependabot" && "$author" != "dependabot[bot]" ) ]]; then
+              echo "Skipping PR #$pr because the author is $author."
+              continue
+            fi
+
+            if [[ "$merge_state" == "DIRTY" || "$merge_state" == "UNKNOWN" ]]; then
+              echo "Skipping PR #$pr because merge state is $merge_state."
+              continue
+            fi
+
+            checks_output="$(gh pr checks "$pr" --json bucket,name,workflow 2>&1 || true)"
+            if ! jq -e 'type == "array"' >/dev/null 2>&1 <<< "$checks_output"; then
+              echo "Skipping PR #$pr because checks could not be read: $checks_output"
+              continue
+            fi
+
+            total_checks="$(jq '[.[] | select(.workflow != "Dependabot Auto Merge")] | length' <<< "$checks_output")"
+            passed_checks="$(jq '[.[] | select(.workflow != "Dependabot Auto Merge" and .bucket == "pass")] | length' <<< "$checks_output")"
+            blocking_checks="$(jq '[.[] | select(.workflow != "Dependabot Auto Merge" and .bucket != "pass" and .bucket != "skipping")] | length' <<< "$checks_output")"
+
+            if [[ "$total_checks" -eq 0 ]]; then
+              echo "Skipping PR #$pr because it has no checks."
+              continue
+            fi
+
+            if [[ "$passed_checks" -eq 0 || "$blocking_checks" -ne 0 ]]; then
+              echo "Skipping PR #$pr because checks are not all green."
+              jq -r '.[] | select(.workflow != "Dependabot Auto Merge") | "- \(.name): \(.bucket)"' <<< "$checks_output"
+              continue
+            fi
+
+            gh pr merge "$pr" --merge --delete-branch --match-head-commit "$head_sha"
+          done <<< "$PRS"

@@ -2,15 +2,18 @@ name: Dependabot Auto Merge
 
 on:
   pull_request_target:
-    types: [opened, reopened, synchronize, ready_for_review]
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - ready_for_review
   schedule:
-    - cron: "*/15 * * * *"
+    - cron: "*/30 * * * *"
   workflow_dispatch:
-    inputs:
-      pr:
-        description: "Pull request number to evaluate, or all"
-        required: false
-        default: "all"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: false
 
 permissions:
   contents: write
@@ -18,118 +21,186 @@ permissions:
   checks: read
   statuses: read
 
-env:
-  GH_REPO: ${{ github.repository }}
-
-concurrency:
-  group: dependabot-auto-merge
-  cancel-in-progress: false
-
 jobs:
   merge:
+    name: Auto-merge Dependabot PRs
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
-      - name: Resolve pull requests
-        id: prs
-        env:
-          GH_TOKEN: ${{ github.token }}
-          EVENT_NAME: ${{ github.event_name }}
-          INPUT_PR: ${{ inputs.pr || 'all' }}
-        run: |
-          set -euo pipefail
+      - name: Merge Dependabot PRs when checks pass
+        uses: actions/github-script@v9
+        with:
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
 
-          prs_file="${RUNNER_TEMP}/prs.txt"
-          : > "$prs_file"
+            const successfulCheckConclusions = new Set(["success", "skipped", "neutral"]);
+            const successfulStatusStates = new Set(["success"]);
+            const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-          if [[ "$EVENT_NAME" == "pull_request_target" ]]; then
-            jq -r '.pull_request.number' "$GITHUB_EVENT_PATH" > "$prs_file"
-          elif [[ "$INPUT_PR" != "all" ]]; then
-            if [[ "$INPUT_PR" =~ ^[0-9]+$ ]]; then
-              printf '%s\n' "$INPUT_PR" > "$prs_file"
-            else
-              echo "Invalid PR input: $INPUT_PR" >&2
-              exit 1
-            fi
-          else
-            gh pr list \
-              --state open \
-              --json number,author,isDraft \
-              --jq '.[] | select(.isDraft == false and .author.is_bot == true and (.author.login == "app/dependabot" or .author.login == "dependabot[bot]")) | .number' \
-              > "$prs_file"
-          fi
+            const latestBy = (items, keyOf, timeOf) => {
+              const latest = new Map();
+              for (const item of items) {
+                const key = keyOf(item);
+                const itemTime = new Date(timeOf(item) || 0).getTime();
+                const existing = latest.get(key);
+                const existingTime = existing ? new Date(timeOf(existing) || 0).getTime() : -1;
+                if (!existing || itemTime >= existingTime) {
+                  latest.set(key, item);
+                }
+              }
+              return [...latest.values()];
+            };
 
-          sort -nu "$prs_file" -o "$prs_file"
+            const findCandidatePulls = async () => {
+              if (context.eventName === "pull_request_target") {
+                const pr = context.payload.pull_request;
+                return pr?.user?.login === "dependabot[bot]" && pr?.state === "open" ? [pr] : [];
+              }
 
-          {
-            echo "prs<<EOF"
-            cat "$prs_file"
-            echo "EOF"
-          } >> "$GITHUB_OUTPUT"
+              const pulls = await github.paginate(github.rest.pulls.list, {
+                owner,
+                repo,
+                state: "open",
+                per_page: 100,
+              });
 
-      - name: Merge green Dependabot pull requests
-        if: steps.prs.outputs.prs != ''
-        env:
-          GH_TOKEN: ${{ github.token }}
-          PRS: ${{ steps.prs.outputs.prs }}
-        run: |
-          set -euo pipefail
+              return pulls.filter((pr) => pr.user?.login === "dependabot[bot]");
+            };
 
-          while IFS= read -r pr; do
-            [[ -n "$pr" ]] || continue
-            echo "Evaluating PR #$pr"
+            const getMergeablePullRequest = async (pull_number) => {
+              for (let attempt = 1; attempt <= 6; attempt += 1) {
+                const { data: pr } = await github.rest.pulls.get({ owner, repo, pull_number });
+                if (pr.mergeable !== null) {
+                  return pr;
+                }
+                core.info("PR #" + pull_number + " mergeability is still being computed; retry " + attempt + "/6.");
+                await wait(5000);
+              }
 
-            pr_json="$(gh pr view "$pr" --json author,isDraft,headRefOid,mergeStateStatus,state)"
-            author="$(jq -r '.author.login' <<< "$pr_json")"
-            is_bot="$(jq -r '.author.is_bot' <<< "$pr_json")"
-            is_draft="$(jq -r '.isDraft' <<< "$pr_json")"
-            head_sha="$(jq -r '.headRefOid' <<< "$pr_json")"
-            merge_state="$(jq -r '.mergeStateStatus' <<< "$pr_json")"
-            state="$(jq -r '.state' <<< "$pr_json")"
+              const { data: pr } = await github.rest.pulls.get({ owner, repo, pull_number });
+              return pr;
+            };
 
-            if [[ "$state" != "OPEN" ]]; then
-              echo "Skipping PR #$pr because it is $state."
-              continue
-            fi
+            const getSignalState = async (sha) => {
+              const checkRuns = await github.paginate(github.rest.checks.listForRef, {
+                owner,
+                repo,
+                ref: sha,
+                per_page: 100,
+              });
 
-            if [[ "$is_draft" == "true" ]]; then
-              echo "Skipping PR #$pr because it is a draft."
-              continue
-            fi
+              const statuses = await github.paginate(github.rest.repos.listCommitStatusesForRef, {
+                owner,
+                repo,
+                ref: sha,
+                per_page: 100,
+              });
 
-            if [[ "$is_bot" != "true" || ( "$author" != "app/dependabot" && "$author" != "dependabot[bot]" ) ]]; then
-              echo "Skipping PR #$pr because the author is $author."
-              continue
-            fi
+              const latestChecks = latestBy(
+                checkRuns.filter((run) => run.name !== "Dependabot Auto Merge"),
+                (run) => (run.app?.slug || "unknown") + ":" + run.name,
+                (run) => run.completed_at || run.started_at || run.created_at,
+              );
+              const latestStatuses = latestBy(statuses, (status) => status.context, (status) => status.updated_at || status.created_at);
 
-            if [[ "$merge_state" == "DIRTY" ]]; then
-              echo "Skipping PR #$pr because merge state is $merge_state."
-              continue
-            fi
+              const pendingChecks = latestChecks.filter((run) => run.status !== "completed");
+              const failedChecks = latestChecks.filter(
+                (run) => run.status === "completed" && !successfulCheckConclusions.has(String(run.conclusion || "").toLowerCase()),
+              );
+              const failedStatuses = latestStatuses.filter((status) => !successfulStatusStates.has(String(status.state || "").toLowerCase()));
 
-            checks_output="$(gh pr checks "$pr" --json bucket,name,workflow 2>&1 || true)"
-            if ! jq -e 'type == "array"' >/dev/null 2>&1 <<< "$checks_output"; then
-              echo "Skipping PR #$pr because checks could not be read: $checks_output"
-              continue
-            fi
+              return {
+                totalSignals: latestChecks.length + latestStatuses.length,
+                pendingChecks,
+                failedChecks,
+                failedStatuses,
+              };
+            };
 
-            total_checks="$(jq '[.[] | select(.workflow != "Dependabot Auto Merge")] | length' <<< "$checks_output")"
-            passed_checks="$(jq '[.[] | select(.workflow != "Dependabot Auto Merge" and .bucket == "pass")] | length' <<< "$checks_output")"
-            blocking_checks="$(jq '[.[] | select(.workflow != "Dependabot Auto Merge" and .bucket != "pass" and .bucket != "skipping")] | length' <<< "$checks_output")"
+            const { data: repository } = await github.rest.repos.get({ owner, repo });
+            const mergeMethods = [];
+            if (repository.allow_merge_commit) mergeMethods.push("merge");
+            if (repository.allow_squash_merge) mergeMethods.push("squash");
+            if (repository.allow_rebase_merge) mergeMethods.push("rebase");
 
-            if [[ "$total_checks" -eq 0 ]]; then
-              echo "Skipping PR #$pr because it has no checks."
-              continue
-            fi
+            if (mergeMethods.length === 0) {
+              core.info("This repository has no enabled pull request merge methods.");
+              return;
+            }
 
-            if [[ "$passed_checks" -eq 0 || "$blocking_checks" -ne 0 ]]; then
-              echo "Skipping PR #$pr because checks are not all green."
-              jq -r '.[] | select(.workflow != "Dependabot Auto Merge") | "- \(.name): \(.bucket)"' <<< "$checks_output"
-              continue
-            fi
+            const pulls = await findCandidatePulls();
+            if (pulls.length === 0) {
+              core.info("No open Dependabot PRs to evaluate.");
+              return;
+            }
 
-            if gh pr merge "$pr" --merge --delete-branch --match-head-commit "$head_sha"; then
-              echo "Merged PR #$pr."
-            else
-              echo "Could not merge PR #$pr; it will be retried on the next scheduled run."
-            fi
-          done <<< "$PRS"
+            for (const candidate of pulls) {
+              const pull_number = candidate.number;
+              const pr = await getMergeablePullRequest(pull_number);
+
+              if (pr.user?.login !== "dependabot[bot]") {
+                core.info("PR #" + pull_number + " is no longer a Dependabot PR.");
+                continue;
+              }
+
+              if (pr.state !== "open" || pr.draft) {
+                core.info("PR #" + pull_number + " is not an open, ready PR.");
+                continue;
+              }
+
+              if (pr.mergeable !== true) {
+                core.info("PR #" + pull_number + " is not currently mergeable.");
+                continue;
+              }
+
+              const signalState = await getSignalState(pr.head.sha);
+              if (signalState.totalSignals === 0) {
+                core.info("PR #" + pull_number + " has no checks or statuses yet; skipping.");
+                continue;
+              }
+
+              if (signalState.pendingChecks.length > 0) {
+                core.info("PR #" + pull_number + " still has pending checks: " + signalState.pendingChecks.map((run) => run.name).join(", ") + ".");
+                continue;
+              }
+
+              if (signalState.failedChecks.length > 0 || signalState.failedStatuses.length > 0) {
+                const failedChecks = signalState.failedChecks.map((run) => run.name + "=" + run.conclusion).join(", ");
+                const failedStatuses = signalState.failedStatuses.map((status) => status.context + "=" + status.state).join(", ");
+                core.info("PR #" + pull_number + " is not green. Checks: " + (failedChecks || "none") + ". Statuses: " + (failedStatuses || "none") + ".");
+                continue;
+              }
+
+              let merged = false;
+              let lastError = null;
+              for (const merge_method of mergeMethods) {
+                try {
+                  await github.rest.pulls.merge({ owner, repo, pull_number, merge_method });
+                  core.info("Merged Dependabot PR #" + pull_number + " with " + merge_method + ".");
+                  merged = true;
+                  break;
+                } catch (error) {
+                  lastError = error;
+                  if (error.status === 405 || error.status === 409) {
+                    core.info("Cannot merge PR #" + pull_number + " with " + merge_method + ": " + error.message);
+                    continue;
+                  }
+                  throw error;
+                }
+              }
+
+              if (!merged) {
+                core.info("PR #" + pull_number + " could not be merged: " + (lastError?.message || "unknown error") + ".");
+                continue;
+              }
+
+              if (pr.head.repo?.full_name === owner + "/" + repo) {
+                try {
+                  await github.rest.git.deleteRef({ owner, repo, ref: "heads/" + pr.head.ref });
+                  core.info("Deleted branch " + pr.head.ref + ".");
+                } catch (error) {
+                  core.info("Could not delete branch " + pr.head.ref + ": " + error.message);
+                }
+              }
+            }

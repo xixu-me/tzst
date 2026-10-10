@@ -78,6 +78,15 @@ Oder mit uv (empfohlen):
 uv tool install tzst
 ```
 
+### Von Homebrew
+
+Installiere tzst unter macOS aus dem Repository [xixu-me/tap](https://github.com/xixu-me/homebrew-tap):
+
+```bash
+brew tap xixu-me/tap
+brew install tzst
+```
+
 ### Aus dem Quellcode
 
 ```bash

@@ -78,6 +78,15 @@ pip install tzst
 uv tool install tzst
 ```
 
+### Homebrew에서
+
+macOS에서는 [xixu-me/tap](https://github.com/xixu-me/homebrew-tap) 저장소에서 tzst를 설치할 수 있습니다.
+
+```bash
+brew tap xixu-me/tap
+brew install tzst
+```
+
 ### 소스에서
 
 ```bash

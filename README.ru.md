@@ -78,6 +78,15 @@ pip install tzst
 uv tool install tzst
 ```
 
+### Из Homebrew
+
+В macOS установите tzst из репозитория [xixu-me/tap](https://github.com/xixu-me/homebrew-tap):
+
+```bash
+brew tap xixu-me/tap
+brew install tzst
+```
+
 ### Из исходного кода
 
 ```bash

@@ -78,6 +78,15 @@ Ou avec uv (recommandé) :
 uv tool install tzst
 ```
 
+### Depuis Homebrew
+
+Sur macOS, installez tzst depuis le dépôt [xixu-me/tap](https://github.com/xixu-me/homebrew-tap) :
+
+```bash
+brew tap xixu-me/tap
+brew install tzst
+```
+
 ### Depuis le code source
 
 ```bash

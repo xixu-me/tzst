@@ -81,6 +81,15 @@ pip install tzst
 uv tool install tzst
 ```
 
+### 通过 Homebrew 安装
+
+在 macOS 上，可以从 [xixu-me/tap](https://github.com/xixu-me/homebrew-tap) 仓库安装 tzst：
+
+```bash
+brew tap xixu-me/tap
+brew install tzst
+```
+
 ### 从源码安装
 
 ```bash

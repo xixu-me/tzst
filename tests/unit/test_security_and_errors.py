@@ -432,3 +432,60 @@ class TestSpecificMissingLineCoverage:
 
         finally:
             archive_path.unlink(missing_ok=True)
+
+
+@pytest.mark.unit
+class TestDestinationSymlinkEscape:
+    """Regression for GHSA-334m-cv57-9wm2: temp-then-move must not follow dest symlinks."""
+
+    def test_extractall_refuses_preexisting_dir_symlink(self, temp_dir):
+        from tzst import TzstArchive
+        from tzst.exceptions import TzstArchiveError
+
+        payload = temp_dir / "payload.txt"
+        payload.write_text("inside", encoding="utf-8")
+        archive_path = temp_dir / "payload.tzst"
+        with TzstArchive(archive_path, "w") as archive:
+            archive.add(payload, arcname="cache/payload.txt")
+
+        outside = temp_dir / "outside"
+        outside.mkdir()
+        sentinel = outside / "payload.txt"
+        assert not sentinel.exists()
+
+        dest = temp_dir / "dest"
+        dest.mkdir()
+        (dest / "cache").symlink_to(outside)
+
+        with pytest.raises(
+            TzstArchiveError, match="Refusing to write outside destination"
+        ):
+            extract_archive(archive_path, dest)
+
+        assert not sentinel.exists()
+        assert list(outside.iterdir()) == []
+
+    def test_flatten_refuses_preexisting_file_symlink(self, temp_dir):
+        from tzst.exceptions import TzstArchiveError
+
+        src = temp_dir / "src"
+        src.mkdir()
+        (src / "cfg").write_text("archive-cfg", encoding="utf-8")
+        archive_path = temp_dir / "cfg.tzst"
+        create_archive(archive_path, [src / "cfg"])
+
+        outside = temp_dir / "outside"
+        outside.mkdir()
+        victim = outside / "cfg"
+        victim.write_text("keep-me", encoding="utf-8")
+
+        dest = temp_dir / "dest"
+        dest.mkdir()
+        (dest / "cfg").symlink_to(victim)
+
+        with pytest.raises(
+            TzstArchiveError, match="Refusing to write outside destination"
+        ):
+            extract_archive(archive_path, dest, flatten=True)
+
+        assert victim.read_text(encoding="utf-8") == "keep-me"

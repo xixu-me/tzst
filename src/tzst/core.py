@@ -87,6 +87,28 @@ def _get_unique_filename(file_path: Path) -> Path:
         counter += 1
 
 
+def _ensure_within(base: Path, target: Path) -> None:
+    """Refuse writes that escape base via symlinks or path resolution (CWE-59).
+
+    The temp-then-move extraction path validates members only against the empty
+    temp directory. Pre-existing symlinks in the real destination are followed by
+    mkdir/open/rename, so every final target must be checked against base before
+    those operations.
+    """
+    base_r = os.path.realpath(base)
+    if os.path.islink(target):
+        raise TzstArchiveError(f"Refusing to write outside destination: {target}")
+    try:
+        parent_r = os.path.realpath(target.parent)
+        if os.path.commonpath([parent_r, base_r]) != base_r:
+            raise TzstArchiveError(f"Refusing to write outside destination: {target}")
+    except ValueError as e:
+        # Different drives (Windows) have no common path.
+        raise TzstArchiveError(
+            f"Refusing to write outside destination: {target}"
+        ) from e
+
+
 def _move_file_cross_platform(src: Path, dst: Path) -> None:
     """Move a file from src to dst, handling cross-drive moves on Windows."""
     try:
@@ -814,6 +836,7 @@ def extract_archive(
                     # Extract to flat directory
                     filename = Path(member.name).name
                     target_path = extract_dir / filename
+                    _ensure_within(extract_dir, target_path)
 
                     # Handle conflicts
                     if target_path.exists():
@@ -833,6 +856,8 @@ def extract_archive(
                         elif actual_resolution == ConflictResolution.EXIT:
                             break
                         target_path = final_path
+                        if target_path is not None:
+                            _ensure_within(extract_dir, target_path)
 
                     fileobj = archive.extractfile(member)
                     if fileobj:
@@ -879,6 +904,7 @@ def extract_archive(
                                 )
                                 temp_file = temp_extract_path / member
                                 if final_path:
+                                    _ensure_within(Path(extract_path), final_path)
                                     _move_file_cross_platform(temp_file, final_path)
                             finally:
                                 # Clean up temp directory
@@ -904,6 +930,7 @@ def extract_archive(
                         if temp_file.is_file():
                             rel_path = temp_file.relative_to(temp_extract_path)
                             target_path = Path(extract_path) / rel_path
+                            _ensure_within(Path(extract_path), target_path)
 
                             # Create parent directories
                             target_path.parent.mkdir(
@@ -928,6 +955,8 @@ def extract_archive(
                                 elif actual_resolution == ConflictResolution.EXIT:
                                     break
                                 target_path = final_path
+                                if target_path is not None:
+                                    _ensure_within(Path(extract_path), target_path)
 
                                 # Handle file replacement on Windows
                                 if target_path and target_path.exists():
